@@ -1,4 +1,4 @@
-# xj_admin
+# shopeeshow_admin
 
 ## Project setup
 ```
