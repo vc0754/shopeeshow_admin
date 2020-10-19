@@ -26,53 +26,38 @@ const routes = [
     children: [
       {
         path: '/',
-        meta: { title: '控制面板' },
+        meta: { title: '首页' },
         component: () => import('@/views/MainView.vue' /* webpackChunkName: 'main' */)
       },
       {
-        path: '/setting',
-        meta: { title: 'APP 设置' },
-        component: () => import('@/views/SettingView.vue' /* webpackChunkName: 'setting' */)
+        path: '/news/detail/:id',
+        meta: { title: '公告详情' },
+        component: () => import('@/views/news/DetailView.vue' /* webpackChunkName: 'news' */)
       },
       {
-        path: '/statistics',
-        meta: { title: '数据统计' },
-        component: () => import('@/views/StatisticsView.vue' /* webpackChunkName: 'statistics' */)
+        path: '/store/list',
+        meta: { title: '店铺管理' },
+        component: () => import('@/views/store/ListView.vue' /* webpackChunkName: 'store' */)
       },
       {
-        path: '/users',
-        meta: { title: '用户管理' },
-        component: () => import('@/views/user/ListView.vue' /* webpackChunkName: 'users' */)
+        path: '/task/add',
+        meta: { title: '发布任务' },
+        component: () => import('@/views/task/AddView.vue' /* webpackChunkName: 'task_add' */)
       },
       {
-        path: '/user/detail',
-        meta: { title: '订单明细' },
-        component: () => import('@/views/user/DetailView.vue' /* webpackChunkName: 'detail' */)
+        path: '/task/list',
+        meta: { title: '任务管理' },
+        component: () => import('@/views/task/ListView.vue' /* webpackChunkName: 'task' */)
       },
       {
-        path: '/orders',
-        meta: { title: '订单管理' },
-        component: () => import('@/views/order/ListView.vue' /* webpackChunkName: 'orders' */)
+        path: '/settlement',
+        meta: { title: '结算中心' },
+        component: () => import('@/views/SettlementView.vue' /* webpackChunkName: 'settlement' */)
       },
       {
-        path: '/account',
-        meta: { title: '用户管理' },
-        component: () => import('@/views/account/Taobao.vue' /* webpackChunkName: 'users' */)
-      },
-      {
-        path: '/withdrawal',
-        meta: { title: '提现设置' },
-        component: () => import('@/views/withdrawal/ListView.vue' /* webpackChunkName: 'withdrawal' */)
-      },
-      {
-        path: '/withdrawal/detail',
-        meta: { title: '提现记录' },
-        component: () => import('@/views/withdrawal/DetailView.vue' /* webpackChunkName: 'wsetting' */)
-      },
-      {
-        path: '/withdrawal/setting',
-        meta: { title: '提现设置' },
-        component: () => import('@/views/withdrawal/Setting.vue' /* webpackChunkName: 'wsetting' */)
+        path: '/transition',
+        meta: { title: '支付流水' },
+        component: () => import('@/views/transition/ListView.vue' /* webpackChunkName: 'transition' */)
       },
     ]
   },
@@ -80,6 +65,11 @@ const routes = [
     path: '/sign',
     meta: { title: '登陆', auth: false },
     component: () => import('@/views/user/SignView.vue' /* webpackChunkName: 'sign' */)
+  },
+  {
+    path: '/register',
+    meta: { title: '注册', auth: false },
+    component: () => import('@/views/user/RegisterView.vue' /* webpackChunkName: 'register' */)
   },
   {
     path: '/lost-password',
@@ -110,6 +100,7 @@ router.beforeEach(({meta, path}, from, next) => {
   let is_signin = store.getters.is_sign
   
   if (is_signin && path === '/sign') return next({ path: '/' })
+
   // 内页调试用，直接绕过登录
   // if (auth && !is_signin && path !== '/sign') return next()
   if (auth && !is_signin && path !== '/sign') return next({ path: `/sign?redirect=${path}` })

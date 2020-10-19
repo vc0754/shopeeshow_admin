@@ -1,7 +1,15 @@
 <template>
   <header class="header">
-    <span class="fs-14 m-r-25">{{ user.login_name }}</span>
-    <img :src="require('../../assets/quit.png')" alt="退出登录" @click="logout" style="cursor: pointer;" />
+    <div class="flex">
+      <img src="../../assets/toggle.svg" alt="" @click="logout" style="cursor: pointer;" class="" />
+      <span class="fs-12 m-l-10" style="color:#333;">店铺商家端管理后台</span>
+    </div>
+    <div class="flex">
+      <img src="../../assets/lan.svg" alt="语言" @click="logout" style="cursor: pointer;" class="" />
+      <img src="../../assets/setting.svg" alt="设置" @click="logout" style="cursor: pointer;" class="m-l-25" />
+      <img src="../../assets/quit.svg" alt="退出登录" @click="logout" style="cursor: pointer;" class="m-l-25" />
+      <span class="fs-12 m-l-25">{{ user.username }}</span>
+    </div>
   </header>
 </template>
 

@@ -1,21 +1,34 @@
 <template>
-  <div class="login-wrapper" :style="{ backgroundImage: `url(${require('../../assets/bg.png')})`}">
+  <div class="login-wrapper">
     <div class="login-container">
 
-      <div class="sign-page" :style="{ backgroundImage: `url(${require('../../assets/login.png')})`}">
-        <h1>登录 Login</h1>
-        <el-form class="sign-content" ref="formPSW" :model="formPSW" :rules="formValidatePSW">
-          <el-form-item prop="username">
-            <el-input v-model="formPSW.username" placeholder="账户" />
+      <div class="sign-page">
+        <div class="brand">
+          <img alt="" src="../../assets/logo.png">
+          <div>
+            <span>Shopee</span>
+            <span>show</span>
+          </div>
+        </div>
+
+        <el-form class="sign-content" ref="formPSW" :model="formPSW">
+          <el-form-item>
+            <el-input v-model="formPSW.UserName" placeholder="请输入邮箱或昵称" />
           </el-form-item>
 
-          <el-form-item prop="pwd">
-            <el-input type="password" v-model="formPSW.pwd" placeholder="密码" :maxlength="6" />
+          <el-form-item>
+            <el-input type="password" v-model="formPSW.Pwd" placeholder="请输入密码" :maxlength="6" />
           </el-form-item>
           
-          <el-form-item prop="captcha">
-            <el-input v-model="formPSW.captcha" placeholder="验证码" :maxlength="6" />
-            <s-identify :identifyCode="identifyCode" class="captcha"></s-identify>
+          <el-form-item style="margin-bottom: 5px;">
+            <el-input v-model="formPSW.captcha" placeholder="请输入验证码" :maxlength="6" style="width:165px;" />
+            <s-identify :identifyCode="identifyCode" :contentWidth="contentWidth" :contentHeight="contentHeight" class="captcha"></s-identify>
+          </el-form-item>
+          
+          <el-form-item>
+            <el-checkbox v-model="formPSW.checked">
+              <span class="fs-12">记住密码</span>
+            </el-checkbox>
           </el-form-item>
         </el-form>
 
@@ -24,8 +37,10 @@
         </div>
         
         <div class="sign-meta">
+          <router-link to="/lost-password" class="fg">忘记密码</router-link>
           <div>
-            <router-link to="/lost-password">忘记密码？</router-link>
+            没有账号？
+            <router-link to="/register" class="m-l-10">注册</router-link>
           </div>
         </div>
 
@@ -46,26 +61,15 @@ export default {
   },
   data () {
     return {
-      identifyCodes: '1234567890',
+      contentWidth: 100,
+      contentHeight: 34,
+      identifyCodes: '23456890',
       identifyCode: '',
       formPSW: {
-        username: '18800000111',
-        pwd: '123456',
-        captcha: ''
-      },
-      formValidatePSW: {
-        username: [
-          { required: true, message: '账号必须', trigger: 'blur' },
-          // { type: 'string', min: 4, message: '账号长度最少4位', trigger: 'blur' },
-          // { pattern: /^[a-zA-Z0-9_.]*$/, message: '只允许英文字母，数字和下划线(_)和点符号(.)', trigger: 'blur' }
-        ],
-        pwd: [
-          { required: true, message: '密码必须', trigger: 'blur' },
-          // { type: 'string', min: 6, message: '密码长度最少6位', trigger: 'blur' }
-        ],
-        captcha: [
-          { required: true, message: '验证码必须', trigger: 'blur' },
-        ]
+        UserName: '980436963@qq.com',
+        Pwd: '123',
+        captcha: '',
+        checked: false
       },
       loading: false
     }
@@ -91,13 +95,17 @@ export default {
     },
 
     // 提交表单
+    // ?UserName=${this.formPSW.UserName}&Pwd=${this.formPSW.Pwd}
     handleSubmit (name) {
       this.$refs[name].validate(valid => {
         if (!valid) return; // this.$message.error('提交失败!');
         if (this.formPSW.captcha !== this.identifyCode) return this.$message.error('验证码不匹配!');
-        this.$http.post(`/api/Home/Login?username=${this.formPSW.username}&pwd=${this.formPSW.pwd}`, this.formPSW).then(res => {
-          sessionStorage.setItem('token', res.data.webToKen)
-          this.$store.dispatch(USER_SIGNIN, res.data)
+        this.$http.post(`/User/Login`, this.formPSW).then(res => {
+          console.log(res)
+          sessionStorage.setItem('token', res.Data)
+          this.$store.dispatch(USER_SIGNIN, {
+            username: this.formPSW.UserName
+          })
           this.$router.replace({ path: '/' })
         }).catch(err => {
           this.$message.error(err.data.message)
@@ -117,56 +125,52 @@ export default {
 
 <style lang="less" scoped>
 .login-wrapper {
-  background-color: #222; background-position: center center; background-repeat: no-repeat; background-size: cover;
+  background-color: rgba(70, 161, 255, 1);
   width: 100%; height: 100%;
   position: absolute;
 }
 .login-container {
   position: absolute; left: 50%; top: 50%;
-  transform: translate3d(-50%, -50%, 0);
+  transform: translate3d(-50%, -64%, 0);
 }
 
 .sign-page {
-  background-color: #fff; background-repeat: no-repeat;
-  width: 850px; height: 530px;
-  border-radius: 8px;
-  box-shadow: 0px 8px 30px 0px rgba(173, 43, 81, 0.44);
-  padding: 40px 40px 40px 490px;
-  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  background-color: #fff;
+  width: 392px; height: 478px;
+  padding: 38px 60px;
+  display: flex; flex-direction: column; align-items: center;
   
-  h1 {
-    font-size: 16px;
-    font-family: 'MicrosoftYaHei';
-    color: rgba(0, 0, 0, 0.85);
-    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.85);
-    margin-bottom: 56px;
-    align-self: flex-start;
+  .brand {
+    width: 100%; margin-bottom: 34px;
   }
-
+  
   .sign-content {
     width: 100%;
-    margin-bottom: 58px;
   }
 
   .sign-button {
-    width: 100%; margin-bottom: 28px;
+    margin-bottom: 22px; width: 100%;
+    display: flex; justify-content: flex-end;
     button {
-      background: #EC4B4B;
-      box-shadow: 0px 5px 10px 0px rgba(254, 91, 91, 0.46);
-      width: 100%;
-      border-color: #EC4B4B;
+      width: 120px; height: 34px; line-height: 34px; padding: 0;
     }
   }
 
   .sign-meta {
+    color: #666;
     font-size: 12px;
+    width: 100%;
+    padding: 10px 0;
+    border-top: solid 1px #ccc;
+    display: flex; justify-content: space-between;
     a {
-      color: #EC4B4B;
+      color: #46A1FF;
+      &.fg { color: #aaa;}
     }
   }
 
   .captcha {
-    position: absolute; top: 4px; right: 8px;
+    position: absolute; top: 0px; right: 0px;
   }
 }
 </style>

@@ -5,20 +5,20 @@ promise.polyfill()
 
 axios.defaults.timeout = 5000
 axios.defaults.headers.post['Content-Type'] = 'application/json; charset=utf-8'
-axios.defaults.baseURL = (process.env.NODE_ENV === 'development' ? 'http://localhost:7001/' : 'http://yyapi_test.xijiee.com/')
+axios.defaults.baseURL = (process.env.NODE_ENV === 'development' ? 'http://localhost:7001/' : 'http://net.taoke8.cn:8080/')
 
-axios.defaults.baseURL = 'http://yyapi_test.xijiee.com'
+axios.defaults.baseURL = 'http://net.taoke8.cn:8080'
 
 axios.interceptors.request.use(config => {
   const token = sessionStorage.getItem('token')
-  if (token) config.headers['Token'] = `${token}`
+  if (token) config.headers['Authorization'] = `Bearer ${token}`
   return config
 }, error => {
   return Promise.reject(error)
 })
 
 axios.interceptors.response.use(res => {
-  if (res.data.stateCode === 0) return Promise.reject(res)
+  if (res.data.ErrorCode !== 200) return Promise.reject(res)
   if (res.status !== 200 && res.status !== 201 && res.status !== 204) return Promise.reject(res)
   return res.data
 }, error => {

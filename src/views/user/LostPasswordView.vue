@@ -1,36 +1,43 @@
 <template>
-  <div class="login-wrapper" :style="{ backgroundImage: `url(${require('../../assets/bg.png')})`}">
+  <div class="login-wrapper">
     <div class="login-container">
 
-      <div class="sign-page" :style="{ backgroundImage: `url(${require('../../assets/login.png')})`}">
-        <h1>忘记密码</h1>
-        <el-form class="sign-content" ref="formPSW" :model="formPSW" :rules="formValidatePSW">
-          <el-form-item prop="account">
-            <el-input v-model="formPSW.account" placeholder="请输入手机号" />
+      <div class="sign-page">
+        <div class="brand">
+          <img alt="" src="../../assets/logo.png">
+          <div>
+            <span>Shopee</span>
+            <span>show</span>
+          </div>
+        </div>
+        
+        <el-form class="sign-content" ref="formPSW" :model="formPSW">
+          <el-form-item>
+            <el-input v-model="formPSW.Email" placeholder="请输入你的注册邮箱" />
           </el-form-item>
           
-          <el-form-item prop="password">
-            <el-input v-model="formPSW.password" placeholder="请输入验证码" :maxlength="6" />
+          <el-form-item>
+            <el-input v-model="formPSW.Code" placeholder="请输入验证码" :maxlength="6" style="width:172px;" />
+            
+            <el-button class="sendSMS" type="primary" round v-if="send_code">{{ send_code }}秒后过期</el-button>
+            <el-button class="sendSMS" :type="send_text === '重新发送' ? 'info' : 'primary'" round :loading="loading" @click="sendCode" v-else>{{ send_text }}</el-button>
           </el-form-item>
 
-          <el-form-item prop="password">
-            <el-input type="password" v-model="formPSW.password" placeholder="设置新密码" :maxlength="6" />
+          <el-form-item>
+            <el-input type="password" v-model="formPSW.Pwd" placeholder="请输入新密码" :maxlength="6" />
           </el-form-item>
 
-          <el-form-item prop="password">
-            <el-input type="password" v-model="formPSW.password" placeholder="确认新密码" :maxlength="6" />
+          <el-form-item>
+            <el-input type="password" v-model="formPSW.Pwd2" placeholder="再次输入密码" :maxlength="6" />
           </el-form-item>
         </el-form>
 
         <div class="sign-button">
-          <el-button type="primary" round :loading="loading" @click="handleSubmit('formPSW')">重置密码</el-button>
+          <el-button type="primary" round :loading="loading" @click="handleSubmit">确定</el-button>
         </div>
         
         <div class="sign-meta">
-          <div class="flex flex-x-between">
-            <span>已有账号</span>
-            <router-link to="/sign">立即登录</router-link>
-          </div>
+          <router-link to="/sign" class="fg">返回登录</router-link>
         </div>
 
       </div>
@@ -45,45 +52,58 @@ export default {
   data () {
     return {
       formPSW: {
-        account: '',
-        email: '',
-        mobile: '',
-        password: '',
+        Email: '',
+        Code: '',
+        Pwd: '',
+        Pwd2: '',
       },
-      formValidatePSW: {
-        account: [
-          { required: true, message: '账号必须', trigger: 'blur' },
-          // { type: 'string', min: 4, message: '账号长度最少4位', trigger: 'blur' },
-          // { pattern: /^[a-zA-Z0-9_.]*$/, message: '只允许英文字母，数字和下划线(_)和点符号(.)', trigger: 'blur' }
-        ],
-        password: [
-          { required: true, message: '密码必须', trigger: 'blur' },
-          // { type: 'string', min: 6, message: '密码长度最少6位', trigger: 'blur' }
-        ],
-        captcha: [
-          { required: true, message: '验证码必须', trigger: 'blur' },
-        ]
-      },
-      loading: false
+      loading: false,
+      send_text: '发送验证码',
+      countID: 0,
+      send_code: 0
     }
   },
   computed: {
   },
   methods: {
-
+    countdown() {
+      this.countID = setInterval(() => {
+        --this.send_code
+        if (this.send_code === 0) clearInterval(this.countID)
+      }, 1000);
+    },
+    // 发送验证码
+    sendCode() {
+      if (!this.formPSW.Email) return this.$message.error('请输入你的注册邮箱')
+      if (!/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(this.formPSW.Email)) return this.$message.error('邮箱格式不正确')
+      this.$http.get('/User/SendEmailCode', {
+        Email: this.formPSW.Email,
+        SmsType: 2
+      }).then(res => {
+        this.send_code = 30
+        this.countdown()
+        this.send_text = '重新发送'
+        console.log(res)
+      }).catch(err => {
+        this.$message.error(err.data.Message)
+      })
+    },
     // 提交表单
-    handleSubmit (name) {
-      console.log(name)
-      this.$message.info('重置密码')
-      // this.$refs[name].validate(valid => {
-      //   if (!valid) return; // this.$message.error('提交失败!');
-      //   this.$http.post('/api/Home/Login', this.formPSW).then(res => {
-      //     this.$store.dispatch(USER_SIGNIN, res)
-      //     this.$router.replace({ path: '/' })
-      //   }).catch(err => {
-      //     this.$message.error(err.data.message)
-      //   })
-      // })
+    handleSubmit() {
+      if (!this.formPSW.Email) return this.$message.error('请输入你的注册邮箱')
+      if (!/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(this.formPSW.Email)) return this.$message.error('邮箱格式不正确')
+      
+      if (!this.formPSW.Code) return this.$message.error('请输入验证码')
+      if (!this.formPSW.Pwd) return this.$message.error('请输入新密码')
+      if (!this.formPSW.Pwd2) return this.$message.error('请再次输入密码')
+      if (this.formPSW.Pwd !== this.formPSW.Pwd2) return this.$message.error('两次密码不一致')
+      
+      this.$http.post('/User/EmailForgetPwd', this.formPSW).then(res => {
+        console.log(res)
+        // this.$router.replace({ path: '/' })
+      }).catch(err => {
+        this.$message.error(err.data.Message)
+      })
     },
   },
   watch: {
@@ -95,53 +115,51 @@ export default {
 
 <style lang="less" scoped>
 .login-wrapper {
-  background-color: #222; background-position: center center; background-repeat: no-repeat; background-size: cover;
+  background-color: rgba(70, 161, 255, 1);
   width: 100%; height: 100%;
   position: absolute;
 }
 .login-container {
   position: absolute; left: 50%; top: 50%;
-  transform: translate3d(-50%, -50%, 0);
+  transform: translate3d(-50%, -64%, 0);
 }
 
 .sign-page {
-  background-color: #fff; background-repeat: no-repeat;
-  width: 850px; height: 530px;
-  border-radius: 8px;
-  box-shadow: 0px 8px 30px 0px rgba(173, 43, 81, 0.44);
-  padding: 40px 40px 40px 490px;
-  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  background-color: #fff;
+  width: 392px; height: 478px;
+  padding: 38px 60px;
+  display: flex; flex-direction: column; align-items: center;
   
-  h1 {
-    font-size: 16px;
-    font-family: 'MicrosoftYaHei';
-    color: rgba(0, 0, 0, 0.85);
-    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.85);
-    margin-bottom: 32px;
-    align-self: flex-start;
+  .brand { width: 100%; margin-bottom: 14px; }
+
+  .el-form-item {
+    margin-bottom: 10px;
   }
 
+  .sendSMS { border-radius: 0; width: 93px; height: 32px; padding: 0; float: right;}
+
   .sign-content {
-    width: 100%;
-    margin-bottom: 18px;
+    width: 100%; margin-bottom: 20px;
   }
 
   .sign-button {
-    width: 100%; margin-bottom: 28px;
+    margin-bottom: 15px; width: 100%;
+    display: flex; justify-content: flex-end;
     button {
-      background: #EC4B4B;
-      box-shadow: 0px 5px 10px 0px rgba(254, 91, 91, 0.46);
-      width: 100%;
-      border-color: #EC4B4B;
+      width: 120px; height: 34px; line-height: 34px; padding: 0;
     }
   }
 
   .sign-meta {
-    color: rgba(0, 0, 0, 0.65);
+    color: #666;
     font-size: 12px;
     width: 100%;
+    padding: 10px 0;
+    border-top: solid 1px #ccc;
+    display: flex; justify-content: space-between;
     a {
-      color: #EC4B4B;
+      color: #46A1FF;
+      &.fg { color: #aaa;}
     }
   }
 }
