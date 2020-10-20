@@ -140,7 +140,7 @@ export default {
         EndTime: this.end_time,
         OrderNo: this.form.OrderNo,
         PayOrderNo: this.form.PayOrderNo,
-        State: 1
+        State: this.form.status
       }
       // console.log(params)
       this.loading = true

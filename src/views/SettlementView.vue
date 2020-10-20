@@ -34,7 +34,7 @@
 
     <div class="formTable">
       
-      <el-table stripe :data="tableData" v-loading="loading" style="width: 100%">
+      <el-table stripe :data="items" v-loading="loading" style="width: 100%">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column type="expand" width="35">
           <template slot-scope="props">
@@ -154,23 +154,45 @@
         </el-pagination>
       </div>
 
-      <!-- <pre>{{ tableData }}</pre>
-      <pre>{{ items }}</pre> -->
+      <!-- <pre>{{ items }}</pre> -->
     
-      <el-dialog title="支付中..." width="944px" :visible.sync="dialogVisible" class="store-form">
-        <!-- <el-form ref="formStore" :model="formStore">
-          <el-form-item label="请在下框输入店铺链接" style="margin-bottom:15px;">
-            <el-input v-model="formStore.url" placeholder="http://" style="width:430px;" />
-              
-            <el-button type="primary" v-if="send_code">{{ send_code }}秒后过期</el-button>
-            <el-button :type="send_text === '重新发送' ? 'info' : 'primary'" @click="sendCode" v-else>{{ send_text }}</el-button>
-          </el-form-item>
+      <el-dialog title="支付中..." width="944px" :visible.sync="dialogVisible" class="payment-form">
+        <div class="col-left">
+          <h3>请选择一种支付方式：</h3>
+          <div>
+            123
+          </div>
+        </div>
+        <div class="col-right">
+          <el-form ref="formPayment" :model="formPayment">
+            <!-- <el-form-item label="支付时间" style="margin-bottom:15px;">
+              <el-input v-model="formPayment.url" placeholder="http://" />
+            </el-form-item>
 
-          <el-form-item label="请在下框输入聊聊客服收到的验证码">
-            <el-input v-model="formStore.captcha" placeholder="" style="width:430px;" />
-            <el-button type="primary" @click="submit">确 定</el-button>
-          </el-form-item>
-        </el-form> -->
+            <el-form-item label="支付流水号：" style="margin-bottom:15px;">
+              <el-input v-model="formPayment.url" placeholder="http://" />
+            </el-form-item>
+
+            <el-form-item label="支付金额：" style="margin-bottom:15px;">
+              <el-input v-model="formPayment.url" placeholder="http://" />
+            </el-form-item>
+
+            <el-form-item label="汇率：" style="margin-bottom:15px;">
+              <el-input v-model="formPayment.url" placeholder="http://" />
+            </el-form-item>
+
+            <el-form-item label="兑换后支付金额：" style="margin-bottom:15px;">
+              <el-input v-model="formPayment.url" placeholder="http://" />
+            </el-form-item>
+
+
+            <el-form-item label="请在下框输入聊聊客服收到的验证码">
+              <el-input v-model="formPayment.captcha" placeholder="" />
+              <el-button type="primary" @click="submit">确 定</el-button>
+            </el-form-item> -->
+          </el-form>
+        </div>
+        
       </el-dialog>
       
     </div>
@@ -189,6 +211,9 @@ export default {
         name: '',
         country: '',
         times: 30
+      },
+      formPayment: {
+
       },
       dialogVisible: false,
       currentPage: 5,
@@ -451,14 +476,26 @@ export default {
 .gray { color: #aaa;}
 .red { color: #C00017;}
 
-.store-form {
+.payment-form {
   .el-dialog__header {
     background-color: rgba(234, 243, 253, 1);
     border-bottom: solid 1px rgba(215, 215, 215, 1);
     font-size: 16px; height: 59px; line-height: 59px;
     text-align: center; padding: 0;
   }
-  .el-dialog__body { padding: 32px;}
+  .el-dialog__body {
+    display: flex;
+    padding: 0;
+    .col-left {
+      width: 613px; height: 445px;
+      padding: 20px;
+    }
+    .col-right {
+      flex-grow: 1;
+      border-left: dashed 1px #d7d7d7;
+      padding: 20px;
+    }
+  }
 
   .el-form-item__label {
     line-height: 32px;

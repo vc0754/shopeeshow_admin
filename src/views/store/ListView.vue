@@ -39,6 +39,13 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    
+    <el-dialog width="596px" :visible.sync="dialogVisible2" class="store-success-tip">
+      <img src="../../assets/big_right_icon.svg" alt="">
+      <h3>恭喜您，绑定成功！</h3>
+      <p>稍后可在店铺管理页面查看</p>
+      <router-link to="/task/add" class="btn">立即发布任务</router-link>
+    </el-dialog>
   </section>
 </template>
 
@@ -55,6 +62,7 @@ export default {
         captcha: ''
       },
       dialogVisible: false,
+      dialogVisible2: false,
       send_text: '发送验证码',
       countID: 0,
       send_code: 0
@@ -75,7 +83,9 @@ export default {
     sendCode() {
       if (!this.formStore.url) return this.$message.error('请输入店铺链接')
       this.$http.get('/UserShop/SendShopCode', {
-        ShopUrl: this.formStore.url
+        params: {
+          ShopUrl: this.formStore.url
+        }
       }).then(res => {
         this.send_code = 30
         this.countdown()
@@ -94,13 +104,15 @@ export default {
       this.$http.post('/UserShop/Bind', {
         ShopUrl: this.formStore.url,
         Code: this.formStore.captcha
-      }).then(res => {
-        console.log(res)
+      }).then(() => {
+        this.dialogVisible2 = true
+
         this.dialogVisible = false
         this.formStore = {
           url: '',
           captcha: ''
         }
+        this.query()
       }).catch(err => {
         this.$message.error(err.data.Message)
       })
@@ -148,6 +160,7 @@ export default {
   cursor: pointer;
 }
 
+// 绑定店铺
 .store-form {
   .el-dialog__header {
     background-color: rgba(243, 246, 249, 1);
@@ -166,10 +179,39 @@ export default {
   .el-input__inner {
     height: 32px; line-height: 32px; border-radius: 0;
   }
-  .el-button--primary {
+  .el-button--primary,
+  .el-button--info {
     width: 93px; height: 32px;
     padding: 0; border-radius: 0;
     margin-left: 20px;
+  }
+}
+
+// 绑定成功提示
+.store-success-tip {
+  .el-dialog__header { display: none; }
+  .el-dialog__body {
+    padding: 40px;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  h3 {
+    font-weight: 400;
+    font-style: normal;
+    font-size: 24px;
+    margin: 15px 0;
+  }
+  p {
+    font-weight: 400;
+    font-style: normal;
+    font-size: 14px;
+    color: #999;
+    margin: 10px 0 40px;
+  }
+  .btn {
+    color: #fff; background-color: rgba(70, 161, 255, 1);
+    width: 165px; height: 42px; line-height: 42px;
+    border-radius: 20px;
+    text-align: center;
   }
 }
 </style>

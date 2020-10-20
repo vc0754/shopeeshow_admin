@@ -77,8 +77,10 @@ export default {
       if (!this.formPSW.Email) return this.$message.error('请输入你的注册邮箱')
       if (!/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(this.formPSW.Email)) return this.$message.error('邮箱格式不正确')
       this.$http.get('/User/SendEmailCode', {
-        Email: this.formPSW.Email,
-        SmsType: 2
+        params: {
+          Email: this.formPSW.Email,
+          SmsType: 2
+        }
       }).then(res => {
         this.send_code = 30
         this.countdown()

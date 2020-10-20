@@ -194,7 +194,7 @@ export default {
         CountryId: this.form.country,
         OrderNo: this.form.OrderNo,
         Title: this.form.name,
-        State: 1
+        State: this.form.status
       }
       // console.log(params)
       this.loading = true

@@ -110,8 +110,10 @@ export default {
       if (!this.formData.Email) return this.$message.error('请输入你的注册邮箱')
       if (!/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(this.formData.Email)) return this.$message.error('邮箱格式不正确')
       this.$http.get('/User/SendEmailCode', {
-        Email: this.formData.Email,
-        SmsType: 1
+        params: {
+          Email: this.formData.Email,
+          SmsType: 1
+        }
       }).then(res => {
         this.send_code = 30
         this.countdown()
