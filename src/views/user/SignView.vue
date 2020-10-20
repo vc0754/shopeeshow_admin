@@ -101,10 +101,11 @@ export default {
         if (!valid) return; // this.$message.error('提交失败!');
         if (this.formPSW.captcha !== this.identifyCode) return this.$message.error('验证码不匹配!');
         this.$http.post(`/User/Login`, this.formPSW).then(res => {
-          console.log(res)
-          sessionStorage.setItem('token', res.Data)
+          sessionStorage.setItem('token', res.Data.JwtToken)
           this.$store.dispatch(USER_SIGNIN, {
-            username: this.formPSW.UserName
+            username: res.Data.UserName,
+            email: res.Data.Email,
+            created: res.Data.CreateTime
           })
           this.$router.replace({ path: '/' })
         }).catch(err => {
