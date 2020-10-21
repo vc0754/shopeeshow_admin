@@ -109,7 +109,7 @@
         <el-table-column label="操作" width="190">
           <template slot-scope="scope">
             <router-link :to="`/task/detail?id=${scope.row.OrderNo}`">任务详情</router-link>
-            <router-link to="/task/detail" class="m-l-20">再次发布</router-link>
+            <router-link :to="`/task/add?id=${scope.row.OrderNo}`" class="m-l-20">再次发布</router-link>
           </template>
         </el-table-column>
       </el-table>

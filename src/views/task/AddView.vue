@@ -4,7 +4,7 @@
       <img src="../../assets/back.svg" alt="">
       <span>返回</span>
     </div>
-    
+
     <h3 class="section_title">发布任务</h3>
 
     <div class="desc">
@@ -75,6 +75,9 @@
         </div>
       </el-form-item>
     </el-form>
+
+    <!-- <pre>{{ form }}</pre>
+    <pre>{{ detail }}</pre> -->
 
     <template v-if="step === 2">
       <div class="formBatch">
@@ -276,6 +279,8 @@ export default {
       stores: [],       // 店铺
       cast: [],         // 费用规则
       ratios: [],       // 汇率
+      
+      detail: {},
 
       form: {
         store: '',      // 选择店铺
@@ -317,6 +322,9 @@ export default {
     }
   },
   computed: {
+    id() {
+      return this.$route.query.id
+    },
     next_abled() {
       return Boolean(this.form.store_id && this.form.country && this.form.currency && this.form.url && this.form.payment && this.form.number)
     },
@@ -388,6 +396,35 @@ export default {
     goback() {
       this.$router.go(-1)
     },
+    query_detail () {
+      this.$http.get('/Task/Detail', {
+        params: {
+          OrderNo: this.id
+        }
+      }).then(res => {
+        this.detail = res.Data
+
+        // let store = this.stores.find(item => item.Id === val)
+        // let country = this.countries.find(item => item.Id === store.Country)
+        let currency = this.currencies.find(item => item.Id === this.detail.CurrencyId)
+
+        this.form.store = this.detail.ShopName
+        this.form.store_id = this.detail.UserShopId
+        this.form.country = this.detail.CountryName
+        this.form.country_id = this.detail.CountryId
+        this.form.flag = currency.Flag
+        this.form.currency = currency.Name
+        this.form.url = this.detail.Url
+        this.form.payment = this.detail.PayMode.toFixed(0)
+        this.form.number = this.detail.Detail.length
+        this.goods.ItemId = this.detail.ItemId
+        this.goods.MainPic = this.detail.MainPic
+        this.goods.SaleCount = this.detail.SaleCount
+        this.goods.Title = this.detail.Title
+      }).catch(err => {
+        this.$message.error(err.data.Message)
+      });
+    },
     on_selected_store(val) {
       let store = this.stores.find(item => item.Id === val)
       let country = this.countries.find(item => item.Id === store.Country)
@@ -451,6 +488,7 @@ export default {
         number: ''      // 任务数
       }
       this.goods = {}
+      this.step = 1
     },
     on_setting() {
       if (this.form2.selected !== 'all') return
@@ -524,6 +562,7 @@ export default {
     query () {
       this.$http.get('/UserShop/GetList').then(res => {
         this.stores = res.Data
+        if (this.id) this.query_detail()
       }).catch(err => {
         this.$message.error(err.data.Message)
       });
