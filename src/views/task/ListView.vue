@@ -1,5 +1,10 @@
 <template>
   <section class="wrap">
+    <div class="goback" @click="goback">
+      <img src="../../assets/back.svg" alt="">
+      <span>返回</span>
+    </div>
+
     <h3 class="section_title">发布任务</h3>
     
     <el-form ref="form" :model="form" class="formDaterange bg-white flex flex-x-between flex-y-center">
@@ -71,7 +76,7 @@
         <el-table-column label="报名商品" min-width="380">
           <template slot-scope="scope">
             <div class="flex flex-y-center text-left p-l-15 p-r-15">
-              <img :src="scope.row.Url" alt="" class="thumb" />
+              <img :src="`http://${scope.row.MainPic}`" alt="" class="thumb" />
               <div class="flex flex-column lh-150">
                 <span>Id: {{ scope.row.ItemId }}</span>
                 <span>{{ scope.row.Title }}</span>
@@ -103,7 +108,7 @@
 
         <el-table-column label="操作" width="190">
           <template slot-scope="scope">
-            <router-link :to="`/task/detail?id=${scope.row.ItemId}`">任务详情</router-link>
+            <router-link :to="`/task/detail?id=${scope.row.OrderNo}`">任务详情</router-link>
             <router-link to="/task/detail" class="m-l-20">再次发布</router-link>
           </template>
         </el-table-column>
@@ -181,6 +186,9 @@ export default {
     }
   },
   methods: {
+    goback() {
+      this.$router.go(-1)
+    },
     countryShowName(id) {
       let item = this.countries.find(item => item.Id === id)
       return item ? item.Name : id

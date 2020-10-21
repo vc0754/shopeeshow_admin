@@ -1,5 +1,10 @@
 <template>
   <section class="wrap">
+    <div class="goback" @click="goback">
+      <img src="../../assets/back.svg" alt="">
+      <span>返回</span>
+    </div>
+    
     <h3 class="section_title">店铺管理</h3>
 
     <div class="add" @click="dialogVisible = true">
@@ -71,7 +76,9 @@ export default {
   computed: {
   },
   methods: {
-    
+    goback() {
+      this.$router.go(-1)
+    },
     countdown() {
       this.countID = setInterval(() => {
         --this.send_code

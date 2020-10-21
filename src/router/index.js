@@ -50,6 +50,11 @@ const routes = [
         component: () => import('@/views/task/ListView.vue' /* webpackChunkName: 'task' */)
       },
       {
+        path: '/task/detail',
+        meta: { title: '任务详情' },
+        component: () => import('@/views/task/DetailView.vue' /* webpackChunkName: 'taskdetail' */)
+      },
+      {
         path: '/settlement',
         meta: { title: '结算中心' },
         component: () => import('@/views/SettlementView.vue' /* webpackChunkName: 'settlement' */)

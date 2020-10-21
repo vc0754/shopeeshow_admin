@@ -1,5 +1,10 @@
 <template>
   <section class="wrap">
+    <div class="goback" @click="goback">
+      <img src="../../assets/back.svg" alt="">
+      <span>返回</span>
+    </div>
+
     <h3 class="section_title">支付流水</h3>
 
     <el-form ref="form" :model="form" class="formDaterange bg-white flex flex-x-between flex-y-center">
@@ -128,6 +133,9 @@ export default {
     }
   },
   methods: {
+    goback() {
+      this.$router.go(-1)
+    },
     stateShowName(id) {
       let item = this.statuses.find(item => item.value === id)
       return item ? item.label : id

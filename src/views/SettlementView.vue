@@ -1,5 +1,10 @@
 <template>
   <section class="wrap">
+    <div class="goback" @click="goback">
+      <img src="../assets/back.svg" alt="">
+      <span>返回</span>
+    </div>
+
     <h3 class="section_title">结算中心</h3>
 
     <el-form ref="form" :model="form" class="formDaterange bg-white flex flex-x-between flex-y-center">
@@ -225,160 +230,7 @@ export default {
         { label: '近30日', value: 30 },
         { label: '近90日', value: 90 }
       ],
-      countries: [],
-      tableData: [
-        {
-          "OrderNo": "SSA4545487323565",
-          "ItemId": 56487878,
-          "Url": "string",
-          "Title": "迈锐博304不锈钢转角水槽双槽套餐厨房洗菜盆圆槽水池淘菜盆M2008",
-          "MainPic": "string",
-          "SaleCount": 0,
-          "UserShopId": 0,
-          "ShopName": "虾皮SHOWxxx店",
-          "CountryId": 1,
-          "CountryName": "string",
-          "CurrencyId": 0,
-          "Currency": "string",
-          "TaskCount": 10,
-          "SuccCount": 4,
-          "WaitSuccCount": 0,
-          "WaitPayCost": 1000.00,
-          "PaySuccCost": 1200.00,
-          "Pub_TotalCost": 0,
-          "TotalCost": 0,
-          "State": 1,
-          "StateStr": "string",
-          "VerifyFailMsg": "string",
-          "PayMode": 1,
-          "PayModeStr": "string",
-          "CreateTime": "2020-10-20T04:15:46.231Z",
-          "Detail": [
-            {
-              "SubOrderNo": "1",
-              "OrderNo": "5454544454",
-              "SearchKey": "string",
-              "BuyCount": 0,
-              "OrderPrice": 0,
-              "Comment": "string",
-              "CommentPic": "string",
-              "Remark": "string",
-              "FollowShop": true,
-              "FollowShop_Cost": 0,
-              "CollectGoods": true,
-              "CollectGoods_Cost": "string",
-              "AddShoppingCart": true,
-              "AddShoppingCart_Cost": 0,
-              "Pub_OrderCost": 180.00,
-              "Pub_CommissionCost": 40,
-              "Pub_TotalCost": 280,
-              "OrderCost": 200.00,
-              "CommissionCost": 50,
-              "TotalCost": 250,
-              "SubmitTime": "2020-10-20T04:15:46.231Z",
-              "SurplusPayTime": "2020-10-20T04:15:46.231Z",
-              "PayTime": "2020-10-20T04:15:46.231Z",
-              "PayBillNo": "string",
-              "Sp_OrderNo": "string",
-              "Sp_Uid": "string",
-              "Sp_NickName": "丢内",
-              "State": 1,
-              "StateStr": "待支付"
-            },
-            {
-              "SubOrderNo": "2",
-              "OrderNo": "5454544454",
-              "SearchKey": "string",
-              "BuyCount": 0,
-              "OrderPrice": 0,
-              "Comment": "string",
-              "CommentPic": "string",
-              "Remark": "string",
-              "FollowShop": true,
-              "FollowShop_Cost": 0,
-              "CollectGoods": true,
-              "CollectGoods_Cost": "string",
-              "AddShoppingCart": true,
-              "AddShoppingCart_Cost": 0,
-              "Pub_OrderCost": 180.00,
-              "Pub_CommissionCost": 40,
-              "Pub_TotalCost": 280,
-              "OrderCost": 200.00,
-              "CommissionCost": 50,
-              "TotalCost": 250,
-              "SubmitTime": "2020-10-20T04:15:46.231Z",
-              "SurplusPayTime": "2020-10-20T04:15:46.231Z",
-              "PayTime": "2020-10-20T04:15:46.231Z",
-              "PayBillNo": "string",
-              "Sp_OrderNo": "string",
-              "Sp_Uid": "string",
-              "Sp_NickName": "丢内",
-              "State": 7,
-              "StateStr": "支付完成"
-            }
-          ]
-        },
-        {
-          "OrderNo": "SSA4545487323565",
-          "ItemId": 56487878,
-          "Url": "string",
-          "Title": "迈锐博304不锈钢转角水槽双槽套餐厨房洗菜盆圆槽水池淘菜盆M2008",
-          "MainPic": "string",
-          "SaleCount": 0,
-          "UserShopId": 0,
-          "ShopName": "虾皮SHOWxxx店",
-          "CountryId": 1,
-          "CountryName": "string",
-          "CurrencyId": 0,
-          "Currency": "string",
-          "TaskCount": 10,
-          "SuccCount": 4,
-          "WaitSuccCount": 0,
-          "WaitPayCost": 1000.00,
-          "PaySuccCost": 1200.00,
-          "Pub_TotalCost": 0,
-          "TotalCost": 0,
-          "State": 1,
-          "StateStr": "string",
-          "VerifyFailMsg": "string",
-          "PayMode": 1,
-          "PayModeStr": "string",
-          "CreateTime": "2020-10-20T04:15:46.231Z",
-          "Detail": [
-            {
-              "SubOrderNo": "string",
-              "OrderNo": "string",
-              "SearchKey": "string",
-              "BuyCount": 0,
-              "OrderPrice": 0,
-              "Comment": "string",
-              "CommentPic": "string",
-              "Remark": "string",
-              "FollowShop": true,
-              "FollowShop_Cost": 0,
-              "CollectGoods": true,
-              "CollectGoods_Cost": "string",
-              "AddShoppingCart": true,
-              "AddShoppingCart_Cost": 0,
-              "Pub_OrderCost": 0,
-              "Pub_CommissionCost": 0,
-              "Pub_TotalCost": 0,
-              "OrderCost": 0,
-              "CommissionCost": 0,
-              "TotalCost": 0,
-              "SubmitTime": "2020-10-20T04:15:46.231Z",
-              "SurplusPayTime": "2020-10-20T04:15:46.231Z",
-              "PayTime": "2020-10-20T04:15:46.231Z",
-              "PayBillNo": "string",
-              "Sp_OrderNo": "string",
-              "Sp_Uid": "string",
-              "Sp_NickName": "string",
-              "State": 1,
-              "StateStr": "string"
-            }
-          ]
-        }
-      ]
+      countries: []
     }
   },
   filters: {
@@ -401,6 +253,9 @@ export default {
     }
   },
   methods: {
+    goback() {
+      this.$router.go(-1)
+    },
     DaKuang() {
       this.dialogVisible = true
     },
