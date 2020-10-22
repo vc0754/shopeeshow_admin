@@ -50,11 +50,7 @@
 
     <div class="formTable">
       <el-tabs type="card" v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="全部（13）" name="tab1"></el-tab-pane>
-        <el-tab-pane label="待审核（4）" name="tab2"></el-tab-pane>
-        <el-tab-pane label="进行中（5）" name="tab3"></el-tab-pane>
-        <el-tab-pane label="被驳回（1）" name="tab4"></el-tab-pane>
-        <el-tab-pane label="任务结束（3）" name="tab5"></el-tab-pane>
+        <el-tab-pane :label="`${item.label}（${item.number}）`" :name="`tab${item.value}`" v-for="(item, index) in statuses" :key="index"></el-tab-pane>
       </el-tabs>
       
       <el-table stripe :data="items" v-loading="loading" style="width: 100%;">
@@ -143,10 +139,10 @@ export default {
         OrderNo: '',
         name: '',
         country: '',
-        status: '',
+        status: 9999,
         times: 30
       },
-      activeName: 'tab1',
+      activeName: 'tab9999',
       currentPage: 1,
       pageSize: 10,
       total: 0,
@@ -158,11 +154,11 @@ export default {
       ],
       countries: [],
       statuses: [
-        { label: '全部', value: ''},
-        { label: '待审核', value: 1},
-        { label: '进行中', value: 2},
-        { label: '被驳回', value: 3},
-        { label: '任务结束', value: 4}
+        { label: '全部', value: 9999, number: 0},
+        { label: '待审核', value: 1, number: 0},
+        { label: '进行中', value: 2, number: 0},
+        { label: '被驳回', value: 3, number: 0},
+        { label: '任务结束', value: 4, number: 0}
       ]
     }
   },
@@ -202,7 +198,7 @@ export default {
         CountryId: this.form.country,
         OrderNo: this.form.OrderNo,
         Title: this.form.name,
-        State: this.form.status
+        State: this.form.status === 9999 ? '' : this.form.status
       }
       // console.log(params)
       this.loading = true
@@ -224,15 +220,22 @@ export default {
         this.$message.error(err.data.Message)
       });
     },
+    get_counts() {
+      this.$http.get('/Task/Search_StateCount').then(res => {
+        this.statuses[0].number = res.Data.SumCount
+        this.statuses[1].number = res.Data.WaitVerifyCount
+        this.statuses[2].number = res.Data.TaskIngCount
+        this.statuses[3].number = res.Data.VerifyFailCount
+        this.statuses[4].number = res.Data.TaskEndCount
+      }).catch(err => {
+        this.$message.error(err.data.Message)
+      });
+    },
     goto(path) {
       this.$router.push(path)
     },
     handleClick() {
-      if (this.activeName === 'tab1') this.form.status =  ''
-      if (this.activeName === 'tab2') this.form.status =  1
-      if (this.activeName === 'tab3') this.form.status =  2
-      if (this.activeName === 'tab4') this.form.status =  3
-      if (this.activeName === 'tab5') this.form.status =  4
+      this.form.status = parseInt(this.activeName.substring(3))
       this.onSearch()
     },
     handleSizeChange(val) {
@@ -250,6 +253,7 @@ export default {
   mounted() {
     this.get_country()
     this.onSearch()
+    this.get_counts()
   }
 }
 </script>
