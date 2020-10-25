@@ -57,30 +57,39 @@
       <el-table stripe :data="detail.Detail" v-loading="loading" style="width: 100%;">
         <el-table-column type="index" label="序号" width="55"></el-table-column>
 
-        <el-table-column prop="SearchKey" label="关键词"></el-table-column>
+        <el-table-column prop="SearchKey" label="关键词" min-width="80"></el-table-column>
 
-        <el-table-column label="下单价格">
+        <el-table-column label="下单价格" width="80">
           <template slot-scope="scope">
             <span>{{ scope.row.OrderPrice | fixed2 }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="BuyCount" label="数量"></el-table-column>
-        <el-table-column prop="Comment" label="评语"></el-table-column>
-        <el-table-column prop="CommentPic" label="图片"></el-table-column>
-        <el-table-column prop="Remark" label="特殊要求备注" min-width="180"></el-table-column>
-        <el-table-column prop="Sp_NickName" label="买家昵称"></el-table-column>
-        <el-table-column prop="SubOrderNo" label="下单单号" min-width="180"></el-table-column>
-        <el-table-column prop="StateStr" label="订单状态"></el-table-column>
-        <el-table-column prop="SurplusPayTime" label="剩余支付时间" min-width="130"></el-table-column>
+        <el-table-column prop="BuyCount" label="数量" width="55"></el-table-column>
 
-        <el-table-column label="关注、收藏、加购金额" min-width="150">
+        <el-table-column prop="Comment" label="评语" min-width="280"></el-table-column>
+
+        <el-table-column label="图片" width="92">
+          <template slot-scope="scope">
+            <div class="thumbs">
+              <img :src="item" alt="" v-for="(item, index) in scope.row.CommentPic" :key="index">
+            </div>
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="Remark" label="特殊要求（颜色，尺寸等）" min-width="100"></el-table-column>
+        <el-table-column prop="Sp_NickName" label="买家昵称" width="80"></el-table-column>
+        <el-table-column prop="SubOrderNo" label="下单单号" min-width="60"></el-table-column>
+        <el-table-column prop="StateStr" label="订单状态" min-width="50"></el-table-column>
+        <el-table-column prop="SurplusPayTime" label="剩余支付时间" min-width="50"></el-table-column>
+
+        <el-table-column label="关注、收藏 加购金额" min-width="50">
           <template slot-scope="scope">
             <span>{{ (scope.row.FollowShop_Cost * 1 + scope.row.CollectGoods_Cost * 1 + scope.row.AddShoppingCart_Cost * 1) | fixed2 }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="付款金额">
+        <el-table-column label="付款金额" min-width="45">
           <template slot-scope="scope">
             <div class="flex flex-column">
               <span class="red">{{ scope.row.Pub_OrderCost | fixed2 }}</span>
@@ -89,7 +98,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="佣金">
+        <el-table-column label="佣金" min-width="45">
           <template slot-scope="scope">
             <div class="flex flex-column">
               <span class="red">{{ scope.row.Pub_CommissionCost | fixed2 }}</span>
@@ -100,6 +109,29 @@
       </el-table>
     </div>
 
+    <!-- 加购 -->
+    <div class="formTable m-b-20" v-if="AddplusForm.add">
+      <el-table stripe :data="[{}]" style="width: 100%">
+        <el-table-column label="加购商品信息（以下为每条订单的加购商品信息）" width="440">
+          <div class="flex flex-y-center">
+            <img :src="`http://${AddplusForm.img}`" alt="" style="width:47px;height:47px;">
+            <div class="p-l-15 text-left">{{ AddplusForm.url }}</div>
+          </div>
+        </el-table-column>
+
+        <el-table-column label="数量" width="80px">
+          <span>{{ AddplusForm.amount }}</span>
+        </el-table-column>
+
+        <el-table-column label="金额" width="150px">
+          <span>{{ AddplusForm.price | fixed2 }}</span>
+        </el-table-column>
+
+        <el-table-column></el-table-column>
+      </el-table>
+    </div>
+    
+    <!-- 合计 -->
     <div class="formTable">
       <el-table stripe :data="[{}]" v-loading="loading" style="width: 100%;">
         <el-table-column label="合计">
@@ -182,6 +214,15 @@ export default {
     return {
       detail: {},
       ratios: [],       // 汇率
+
+      AddplusForm: {                // 加购商品信息
+        add: false,
+        url: '',
+        title: '',
+        img: '',
+        amount: 0,
+        price: 0
+      },
 
       currentPage: 1,
       pageSize: 10,
@@ -292,7 +333,21 @@ export default {
           OrderNo: this.id
         }
       }).then(res => {
+        res.Data.Detail.map(item => {
+          item.CommentPic = item.CommentPic ? JSON.parse(item.CommentPic) : []
+          return item
+        })
+        // res.Data.CommentPic = JSON.parse(res.Data.CommentPic)
+
         this.detail = res.Data
+
+        this.AddplusForm.add = res.Data.AddedGoods.Url ? true : false
+        this.AddplusForm.url = res.Data.AddedGoods.Url
+        this.AddplusForm.title = res.Data.AddedGoods.Title
+        this.AddplusForm.img = res.Data.AddedGoods.MainPic
+        this.AddplusForm.amount = res.Data.AddedGoods.BuyCount
+        this.AddplusForm.price = res.Data.AddedGoods.OrderPrice
+
         this.loading = false
       }).catch(err => {
         this.loading = false
@@ -375,4 +430,9 @@ export default {
 
 .orange { color: #FF5500;}
 .red { color: #C00017;}
+
+.thumbs {
+  display: flex;
+  img { width: 36px; height: 36px; margin: 2px;}
+}
 </style>

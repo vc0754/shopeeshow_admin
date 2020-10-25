@@ -107,10 +107,12 @@
           </div>
           
           <el-button type="primary" @click="on_setting">立即设置</el-button>
-          <el-button type="primary">批量加购</el-button>
+          <el-button type="primary" @click="addplus_cancel" v-if="AddplusForm.add">取消加购</el-button>
+          <el-button type="primary" @click="addplus" v-else>批量加购</el-button>
         </div>
       </div>
 
+      <!-- 批量 -->
       <div class="formTable formTable2">
         <el-table stripe :data="tableData" style="width: 100%">
           <el-table-column type="index" label="序号" width="60"></el-table-column>
@@ -142,7 +144,7 @@
           <el-table-column label="晒图" width="100">
             <div>
               <el-upload
-                action="https://jsonplaceholder.typicode.com/posts/"
+                :action="`${this.$http.defaults.baseURL}/File/UploadFile`"
                 list-type="picture-card"
                 :on-preview="handlePictureCardPreview"
                 :on-remove="handleRemove">
@@ -152,7 +154,7 @@
             </div>
           </el-table-column>
 
-          <el-table-column label="特殊要求请备注" width="200">
+          <el-table-column label="特殊要求（颜色，尺寸等）" width="200">
             <template slot-scope="scope">
               <el-input placeholder="备注" style="width:180px;" v-model="scope.row.remark"></el-input>
             </template>
@@ -211,6 +213,29 @@
         </el-table>
       </div>
 
+      <!-- 加购 -->
+      <div class="formTable" v-if="AddplusForm.add">
+        <el-table stripe :data="[{}]" style="width: 100%">
+          <el-table-column label="加购商品信息（以下为每条订单的加购商品信息）" width="440">
+            <div class="flex flex-y-center">
+              <img :src="`http://${AddplusForm.img}`" alt="" style="width:47px;height:47px;">
+              <div class="p-l-15 text-left">{{ AddplusForm.url }}</div>
+            </div>
+          </el-table-column>
+
+          <el-table-column label="数量" width="80px">
+            <span>{{ AddplusForm.amount }}</span>
+          </el-table-column>
+
+          <el-table-column label="金额" width="150px">
+            <span>{{ AddplusForm.price | fixed2 }}</span>
+          </el-table-column>
+
+          <el-table-column></el-table-column>
+        </el-table>
+      </div>
+      
+      <!-- 合计 -->
       <div class="formTable">
         <el-table stripe :data="[{}]" style="width: 100%">
           <el-table-column label="合计" width="163">
@@ -261,10 +286,41 @@
         </el-table>
       </div>
 
-      <div class="submitAll">
-        <el-button type="primary" @click="submit" :disabled="!submit_abled">确认无误发布</el-button>
+      <div class="submitAll" style="padding-bottom:30px;">
+        <el-button type="primary" @click="submit" :disabled="!submit_abled" v-loading.fullscreen.lock="fullscreenLoading">确认无误发布</el-button>
       </div>
     </template>
+
+    
+    <!-- 加购对话框 -->
+    <el-dialog title="加购商品" width="1000px" :visible.sync="dialogVisibleAddplus" class="addplus-form">
+      <el-table stripe :data="[{}]" style="width: 100%;">
+        <el-table-column label="商品链接" width="400">
+          <el-input v-model="AddplusForm.url" placeholder="" @blur="on_addplus_input_blured"></el-input>
+        </el-table-column>
+
+        <el-table-column label="商品标题" min-width="180">
+          <div class="title">{{ AddplusForm.title }}</div>
+        </el-table-column>
+
+        <el-table-column label="主图" width="70">
+          <img :src="`http://${AddplusForm.img}`" alt="">
+        </el-table-column>
+
+        <el-table-column label="件数" width="80">
+          <el-input v-model="AddplusForm.amount" placeholder=""></el-input>
+        </el-table-column>
+
+        <el-table-column label="下单金额" width="100">
+          <el-input v-model="AddplusForm.price" placeholder=""></el-input>
+        </el-table-column>
+      </el-table>
+      <div slot="footer" class="flex flex-x-right flex-y-center">
+        <el-button type="primary" @click="addplus_confirm">确定</el-button>
+        <el-button @click="dialogVisibleAddplus = false">退出</el-button>
+      </div>
+    </el-dialog>
+
   </section>
 </template>
 
@@ -274,6 +330,17 @@ export default {
   components: {},
   data () {
     return {
+      fullscreenLoading: false,     // 全屏加载
+      dialogVisibleAddplus: false,  // 加购商品对话框
+      AddplusForm: {                // 加购商品信息
+        add: false,
+        url: '',
+        title: '',
+        img: '',
+        amount: 0,
+        price: 0
+      },
+
       currencies: [],   // 币种
       countries: [],    // 国家
       stores: [],       // 店铺
@@ -318,7 +385,7 @@ export default {
   filters: {
     fixed2(str) {
       if (!str) return '-'
-      return str.toFixed(2)
+      return (str * 1).toFixed(2)
     }
   },
   computed: {
@@ -393,6 +460,31 @@ export default {
     }
   },
   methods: {
+    on_addplus_input_blured() {
+      if (!this.AddplusForm.url) return
+      this.$http.post('/Task/GetGoodsInfo', {
+        GoodsUrl: this.AddplusForm.url
+      }).then(res => {
+        this.AddplusForm.title = res.Data.Title
+        this.AddplusForm.img = res.Data.MainPic
+      }).catch(err => {
+        this.$message.error(err.data.Message)
+      });
+    },
+    addplus() {
+      this.dialogVisibleAddplus = true
+    },
+    addplus_confirm() {
+      if (this.AddplusForm.url && this.AddplusForm.title && this.AddplusForm.amount && this.AddplusForm.price) {
+        this.AddplusForm.add = true
+        this.dialogVisibleAddplus = false
+        this.calculate()
+      }
+    },
+    addplus_cancel() {
+      this.AddplusForm.add = false
+      this.calculate()
+    },
     goback() {
       this.$router.go(-1)
     },
@@ -492,6 +584,11 @@ export default {
     },
     on_setting() {
       if (this.form2.selected !== 'all') return
+      this.calculate()
+    },
+
+    // 计算
+    calculate() {
       this.tableData.map(item => {
         if (this.form2.keyword) item.keyword = this.form2.keyword
         if (this.form2.price) item.price = parseFloat(this.form2.price)
@@ -515,7 +612,7 @@ export default {
         } else {
           item.price_3_bool = false
         }
-        item.price_yugu = parseFloat(item.price * item.amount)
+        item.price_yugu = parseFloat(item.price * item.amount + (this.AddplusForm.add ? this.AddplusForm.amount * this.AddplusForm.price: 0))
         item.yongjin_yugu = this.yongjin_price
         item.total = parseFloat(item.price_yugu + item.yongjin_yugu + item.price_1 + item.price_2 + item.price_3)
         return item
@@ -568,6 +665,8 @@ export default {
       });
     },
     submit() {
+      this.fullscreenLoading = true;
+      
       let detail = []
       this.tableData.map(item => {
         detail.push({
@@ -589,13 +688,25 @@ export default {
         SaleCount: this.goods.SaleCount,
         UserShopId: this.form.store_id,
         Detail: detail,
+        AddedGoods: {
+          Url: this.AddplusForm.url,
+          Title: this.AddplusForm.title,
+          MainPic: this.AddplusForm.img,
+          BuyCount: parseFloat(this.AddplusForm.amount),
+          OrderPrice: parseFloat(this.AddplusForm.price),
+          Comment: '',
+          CommentPic: [],
+          Remark: ''
+        },
         PayMode: parseInt(this.form.payment),
         TotalCost: parseFloat((this.sub_total_all).toFixed(2))
       }
       this.$http.post('/Task/Add', params).then(() => {
+        this.fullscreenLoading = false
         this.$message.success('添加成功')
         this.$router.replace({ path: '/task/list' })
       }).catch(err => {
+        this.fullscreenLoading = false
         this.$message.error(err.data.Message)
       })
     }
@@ -685,26 +796,6 @@ export default {
 
 .red { color: #C00017;}
 
-
-// .el-radio__inner { background-color: #d7d7d7; border-color: #d7d7d7; border-radius: 50%;}
-// .el-radio__inner::after {
-//   transform: rotate(45deg) scaleY(1);
-//   box-sizing: content-box;
-//   content: "";
-//   border: 1px solid #FFF;
-//   border-left: 0;
-//   border-top: 0;
-//   height: 7px;
-//   left: 4px;
-//   position: absolute;
-//   top: 1px;
-//   transform: rotate(45deg) scaleY(0);
-//   width: 3px;
-//   transition: transform .15s ease-in .05s;
-//   transform-origin: center;
-//   border-radius: 0;
-//   background-color: transparent;
-// }
 .el-radio__input.is-checked+.el-radio__label { color: #606266;}
 
 .grayinput .el-input__inner { background-color: #f2f2f2; border-color: #eaeaea; text-align: center;}
@@ -714,4 +805,18 @@ export default {
 .el-upload-list__item.is-success .el-upload-list__item-status-label { visibility: hidden;}
 // .el-upload-list--picture-card .el-upload-list__item-actions span { visibility: hidden;}
 .el-upload--picture-card { width: 22px; height: 22px;}
+
+.addplus-form {
+  .el-dialog__header {
+    background-color: rgba(243, 246, 249, 1);
+    border: solid 1px rgba(215, 215, 215, 1);
+    text-align: center;
+    height: 59px; padding: 0;
+    display: flex; justify-content: center; align-items: center;
+    .el-dialog__title {
+      font-size: 16px;
+    }
+  }
+  .title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+}
 </style>

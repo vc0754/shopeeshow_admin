@@ -129,21 +129,21 @@
         </div>
 
         <div class="card">
-          <p class="fs-18 m-b-10"><span class="num m-r-5">12</span>个任务</p>
+          <p class="fs-18 m-b-10"><span class="num m-r-5">{{ counts.WaitPayCount }}</span>个任务</p>
           <p class="flex" style="color:#aaa;">
             <img src="../assets/alert.svg" alt="" class="m-r-10">24小时内未返款可能导致买手退款
           </p>
         </div>
 
         <div class="card">
-          <p class="fs-18 m-b-10"><span class="num m-r-5">8</span>个任务</p>
+          <p class="fs-18 m-b-10"><span class="num m-r-5">{{ counts.TaskRejectCount }}</span>个任务</p>
           <p class="flex" style="color:#aaa;">
             <img src="../assets/alert.svg" alt="" class="m-r-10">7天内被平台驳回的任务数
           </p>
         </div>
 
         <div class="card">
-          <p class="fs-18 m-b-10"><span class="num m-r-5">6</span>个订单</p>
+          <p class="fs-18 m-b-10"><span class="num m-r-5">{{ counts.PayRejectCount }}</span>个订单</p>
           <p class="flex" style="color:#aaa;">
             <img src="../assets/alert.svg" alt="" class="m-r-10">当前所有支付被驳回的订单数
           </p>
@@ -164,17 +164,26 @@ export default {
   components: {},
   data () {
     return {
-      data: {}
+      data: {},
+      counts: {}
     }
   },
   computed: {
   },
   methods: {
     query () {
-      this.$http.post('/api/Home/GetTotalStatistics').then(res => {
+      this.$http.get('/Home/NoticeList', {
+        PageIndex: 1,
+        PageSize: 20
+      }).then(res => {
         this.data = res.data
       }).catch(err => {
         this.$message.error(err.data.message)
+      })
+    },
+    query2() {
+      this.$http.get('/Home/GetTaskState').then(res => {
+        this.counts = res.Data
       })
     },
     goto(path) {
@@ -184,11 +193,8 @@ export default {
   watch: {
   },
   mounted () {
-    // this.query()
-  },
-  beforeCreate () {
-  },
-  beforeDestroy() {
+    this.query()
+    this.query2()
   }
 }
 </script>

@@ -4,11 +4,7 @@
 
       <div class="sign-page">
         <div class="brand">
-          <img alt="" src="../../assets/logo.png">
-          <div>
-            <span>Shopee</span>
-            <span>show</span>
-          </div>
+          <img alt="" :src="sys.logo">
         </div>
 
         <el-form class="sign-content" ref="formPSW" :model="formPSW">
@@ -22,7 +18,7 @@
           
           <el-form-item style="margin-bottom: 5px;">
             <el-input v-model="formPSW.captcha" placeholder="请输入验证码" :maxlength="6" style="width:165px;" />
-            <s-identify :identifyCode="identifyCode" :contentWidth="contentWidth" :contentHeight="contentHeight" class="captcha"></s-identify>
+            <s-identify :identifyCode="identifyCode" :contentWidth="contentWidth" :contentHeight="contentHeight" class="captcha" @click.native="refreshCode"></s-identify>
           </el-form-item>
           
           <el-form-item>
@@ -51,7 +47,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { USER_SIGNIN } from '@/store/modules/user'
 import SIdentify  from '@/components/sidentify'
 export default {
@@ -74,8 +70,7 @@ export default {
       loading: false
     }
   },
-  computed: {
-  },
+  computed: mapState({ sys: state => state.sys }),
   methods: {
     ...mapActions([USER_SIGNIN]),
     
@@ -142,7 +137,7 @@ export default {
   display: flex; flex-direction: column; align-items: center;
   
   .brand {
-    width: 100%; margin-bottom: 34px;
+    width: 100%; margin-bottom: 24px;
   }
   
   .sign-content {

@@ -2,11 +2,7 @@
   <nav>
     <header class="nav-header">
       <router-link to="/" class="brand">
-        <img alt="" src="../../assets/logo.png">
-        <div>
-          <span>Shopee</span>
-          <span>show</span>
-        </div>
+        <img alt="" :src="sys.logo">
       </router-link>
     </header>
     
@@ -53,6 +49,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'AdminMenu',
   data () {
@@ -60,8 +57,7 @@ export default {
       menus: []
     }
   },
-  computed: {
-  },
+  computed: mapState({ sys: state => state.sys }),
   methods: {
   },
   mounted() {
