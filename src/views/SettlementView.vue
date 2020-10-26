@@ -2,7 +2,7 @@
   <section class="wrap">
     <div class="goback" @click="goback">
       <img src="../assets/back.svg" alt="">
-      <span>返回</span>
+      <span>{{ $t('goback') }}</span>
     </div>
 
     <h3 class="section_title">结算中心</h3>
@@ -39,14 +39,15 @@
     </div>
 
     <div class="formTable">
-      
-      <el-table stripe :data="items" v-loading="loading" style="width: 100%" ref="multipleTable" @select="table_selected" @select-all="table_selected_all" @selection-change="handleSelectionChange">
+      <!-- <el-checkbox :indeterminate="a" v-model="b">全选</el-checkbox> -->
+
+      <el-table stripe :data="items" v-loading="loading" style="width: 100%" ref="multipleTable" @selection-change="handleSelectionChange" @expand-change="expand_change">
         <el-table-column type="selection" :selectable="checkbox_select" width="55"></el-table-column>
         
         <el-table-column type="expand" width="35">
           <template slot-scope="props">
             
-            <el-table stripe border :data="props.row.Detail" style="width: 100%" @selection-change="handleSelectionChange2">
+            <el-table stripe border :data="props.row.Detail" style="width: 100%" :ref="`multipleTable2_${props.row.Id}`" @selection-change="handleSelectionChange2">
               <el-table-column type="selection" label="序号" :selectable="checkbox_select" width="55"></el-table-column>
 
               <el-table-column type="index" label="序号" width="80"></el-table-column>
@@ -159,11 +160,11 @@
 
       <!-- <pre>{{ multipleSelection }}</pre> -->
       <!-- <pre>{{ multipleSelection2 }}</pre> -->
-      <!-- <pre>{{ payment_country }}</pre>
-      <pre>{{ selected_orders_sn }}</pre>
-      <pre>{{ selected_orders_country }}</pre>
-      <pre>{{ selected_orders_currency }}</pre>
-      <pre>{{ selected_orders_total }}</pre> -->
+      <!-- <pre>{{ payment_country }}</pre> -->
+      <!-- <pre>{{ selected_orders_sn }}</pre> -->
+      <!-- <pre>{{ selected_orders_country }}</pre> -->
+      <!-- <pre>{{ selected_orders_currency }}</pre> -->
+      <!-- <pre>{{ selected_orders_total }}</pre> -->
     
       <el-dialog title="支付中..." width="944px" :visible.sync="dialogVisible" class="payment-form">
         <div class="col-left">
@@ -235,6 +236,8 @@ export default {
   components: {},
   data () {
     return {
+      a: true,
+      b: true,
       countries: [],        // 国家
       currencies: [],       // 货币
       ratios: [],           // 汇率
@@ -409,35 +412,68 @@ export default {
       return row.State === 3 || row.State === 5 || row.State === 6 ? 1 : 0
     },
 
+    expand_change(row, expandedRows, expanded) {
+      console.log(row, expandedRows, expanded)
+    },
+
     handleSelectionChange(val) {
       this.multipleSelection = val
-      console.log('父表格单选状态改变')
-    },
-    table_selected(selection, row) {
-      console.log(selection, row.Id)
-      // items.map(item => {
-      //   item.Id === row.Id
-      // })
-      // this.$refs.multipleTable.toggleRowSelection(row);
-      console.log('父表格单选')
-    },
-    table_selected_all(selection) {
-      console.log(selection)
-      console.log('父表格全选')
+      
+      if (val.length) {
+        val.map(item => {
+          let childrens = item.Detail.filter(item2 => item2.State === 3 || item2.State === 5 || item2.State === 6)
+          if (childrens.length) {
+            if (this.$refs[`multipleTable2_${item.Id}`]) {
+              childrens.forEach(row => {
+                if (!this.multipleSelection2.includes(row)) {
+                  this.$refs[`multipleTable2_${item.Id}`].toggleRowSelection(row)
+                }
+              })
+            } else {
+              this.multipleSelection2 = childrens
+            }
+            // console.log(`multipleTable2_${item.Id}`)
+          }
+        })
+      } else {
+        this.items.map(item => {
+          if (this.$refs[`multipleTable2_${item.Id}`]) {
+            this.$refs[`multipleTable2_${item.Id}`].clearSelection()
+          } else {
+            this.multipleSelection2 = []
+          }
+        })
+      }
     },
     
     handleSelectionChange2(val) {
       this.multipleSelection2 = val
-      // console.log('子表格单选状态改变')
-      // 父级
-      let selected_orders_sn = val.map(item => item.SubOrderNo)
-      let item = this.items.find(item => {
-        return item.Detail.find(item2 => {
-          return selected_orders_sn.includes(item2.SubOrderNo)
-        })
-      })
-      // this.sub_orders_parent_order = item || []
-      this.sub_orders_parent_order_CountryId = item && item.CountryId || 0
+      
+      // console.log(val)
+      // let parents = this.items.filter(item => {
+      //   return item.Detail.find(item2 => {
+      //     return this.selected_orders_sn.includes(item2.SubOrderNo)
+      //   })
+      // })
+      // if (parents.length) {
+      //   parents.forEach(row => {
+      //     if (!this.multipleSelection.includes(row)) {
+      //       this.$refs.multipleTable.toggleRowSelection(row)
+      //     }
+      //   })
+      // } else {
+      //   this.$refs.multipleTable.clearSelection()
+      // }
+      
+      // // 父级
+      // let selected_orders_sn = val.map(item => item.SubOrderNo)
+      // let item = this.items.find(item => {
+      //   return item.Detail.find(item2 => {
+      //     return selected_orders_sn.includes(item2.SubOrderNo)
+      //   })
+      // })
+      // // this.sub_orders_parent_order = item || []
+      // this.sub_orders_parent_order_CountryId = item && item.CountryId || 0
     },
     
     onReset() {

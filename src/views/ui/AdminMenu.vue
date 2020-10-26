@@ -8,42 +8,19 @@
     
     <div class="color_block"></div>
 
-    <el-menu :default-active="default_active" router class="p-t-20">
+    <el-menu :default-active="default_active" router class="p-t-20" :collapse="isCollapse">
 
-      <el-menu-item index="/">
+      <el-menu-item :index="item.url" v-for="(item, index) in menus" :key="index">
         <div slot="title">
-          <img alt="" src="../../assets/home.svg">
-          <span>首页</span>
+          <img alt="" :src="item.icon">
+          <span>{{ item.label }}</span>
         </div>
       </el-menu-item>
 
-      <el-menu-item index="/store/list">
-        <div slot="title">
-          <img alt="" src="../../assets/store.svg">
-          <span>店铺管理</span>
-        </div>
-      </el-menu-item>
-
-      <el-menu-item index="/task/list">
-        <div slot="title">
-          <img alt="" src="../../assets/task.svg">
-          <span>任务管理</span>
-        </div>
-      </el-menu-item>
-
-      <el-menu-item index="/settlement">
-        <div slot="title">
-          <img alt="" src="../../assets/settlement.svg">
-          <span>结算中心</span>
-        </div>
-      </el-menu-item>
-
-      <el-menu-item index="/transition">
-        <div slot="title">
-          <img alt="" src="../../assets/trans2.svg">
-          <span>支付流水</span>
-        </div>
-      </el-menu-item>
+      <!-- <el-menu-item index="/transition">
+        <i class="el-icon-setting"></i>
+        <span slot="title">支付流水</span>
+      </el-menu-item> -->
     </el-menu>
   </nav>
 </template>
@@ -54,7 +31,34 @@ export default {
   name: 'AdminMenu',
   data () {
     return {
-      menus: []
+      isCollapse: false,
+      menus: [
+        {
+          url: '/',
+          icon: require('../../assets/home.svg'),
+          label: this.$t('nav.shouye')
+        },
+        {
+          url: '/store/list',
+          icon: require('../../assets/store.svg'),
+          label: this.$t('nav.dianpuguanli')
+        },
+        {
+          url: '/task/list',
+          icon: require('../../assets/task.svg'),
+          label: this.$t('nav.renwuguanli')
+        },
+        {
+          url: '/settlement',
+          icon: require('../../assets/settlement.svg'),
+          label: this.$t('nav.jiesuanzhongxin')
+        },
+        {
+          url: '/transition',
+          icon: require('../../assets/trans2.svg'),
+          label: this.$t('nav.zhifuliushui')
+        }
+      ]
     }
   },
   computed: mapState({

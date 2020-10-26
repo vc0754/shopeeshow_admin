@@ -2,7 +2,7 @@
   <header class="header">
     <div class="flex">
       <img src="../../assets/toggle.svg" alt="" style="cursor: pointer;" class="" />
-      <span class="fs-12 m-l-10" style="color:#333;">店铺商家端管理后台</span>
+      <span class="fs-12 m-l-10" style="color:#333;">{{ $t('header.left') }}</span>
     </div>
     <div class="flex">
       <img src="../../assets/lan.svg" alt="语言" style="cursor: pointer;" class="" />

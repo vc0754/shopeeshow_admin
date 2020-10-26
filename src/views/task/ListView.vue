@@ -2,7 +2,7 @@
   <section class="wrap">
     <div class="goback" @click="goback">
       <img src="../../assets/back.svg" alt="">
-      <span>返回</span>
+      <span>{{ $t('goback') }}</span>
     </div>
 
     <h3 class="section_title">发布任务</h3>

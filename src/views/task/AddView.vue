@@ -145,9 +145,11 @@
             <div>
               <el-upload
                 :action="`${this.$http.defaults.baseURL}/File/UploadFile`"
+                name="files"
                 list-type="picture-card"
                 :on-preview="handlePictureCardPreview"
-                :on-remove="handleRemove">
+                :on-remove="handleRemove"
+                :on-success="uploadSuccess">
                 <i class="el-icon-plus"></i>
               </el-upload>
 
@@ -460,6 +462,9 @@ export default {
     }
   },
   methods: {
+    uploadSuccess(response, file, fileList) {
+      console.log(response, file, fileList)
+    },
     on_addplus_input_blured() {
       if (!this.AddplusForm.url) return
       this.$http.post('/Task/GetGoodsInfo', {
