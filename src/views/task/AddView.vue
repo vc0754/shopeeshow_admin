@@ -681,14 +681,9 @@ export default {
           AddShoppingCart: item.price_3_bool
         })
       })
-      let params = {
-        Url: this.form.url,
-        Title: this.goods.Title,
-        MainPic: this.goods.MainPic,
-        SaleCount: this.goods.SaleCount,
-        UserShopId: this.form.store_id,
-        Detail: detail,
-        AddedGoods: {
+      let AddedGoods = {}
+      if (this.AddplusForm.title) {
+        AddedGoods = {
           Url: this.AddplusForm.url,
           Title: this.AddplusForm.title,
           MainPic: this.AddplusForm.img,
@@ -697,7 +692,16 @@ export default {
           Comment: '',
           CommentPic: [],
           Remark: ''
-        },
+        }
+      }
+      let params = {
+        Url: this.form.url,
+        Title: this.goods.Title,
+        MainPic: this.goods.MainPic,
+        SaleCount: this.goods.SaleCount,
+        UserShopId: this.form.store_id,
+        Detail: detail,
+        AddedGoods,
         PayMode: parseInt(this.form.payment),
         TotalCost: parseFloat((this.sub_total_all).toFixed(2))
       }

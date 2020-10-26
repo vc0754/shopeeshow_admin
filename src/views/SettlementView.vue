@@ -30,7 +30,7 @@
         </el-form-item>
       </div>
       <el-button type="primary" @click="onSearch">查询</el-button>
-      <el-button type="primary" @click="onReset">查询</el-button>
+      <el-button type="primary" @click="onReset">重置</el-button>
     </el-form>
 
     <div class="add" @click="payit">
@@ -42,10 +42,11 @@
       
       <el-table stripe :data="items" v-loading="loading" style="width: 100%" ref="multipleTable" @select="table_selected" @select-all="table_selected_all" @selection-change="handleSelectionChange">
         <el-table-column type="selection" :selectable="checkbox_select" width="55"></el-table-column>
+        
         <el-table-column type="expand" width="35">
           <template slot-scope="props">
             
-            <el-table stripe border :data="props.row.Detail" style="width: 100%" @select="table_selected2" @select-all="table_selected2_all" @selection-change="handleSelectionChange2">
+            <el-table stripe border :data="props.row.Detail" style="width: 100%" @selection-change="handleSelectionChange2">
               <el-table-column type="selection" label="序号" :selectable="checkbox_select" width="55"></el-table-column>
 
               <el-table-column type="index" label="序号" width="80"></el-table-column>
@@ -251,7 +252,7 @@ export default {
         times: 30
       },
       formPayment: {
-        an: ''
+        sn: ''
       },
       dialogVisible: false,
       currentPage: 1,
@@ -343,7 +344,7 @@ export default {
     },
     // 选中的子订单与支付方式对应的汇率
     selected_orders_to_payment_ratio() {
-      let item = this.ratios.find(item => item.Transfer === this.selected_orders_country.Id && item.To === this.payment_currency.Id)
+      let item = this.ratios.find(item => item.Transfer === this.selected_orders_currency.Id && item.To === this.payment_currency.Id)
       return item && item.Rate || 0
     }
   },
@@ -394,16 +395,18 @@ export default {
     payment_submit() {
       this.$http.post('/SettlementCenter/Pay', {
         PaymentModeId: this.payment_channel_id,
-        PayCost: (this.selected_orders_total * 1).toFixed(2) * 1,
+        PayCost: (this.payment_total * 1).toFixed(2) * 1,
         PayOrderNo: this.formPayment.sn,
         TaskSubOrderNo: this.selected_orders_sn
-      }).then(res => {
-        console.log(res)
+      }).then(() => {
+        this.dialogVisible = false
+        this.onSearch()
+        this.formPayment.sn = ''
       })
     },
     // 检查行状态，返回用于 table checkbox 是否禁用
     checkbox_select(row){
-      return row.State === 3 ? 1 : 0
+      return row.State === 3 || row.State === 5 || row.State === 6 ? 1 : 0
     },
 
     handleSelectionChange(val) {
@@ -422,9 +425,10 @@ export default {
       console.log(selection)
       console.log('父表格全选')
     },
+    
     handleSelectionChange2(val) {
       this.multipleSelection2 = val
-      console.log('子表格单选状态改变')
+      // console.log('子表格单选状态改变')
       // 父级
       let selected_orders_sn = val.map(item => item.SubOrderNo)
       let item = this.items.find(item => {
@@ -435,19 +439,7 @@ export default {
       // this.sub_orders_parent_order = item || []
       this.sub_orders_parent_order_CountryId = item && item.CountryId || 0
     },
-    table_selected2() {
-      // selection, row
-      // console.log(selection, row.Id)
-      // items.map(item => {
-      //   item.Id === row.Id
-      // })
-      // this.$refs.multipleTable.toggleRowSelection(row);
-      console.log('子表格单选')
-    },
-    table_selected2_all(selection) {
-      console.log(selection)
-      console.log('子表格全选')
-    },
+    
     onReset() {
       this.$http.get('/SettlementCenter/ResetData').then(res => {
         console.log(res)

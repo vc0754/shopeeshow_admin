@@ -156,8 +156,8 @@ export default {
       statuses: [
         { label: '全部', value: 9999, number: 0},
         { label: '待审核', value: 1, number: 0},
-        { label: '进行中', value: 2, number: 0},
-        { label: '被驳回', value: 3, number: 0},
+        { label: '进行中', value: 3, number: 0},
+        { label: '被驳回', value: 2, number: 0},
         { label: '任务结束', value: 4, number: 0}
       ]
     }

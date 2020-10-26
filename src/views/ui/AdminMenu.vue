@@ -8,7 +8,7 @@
     
     <div class="color_block"></div>
 
-    <el-menu default-active="1" router class="p-t-20">
+    <el-menu :default-active="default_active" router class="p-t-20">
 
       <el-menu-item index="/">
         <div slot="title">
@@ -57,7 +57,12 @@ export default {
       menus: []
     }
   },
-  computed: mapState({ sys: state => state.sys }),
+  computed: mapState({
+    sys: state => state.sys,
+    default_active() {
+      return `${window.location.pathname}${window.location.search}` || '/'
+    }
+  }),
   methods: {
   },
   mounted() {

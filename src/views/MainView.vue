@@ -52,65 +52,11 @@
     <div class="row">
       <div class="col_left">
         <ul>
-          <li>
-            <router-link to="/news/detail/1">
-              <p>【关于返款服务费的调整公告】</p>
-              <span>2020/09/30</span>
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/news/detail/1">
-              <p>【关于返款服务费的调整公告】</p>
-              <span>2020/09/30</span>
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/news/detail/1">
-              <p>【关于返款服务费的调整公告】</p>
-              <span>2020/09/30</span>
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/news/detail/1">
-              <p>【关于返款服务费的调整公告】</p>
-              <span>2020/09/30</span>
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/news/detail/1">
-              <p>【关于返款服务费的调整公告】</p>
-              <span>2020/09/30</span>
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/news/detail/1">
-              <p>【关于返款服务费的调整公告】</p>
-              <span>2020/09/30</span>
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/news/detail/1">
-              <p>【关于返款服务费的调整公告】</p>
-              <span>2020/09/30</span>
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/news/detail/1">
-              <p>【关于返款服务费的调整公告】</p>
-              <span>2020/09/30</span>
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/news/detail/1">
-              <p>【关于返款服务费的调整公告】</p>
-              <span>2020/09/30</span>
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/news/detail/1">
-              <p>【关于返款服务费的调整公告】</p>
-              <span>2020/09/30</span>
-            </router-link>
+          <li v-for="(item, index) in items" :key="index">
+            <div class="link" @click="to_detail(item.Id)">
+              <p>{{ item.Title }}</p>
+              <span>{{ item.CreateTime | date }}</span>
+            </div>
           </li>
         </ul>
       </div>
@@ -159,13 +105,21 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default {
   name: 'MainView',
   components: {},
   data () {
     return {
-      data: {},
-      counts: {}
+      items: {},
+      counts: {},
+      PageIndex: 1,
+      PageSize: 10
+    }
+  },
+  filters: {
+    date(str) {
+      return moment(str).format('YYYY-MM-DD HH:mm:ss')
     }
   },
   computed: {
@@ -173,10 +127,12 @@ export default {
   methods: {
     query () {
       this.$http.get('/Home/NoticeList', {
-        PageIndex: 1,
-        PageSize: 20
+        params: {
+          PageIndex: this.PageIndex,
+          PageSize: this.PageSize
+        }
       }).then(res => {
-        this.data = res.data
+        this.items = res.Data
       }).catch(err => {
         this.$message.error(err.data.message)
       })
@@ -188,6 +144,11 @@ export default {
     },
     goto(path) {
       this.$router.push(path)
+    },
+    to_detail(id){
+      let detail = this.items.find(item => item.Id === id)
+      sessionStorage.setItem('detail', JSON.stringify(detail))
+      this.$router.push(`/news/detail/${id}`)
     }
   },
   watch: {
@@ -212,10 +173,13 @@ export default {
       li {
         background-color: #fff; color: #333;
         font-size: 12px;
-        a {
-          color: #333;
+        .link {
+          color: #333; cursor: pointer;
           height: 50px; padding: 0 25px; margin-bottom: 10px;
           display: flex; justify-content: space-between; align-items: center;
+          &:hover {
+            background-color: #f7f7f7;
+          }
         }
       }
     }

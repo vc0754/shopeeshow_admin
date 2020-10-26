@@ -1,15 +1,19 @@
 <template>
   <section class="wrap">
+    <div class="goback" @click="goback">
+      <img src="../../assets/back.svg" alt="">
+      <span>返回</span>
+    </div>
+
     <h3 class="section_title">公告详情</h3>
     
     <div class="wrap2">
-      <h1>【关于返款服务费的调整公告】</h1>
+      <h1>{{ detail.Title }}</h1>
       <div class="metas">
-        商家公告 | 2019-10-10 11:15
+        商家公告 | {{ detail.CreateTime | date }}
       </div>
       <div class="wrap2_content">
-        <p>AAAA</p>
-        <p>BBBB</p>
+        {{ detail.Content }}
       </div>
     </div>
     
@@ -18,29 +22,32 @@
 
 
 <script>
+import moment from 'moment'
 export default {
   name: 'DetailView',
   components: {},
   data () {
     return {
-      data: {}
+      detail: {}
+    }
+  },
+  filters: {
+    date(str) {
+      return moment(str).format('YYYY-MM-DD HH:mm:ss')
     }
   },
   computed: {
   },
   methods: {
-    query () {
-      this.$http.post('/api/Home/GetTotalStatistics').then(res => {
-        this.data = res.data
-      }).catch(err => {
-        this.$message.error(err.data.message)
-      })
+    goback() {
+      this.$router.go(-1)
     }
   },
   watch: {
   },
   mounted () {
-    // this.query()
+    this.detail = JSON.parse(sessionStorage.getItem('detail'))
+    // sessionStorage.removeItem('detail')
   },
   beforeCreate () {
   },
