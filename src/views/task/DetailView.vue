@@ -10,7 +10,7 @@
     <el-form ref="detail" :model="detail"  label-width="160px" class="border bg-white p-t-30 p-r-35 p-b-25 p-l-10 m-b-50" v-if="detail.Title">
       <div class="preview flex" style="padding-left:68px;">
         <div class="thumb">
-          <img :src="`http://${detail.MainPic}`" alt="">
+          <img :src="`http://${detail.MainPic}`" alt="" v-if="detail.MainPic">
         </div>
         <div class="info">
           <h6 class="m-t-10 m-b-10">{{ detail.Title }}</h6>
@@ -32,7 +32,7 @@
       <el-form-item :label="`${$t('currency')}:`" style="margin: 0;">
         <div class="flex flex-y-center">
           <span>{{ currency }}</span>
-          <img :src="flag" alt="" style="width:20px;height:20px;margin-left:6px;">
+          <img :src="flag" alt="" style="width:20px;height:20px;margin-left:6px;" v-if="flag">
         </div>
       </el-form-item>
 
@@ -71,8 +71,8 @@
 
         <el-table-column :label="$t('picture')" width="92">
           <template slot-scope="scope">
-            <div class="thumbs">
-              <img :src="item" alt="" v-for="(item, index) in scope.row.CommentPic" :key="index">
+            <div class="thumbs" v-for="(item, index) in scope.row.CommentPic" :key="index">
+              <img :src="`http://${item}`" alt="">
             </div>
           </template>
         </el-table-column>
@@ -114,7 +114,7 @@
       <el-table stripe :data="[{}]" style="width: 100%">
         <el-table-column label="加购商品信息（以下为每条订单的加购商品信息）" width="440">
           <div class="flex flex-y-center">
-            <img :src="`http://${AddplusForm.img}`" alt="" style="width:47px;height:47px;">
+            <img :src="`http://${AddplusForm.img}`" alt="" style="width:47px;height:47px;" v-if="AddplusForm.img">
             <div class="p-l-15 text-left">{{ AddplusForm.url }}</div>
           </div>
         </el-table-column>
@@ -162,7 +162,7 @@
         <el-table-column min-width="120">
           <template #header>
             <div class="flex flex-x-center flex-y-center">
-              <img :src="flag" alt="" style="width:16px;height:16px;margin-right:6px;">
+              <img :src="flag" alt="" style="width:16px;height:16px;margin-right:6px;" v-if="flag">
               <span>{{ $t('total_amount') }}（{{ currency }}）</span>
             </div>
           </template>
@@ -175,7 +175,7 @@
         <el-table-column min-width="120">
           <template #header>
             <div class="flex flex-x-center flex-y-center">
-              <img :src="flag_1" alt="" style="width:16px;height:16px;margin-right:6px;">
+              <img :src="flag_1" alt="" style="width:16px;height:16px;margin-right:6px;" v-if="flag_1">
               <span>{{ $t('rmb') }}（{{ $t('exchange_rate') }}：{{ ratio_1 }}）</span>
             </div>
           </template>

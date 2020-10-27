@@ -141,19 +141,22 @@
             </template>
           </el-table-column>
 
-          <el-table-column :label="$t('add_pic')" width="100">
-            <div>
-              <el-upload
-                :action="`${this.$http.defaults.baseURL}/File/UploadFile`"
-                name="files"
-                list-type="picture-card"
-                :on-preview="handlePictureCardPreview"
-                :on-remove="handleRemove"
-                :on-success="uploadSuccess">
-                <i class="el-icon-plus"></i>
-              </el-upload>
-
-            </div>
+          <el-table-column :label="$t('add_pic')" width="140">
+            <template slot-scope="scope">
+              <div>
+                <el-upload name="files" list-type="picture-card"
+                  :action="upload_url"
+                  :on-success="function(res, file) { return handleBannerSuccess(res, file, scope.$index)}"
+                  :on-remove="function(res, file){ return handleBannerRemove(res, scope.$index)}"
+                  >
+                  <!-- scope.$index -->
+                  <!-- :file-list="scope.row.CommentPic" -->
+                  <!-- <div v-if="scope.row.CommentPic.length"></div> -->
+                  <i class="el-icon-plus"></i>
+                  <!-- :on-preview="handlePictureCardPreview" -->
+                </el-upload>
+              </div>
+            </template>
           </el-table-column>
 
           <el-table-column :label="$t('special_requirements')" width="200">
@@ -258,7 +261,7 @@
 
           <el-table-column>
             <template #header>
-              <div class="flex flex-y-center">
+              <div class="flex flex-x-center flex-y-center">
                 <img :src="form.flag" alt="" style="width:16px;height:16px;margin-right:6px;" v-if="form.flag">
                 <span>{{ $t('total_amount') }}（{{ form.currency }}）</span>
               </div>
@@ -268,7 +271,7 @@
 
           <el-table-column>
             <template #header>
-              <div class="flex flex-y-center">
+              <div class="flex flex-x-center flex-y-center">
                 <img :src="flag_1" alt="" style="width:16px;height:16px;margin-right:6px;" v-if="flag_1">
                 <span>{{ $t('rmb') }}（{{ $t('exchange_rate') }}：{{ ratio_1 }}）</span>
               </div>
@@ -332,6 +335,7 @@ export default {
   components: {},
   data () {
     return {
+      upload_url: `${this.$http.defaults.baseURL}/File/UploadFile`,
       fullscreenLoading: false,     // 全屏加载
       dialogVisibleAddplus: false,  // 加购商品对话框
       AddplusForm: {                // 加购商品信息
@@ -454,11 +458,11 @@ export default {
       return total
     },
     ratio_1() {
-      let item = this.ratios.find(item => item.To === 9 && item.Transfer === this.form.currency_id)
+      let item = this.ratios.find(item => item.To == 9 && item.Transfer == this.form.currency_id)
       return item && item.Rate || 0
     },
     ratio_2() {
-      let item = this.ratios.find(item => item.To === 10 && item.Transfer === this.form.currency_id)
+      let item = this.ratios.find(item => item.To == 10 && item.Transfer == this.form.currency_id)
       return item && item.Rate || 0
     },
     flag_1() {
@@ -471,9 +475,6 @@ export default {
     }
   },
   methods: {
-    uploadSuccess(response, file, fileList) {
-      console.log(response, file, fileList)
-    },
     on_addplus_input_blured() {
       if (!this.AddplusForm.url) return
       this.$http.post('/Task/GetGoodsInfo', {
@@ -518,8 +519,9 @@ export default {
         this.form.store_id = this.detail.UserShopId
         this.form.country = this.detail.CountryName
         this.form.country_id = this.detail.CountryId
-        this.form.flag = currency.Flag
         this.form.currency = currency.Name
+        this.form.currency_id = currency.Id
+        this.form.flag = currency.Flag
         this.form.url = this.detail.Url
         this.form.payment = this.detail.PayMode.toFixed(0)
         this.form.number = this.detail.Detail.length
@@ -638,8 +640,20 @@ export default {
       })
     },
     
+    handleBannerSuccess(response, file, index) {
+      this.tableData[index].CommentPic.push(response.Data[0])
+    },
+    handleBannerRemove(response, index) {
+      this.tableData[index].CommentPic = this.tableData[index].CommentPic.filter(item => response.response.Data[0] !== item)
+    },
+    // uploadSuccess(response, file, fileList) {
+    //   console.log(response.Data[0])
+    //   console.log(file)
+    //   console.log(fileList)
+    // },
     handleRemove(file, fileList) {
-      console.log(file, fileList);
+      console.log(file);
+      console.log(fileList);
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
@@ -826,10 +840,10 @@ export default {
 .grayinput .el-input__inner { background-color: #f2f2f2; border-color: #eaeaea; text-align: center;}
 .orange { color: #FF5500;}
 
-.el-upload-list--picture-card .el-upload-list__item { width: 22px; height: 22px; margin: 0 2px 2px 0;}
+.el-upload-list--picture-card .el-upload-list__item { width: 42px; height: 42px; margin: 0 2px 2px 0;}
 .el-upload-list__item.is-success .el-upload-list__item-status-label { visibility: hidden;}
 // .el-upload-list--picture-card .el-upload-list__item-actions span { visibility: hidden;}
-.el-upload--picture-card { width: 22px; height: 22px;}
+.el-upload--picture-card { width: 42px; height: 42px;}
 
 .addplus-form {
   .el-dialog__header {
