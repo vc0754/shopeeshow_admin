@@ -2,76 +2,76 @@
   <section class="wrap">
     <div class="goback" @click="goback">
       <img src="../../assets/back.svg" alt="">
-      <span>返回</span>
+      <span>{{ $t('goback') }}</span>
     </div>
 
-    <h3 class="section_title">发布任务</h3>
+    <h3 class="section_title">{{ $t('create_tasks') }}</h3>
 
     <div class="desc">
-      <h3>任务说明</h3>
-      <p>任务流程：用户搜索打标关键词 - 指定竞品多天打标操作 - 搜索下单</p>
-      <p>如何打标：搜索长尾词 - 指定竞品收藏、加购，多天反复操作，确保标签深度</p>
-      <p>核心功能：多天操作，路径随机性更强，标签用户购买，权重提升更快，快速打开搜索入口</p>
+      <h3>{{ $t('p_title') }}</h3>
+      <p>{{ $t('p_p_1') }}</p>
+      <p>{{ $t('p_p_2') }}</p>
+      <p>{{ $t('p_p_3') }}</p>
     </div>
 
     <el-form ref="form" :model="form" class="formAddTask" label-width="130px">
-      <h4>第一步：选择店铺</h4>
+      <h4>{{ $t('step_1') }}</h4>
 
       <pre>https://xiapi.xiapibuy.com/product/282684893/4743308116/</pre>
       <!-- <pre>{{ form }}</pre> -->
 
-      <el-form-item label="选择店铺：">
+      <el-form-item :label="`${$t('choose_a_store')}:`">
         <el-select v-model="form.store_id" style="width:320px;" @change="on_selected_store">
           <el-option :label="item.ShopName" :value="item.Id" v-for="(item, index) in stores" :key="index"></el-option>
         </el-select>
       </el-form-item>
 
-      <el-form-item label="站点：">
-        <el-input v-model="form.country" placeholder="" style="width:76px;"></el-input>
+      <el-form-item :label="`${$t('site')}:`">
+        <el-input v-model="form.country" placeholder="" style="width:76px;" readonly></el-input>
       </el-form-item>
 
-      <el-form-item label="本地币种：">
-        <el-input v-model="form.currency" placeholder="" style="width:76px;"></el-input>
+      <el-form-item :label="`${$t('local_currency')}:`">
+        <el-input v-model="form.currency" placeholder="" style="width:76px;" readonly></el-input>
       </el-form-item>
 
-      <h4 class="m-t-35">第二步：输入链接、自动显示</h4>
+      <h4 class="m-t-35">{{ $t('step_2') }}</h4>
 
-      <el-form-item label="宝贝链接：">
+      <el-form-item :label="`${$t('baby_link')}:`">
         <el-input v-model="form.url" placeholder="" @blur="on_input_blured"></el-input>
 
         <div class="preview flex" v-if="goods.Title">
           <div class="thumb">
-            <img :src="`http://${goods.MainPic}`" alt="">
+            <img :src="`http://${goods.MainPic}`" alt="" v-if="goods.MainPic">
           </div>
           <div class="info">
             <h6>{{ goods.Title }}</h6>
             <div>
-              <span>商品ID: {{ goods.ItemId }}</span>
-              <span class="m-l-20">销量: {{ goods.SaleCount }}</span>
+              <span>{{ $t('commodity_ID') }}: {{ goods.ItemId }}</span>
+              <span class="m-l-20">{{ $t('sales_volume') }}: {{ goods.SaleCount }}</span>
             </div>
           </div>
         </div>
       </el-form-item>
 
-      <h4 class="m-t-35">第三步：支付方式</h4>
+      <h4 class="m-t-35">{{ $t('step_3') }}</h4>
 
-      <el-form-item label="付款方式：">
+      <el-form-item :label="`${$t('pay_it_method')}:`">
         <el-radio-group v-model="form.payment">
-          <el-radio label="1">下单付款
-            <span class="orange">（需要在表格核对后24小时内安排返款，否则刷手前往退款，特殊情况请联系客服处理！）</span>
+          <el-radio label="1">{{ $t('order_payment') }}
+            <span class="orange">（{{ $t('tip8') }}）</span>
           </el-radio>
-          <el-radio label="2">货到付款
-            <span class="orange">（需要在收货后24小时内安排返款，否则刷手前往退款，特殊情况请联系客服处理！）</span>
+          <el-radio label="2">{{ $t('cash_on_delivery') }}
+            <span class="orange">（{{ $t('tip9') }}）</span>
           </el-radio>
         </el-radio-group>
       </el-form-item>
 
-      <el-form-item label="发布任务数单数：" class="formNextOptWrap">
+      <el-form-item :label="`${$t('odd_number_of_published_tasks')}:`" class="formNextOptWrap">
         <el-input v-model="form.number" placeholder="" style="width:58px;"></el-input>
 
         <div class="formNextOpt">
-          <el-button type="primary" @click="on_next_step" :disabled="!next_abled">下一步</el-button>
-          <span @click="on_cancel" style="cursor:pointer;">取消</span>
+          <el-button type="primary" @click="on_next_step" :disabled="!next_abled">{{ $t('next') }}</el-button>
+          <span @click="on_cancel" style="cursor:pointer;">{{ $t('cancel') }}</span>
         </div>
       </el-form-item>
     </el-form>
@@ -81,67 +81,67 @@
 
     <template v-if="step === 2">
       <div class="formBatch">
-        <h5>批量设置（在下方栏中选择内容进行批量填充）</h5>
+        <h5>{{ $t('batch_setting') }}</h5>
         <div class="flex flex-wrap flex-y-center">
           <el-select v-model="form2.selected" style="width:90px;">
-            <el-option label="全部" value="all"></el-option>
+            <el-option :label="$t('all')" value="all"></el-option>
           </el-select>
 
-          <el-input v-model="form2.keyword" placeholder="关键词" style="width:162px;" class="m-l-10"></el-input>
-          <el-input v-model="form2.price" placeholder="产品下单价格" style="width:108px;" class="m-l-10"></el-input>
-          <el-input v-model="form2.amount" placeholder="数量" style="width:78px;" class="m-l-10"></el-input>
-          <el-input v-model="form2.pingyu" placeholder="评语" style="width:313px;" class="m-l-10"></el-input>
+          <el-input v-model="form2.keyword" :placeholder="$t('keyword')" style="width:162px;" class="m-l-10"></el-input>
+          <el-input v-model="form2.price" :placeholder="$t('product_order_price')" style="width:108px;" class="m-l-10"></el-input>
+          <el-input v-model="form2.amount" :placeholder="$t('number')" style="width:78px;" class="m-l-10"></el-input>
+          <el-input v-model="form2.pingyu" :placeholder="$t('comment')" style="width:313px;" class="m-l-10"></el-input>
 
           <div class="flex flex-y-center m-l-10">
             <el-checkbox-group v-model="form2.type1">
-              <el-checkbox :label="`关注店铺（+${fav_shop_price}元）`" name="type"></el-checkbox>
+              <el-checkbox :label="`${$t('focus_on_stores')}（+${fav_shop_price}${$t('currency_unit')}）`" name="type"></el-checkbox>
             </el-checkbox-group>
 
             <el-checkbox-group v-model="form2.type2">
-              <el-checkbox :label="`收藏商品（+${fav_goods_price}元）`" name="type"></el-checkbox>
+              <el-checkbox :label="`${$t('collection_of_goods')}（+${fav_goods_price}${$t('currency_unit')}）`" name="type"></el-checkbox>
             </el-checkbox-group>
 
             <el-checkbox-group v-model="form2.type3">
-              <el-checkbox :label="`加入购物车（+${add_cart_price}元）`" name="type"></el-checkbox>
+              <el-checkbox :label="`${$t('add_cart')}（+${add_cart_price}${$t('currency_unit')}）`" name="type"></el-checkbox>
             </el-checkbox-group>
           </div>
           
-          <el-button type="primary" @click="on_setting">立即设置</el-button>
-          <el-button type="primary" @click="addplus_cancel" v-if="AddplusForm.add">取消加购</el-button>
-          <el-button type="primary" @click="addplus" v-else>批量加购</el-button>
+          <el-button type="primary" @click="on_setting">{{ $t('set_now') }}</el-button>
+          <el-button type="primary" @click="addplus_cancel" v-if="AddplusForm.add">{{ $t('cancel_app_plush') }}</el-button>
+          <el-button type="primary" @click="addplus" v-else>{{ $t('app_plush') }}</el-button>
         </div>
       </div>
 
       <!-- 批量 -->
       <div class="formTable formTable2">
         <el-table stripe :data="tableData" style="width: 100%">
-          <el-table-column type="index" label="序号" width="60"></el-table-column>
+          <el-table-column type="index" :label="$t('serial_number')" width="60"></el-table-column>
 
-          <el-table-column label="关键词" min-width="150">
+          <el-table-column :label="$t('keyword')" min-width="150">
             <template slot-scope="scope">
-              <el-input placeholder="关键词" style="width:116px;" v-model="scope.row.keyword"></el-input>
+              <el-input :placeholder="$t('keyword')" style="width:116px;" v-model="scope.row.keyword"></el-input>
             </template>
           </el-table-column>
 
-          <el-table-column label="产品下单价格" min-width="120">
+          <el-table-column :label="$t('product_order_price')" min-width="120">
             <template slot-scope="scope">
-              <el-input placeholder="价格" style="width:97px;" class="grayinput" v-model="scope.row.price" readonly></el-input>
+              <el-input :placeholder="$t('price')" style="width:97px;" class="grayinput" v-model="scope.row.price" readonly></el-input>
             </template>
           </el-table-column>
 
-          <el-table-column label="数量" width="100">
+          <el-table-column :label="$t('number')" width="100">
             <template slot-scope="scope">
-              <el-input placeholder="数量" style="width:79px;" class="grayinput" v-model="scope.row.amount" readonly></el-input>
+              <el-input :placeholder="$t('number')" style="width:79px;" class="grayinput" v-model="scope.row.amount" readonly></el-input>
             </template>
           </el-table-column>
 
-          <el-table-column label="评语" width="200">
+          <el-table-column :label="$t('comment')" width="200">
             <template slot-scope="scope">
-              <el-input placeholder="评语" style="width:180px;" v-model="scope.row.pingyu"></el-input>
+              <el-input :placeholder="$t('comment')" style="width:180px;" v-model="scope.row.pingyu"></el-input>
             </template>
           </el-table-column>
 
-          <el-table-column label="晒图" width="100">
+          <el-table-column :label="$t('add_pic')" width="100">
             <div>
               <el-upload
                 :action="`${this.$http.defaults.baseURL}/File/UploadFile`"
@@ -156,16 +156,16 @@
             </div>
           </el-table-column>
 
-          <el-table-column label="特殊要求（颜色，尺寸等）" width="200">
+          <el-table-column :label="$t('special_requirements')" width="200">
             <template slot-scope="scope">
-              <el-input placeholder="备注" style="width:180px;" v-model="scope.row.remark"></el-input>
+              <el-input :placeholder="$t('remark')" style="width:180px;" v-model="scope.row.remark"></el-input>
             </template>
           </el-table-column>
 
           <el-table-column min-width="100">
             <template #header>
-              <p class="lh-150">关注店铺</p>
-              <p style="color:#46A1FF;" class="lh-100">(+{{ fav_shop_price }}元)</p>
+              <p class="lh-150">{{ $t('focus_on_stores') }}</p>
+              <p style="color:#46A1FF;" class="lh-100">(+{{ fav_shop_price }}{{ $t('currency_unit') }})</p>
             </template>
 
             <template slot-scope="scope">
@@ -175,8 +175,8 @@
 
           <el-table-column min-width="100">
             <template #header>
-              <p class="lh-150">收藏商品</p>
-              <p style="color:#46A1FF;" class="lh-100">(+{{ fav_goods_price }}元)</p>
+              <p class="lh-150">{{ $t('collection_of_goods') }}</p>
+              <p style="color:#46A1FF;" class="lh-100">(+{{ fav_goods_price }}{{ $t('currency_unit') }})</p>
             </template>
 
             <template slot-scope="scope">
@@ -186,8 +186,8 @@
 
           <el-table-column min-width="100">
             <template #header>
-              <p class="lh-150">加入购物车</p>
-              <p style="color:#46A1FF;" class="lh-100">(+{{ add_cart_price }}元)</p>
+              <p class="lh-150">{{ $t('add_cart') }}</p>
+              <p style="color:#46A1FF;" class="lh-100">(+{{ add_cart_price }}{{ $t('currency_unit') }})</p>
             </template>
 
             <template slot-scope="scope">
@@ -195,19 +195,19 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="预估付款金额" min-width="100">
+          <el-table-column :label="$t('estimated_payment_amount')" min-width="100">
             <template slot-scope="scope">
               <span class="red">{{ scope.row.price_yugu | fixed2 }}</span>
             </template>
           </el-table-column>
 
-          <el-table-column label="预估佣金" min-width="90">
+          <el-table-column :label="$t('estimated_commission')" min-width="90">
             <template slot-scope="scope">
               <span class="red">{{ scope.row.yongjin_yugu | fixed2 }}</span>
             </template>
           </el-table-column>
 
-          <el-table-column label="小计" min-width="90">
+          <el-table-column :label="$t('subtotal')" min-width="90">
             <template slot-scope="scope">
               <span class="red">{{ scope.row.total | fixed2 }}</span>
             </template>
@@ -218,18 +218,18 @@
       <!-- 加购 -->
       <div class="formTable" v-if="AddplusForm.add">
         <el-table stripe :data="[{}]" style="width: 100%">
-          <el-table-column label="加购商品信息（以下为每条订单的加购商品信息）" width="440">
+          <el-table-column :label="$t('tip4')" width="440">
             <div class="flex flex-y-center">
               <img :src="`http://${AddplusForm.img}`" alt="" style="width:47px;height:47px;">
               <div class="p-l-15 text-left">{{ AddplusForm.url }}</div>
             </div>
           </el-table-column>
 
-          <el-table-column label="数量" width="80px">
+          <el-table-column :label="$t('number')" width="80px">
             <span>{{ AddplusForm.amount }}</span>
           </el-table-column>
 
-          <el-table-column label="金额" width="150px">
+          <el-table-column :label="$t('amount_of_money')" width="150px">
             <span>{{ AddplusForm.price | fixed2 }}</span>
           </el-table-column>
 
@@ -240,27 +240,27 @@
       <!-- 合计 -->
       <div class="formTable">
         <el-table stripe :data="[{}]" style="width: 100%">
-          <el-table-column label="合计" width="163">
-            预估
+          <el-table-column :label="$t('total')" width="163">
+            {{ $t('estimate') }}
           </el-table-column>
 
-          <el-table-column label="关注、收藏、加购">
+          <el-table-column :label="$t('pay_attention_to_and_collect_additional_purchase_amount')">
             <span class="red fs-14">{{ sub_total_1 | fixed2 }}</span>
           </el-table-column>
 
-          <el-table-column label="预估付款金额">
+          <el-table-column :label="$t('estimated_payment_amount')">
             <span class="red fs-14">{{ sub_total_2 | fixed2 }}</span>
           </el-table-column>
 
-          <el-table-column label="佣金">
+          <el-table-column :label="$t('commission')">
             <span class="red fs-14">{{ sub_total_3 | fixed2 }}</span>
           </el-table-column>
 
           <el-table-column>
             <template #header>
               <div class="flex flex-y-center">
-                <img :src="form.flag" alt="" style="width:16px;height:16px;margin-right:6px;">
-                <span>合计金额（{{ form.currency }}）</span>
+                <img :src="form.flag" alt="" style="width:16px;height:16px;margin-right:6px;" v-if="form.flag">
+                <span>{{ $t('total_amount') }}（{{ form.currency }}）</span>
               </div>
             </template>
             <span class="red fs-14">{{ sub_total_all | fixed2 }}</span>
@@ -269,57 +269,57 @@
           <el-table-column>
             <template #header>
               <div class="flex flex-y-center">
-                <img :src="flag_1" alt="" style="width:16px;height:16px;margin-right:6px;">
-                <span>人民币（汇率：{{ ratio_1 }}）</span>
+                <img :src="flag_1" alt="" style="width:16px;height:16px;margin-right:6px;" v-if="flag_1">
+                <span>{{ $t('rmb') }}（{{ $t('exchange_rate') }}：{{ ratio_1 }}）</span>
               </div>
             </template>
             <span class="red fs-14">{{ sub_total_all * ratio_1 | fixed2 }}</span>
           </el-table-column>
 
-          <el-table-column>
+          <!-- <el-table-column>
             <template #header>
               <div class="flex flex-y-center">
-                <img :src="flag_2" alt="" style="width:16px;height:16px;margin-right:6px;">
-                <span>美元（汇率：{{ ratio_2 }}）</span>
+                <img :src="flag_2" alt="" style="width:16px;height:16px;margin-right:6px;" v-if="flag_2">
+                <span>{{ $t('usd') }}（{{ $t('exchange_rate') }}：{{ ratio_2 }}）</span>
               </div>
             </template>
             <span class="red fs-14">{{ sub_total_all * ratio_2 | fixed2 }}</span>
-          </el-table-column>
+          </el-table-column> -->
         </el-table>
       </div>
 
       <div class="submitAll" style="padding-bottom:30px;">
-        <el-button type="primary" @click="submit" :disabled="!submit_abled" v-loading.fullscreen.lock="fullscreenLoading">确认无误发布</el-button>
+        <el-button type="primary" @click="submit" :disabled="!submit_abled" v-loading.fullscreen.lock="fullscreenLoading">{{ $t('release_without_error') }}</el-button>
       </div>
     </template>
 
     
     <!-- 加购对话框 -->
-    <el-dialog title="加购商品" width="1000px" :visible.sync="dialogVisibleAddplus" class="addplus-form">
+    <el-dialog :title="$t('additional_purchase_of_goods')" width="1000px" :visible.sync="dialogVisibleAddplus" class="addplus-form">
       <el-table stripe :data="[{}]" style="width: 100%;">
-        <el-table-column label="商品链接" width="400">
+        <el-table-column :label="$t('product_links')" width="400">
           <el-input v-model="AddplusForm.url" placeholder="" @blur="on_addplus_input_blured"></el-input>
         </el-table-column>
 
-        <el-table-column label="商品标题" min-width="180">
+        <el-table-column :label="$t('product_title')" min-width="180">
           <div class="title">{{ AddplusForm.title }}</div>
         </el-table-column>
 
-        <el-table-column label="主图" width="70">
-          <img :src="`http://${AddplusForm.img}`" alt="">
+        <el-table-column :label="$t('main_pic')" width="70">
+          <img :src="`http://${AddplusForm.img}`" alt="" v-if="AddplusForm.img">
         </el-table-column>
 
-        <el-table-column label="件数" width="80">
+        <el-table-column :label="$t('order_numbers')" width="80">
           <el-input v-model="AddplusForm.amount" placeholder=""></el-input>
         </el-table-column>
 
-        <el-table-column label="下单金额" width="100">
+        <el-table-column :label="$t('order_amount')" width="100">
           <el-input v-model="AddplusForm.price" placeholder=""></el-input>
         </el-table-column>
       </el-table>
       <div slot="footer" class="flex flex-x-right flex-y-center">
-        <el-button type="primary" @click="addplus_confirm">确定</el-button>
-        <el-button @click="dialogVisibleAddplus = false">退出</el-button>
+        <el-button type="primary" @click="addplus_confirm">{{ $t('confirm') }}</el-button>
+        <el-button @click="dialogVisibleAddplus = false">{{ $t('quit') }}</el-button>
       </div>
     </el-dialog>
 
@@ -398,7 +398,16 @@ export default {
       return Boolean(this.form.store_id && this.form.country && this.form.currency && this.form.url && this.form.payment && this.form.number)
     },
     submit_abled() {
-      return Boolean(this.form.store_id && this.form.url && this.form.payment && this.goods.Title && this.tableData.length)
+      let abled = false
+      if (this.form.store_id && this.form.url && this.form.payment && this.goods.Title && this.tableData.length) {
+        abled = true
+        this.tableData.map(item => {
+          if (!item.keyword) abled = false
+          if (!item.price) abled = false
+          if (!item.amount) abled = false
+        })
+      }
+      return abled
     },
     yongjin_price() {
       let item = this.cast.find(item => item.County === this.form.country_id)
@@ -570,20 +579,22 @@ export default {
         })
       }
       this.tableData = items
+      this.calculate()
     },
     on_cancel() {
-      this.form = {
-        store: '',      // 选择店铺
-        store_id: null,    // 店铺ID
-        country: '',    // 国家
-        country_id: 0,  // 国家ID
-        currency_id: 0, // 货币ID
-        flag: '',       // 旗帜
-        currency: '',   // 币种
-        url: '',        // 宝贝链接
-        payment: '',    // 支付方式
-        number: ''      // 任务数
-      }
+      this.form.number = ''
+      // this.form = {
+      //   store: '',      // 选择店铺
+      //   store_id: null,    // 店铺ID
+      //   country: '',    // 国家
+      //   country_id: 0,  // 国家ID
+      //   currency_id: 0, // 货币ID
+      //   flag: '',       // 旗帜
+      //   currency: '',   // 币种
+      //   url: '',        // 宝贝链接
+      //   payment: '',    // 支付方式
+      //   number: ''      // 任务数
+      // }
       this.goods = {}
       this.step = 1
     },
@@ -603,18 +614,21 @@ export default {
           item.price_1 = this.fav_shop_price
           item.price_1_bool = true
         } else {
+          item.price_1 = 0
           item.price_1_bool = false
         }
         if (this.form2.type2) {
           item.price_2 = this.fav_goods_price
           item.price_2_bool = true
         } else {
+          item.price_2 = 0
           item.price_2_bool = false
         }
         if (this.form2.type3) {
           item.price_3 = this.add_cart_price
           item.price_3_bool = true
         } else {
+          item.price_3 = 0
           item.price_3_bool = false
         }
         item.price_yugu = parseFloat(item.price * item.amount + (this.AddplusForm.add ? this.AddplusForm.amount * this.AddplusForm.price: 0))
@@ -686,7 +700,7 @@ export default {
           AddShoppingCart: item.price_3_bool
         })
       })
-      let AddedGoods = {}
+      let AddedGoods
       if (this.AddplusForm.title) {
         AddedGoods = {
           Url: this.AddplusForm.url,
@@ -698,6 +712,8 @@ export default {
           CommentPic: [],
           Remark: ''
         }
+      } else {
+        AddedGoods = null
       }
       let params = {
         Url: this.form.url,

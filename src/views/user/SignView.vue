@@ -9,34 +9,33 @@
 
         <el-form class="sign-content" ref="formPSW" :model="formPSW">
           <el-form-item>
-            <el-input v-model="formPSW.UserName" placeholder="请输入邮箱或昵称" />
+            <el-input v-model="formPSW.UserName" :placeholder="$t('sign.account')" />
           </el-form-item>
 
           <el-form-item>
-            <el-input type="password" v-model="formPSW.Pwd" placeholder="请输入密码" :maxlength="6" />
+            <el-input type="password" v-model="formPSW.Pwd" :placeholder="$t('sign.pwd')" :maxlength="6" />
           </el-form-item>
           
           <el-form-item style="margin-bottom: 5px;">
-            <el-input v-model="formPSW.captcha" placeholder="请输入验证码" :maxlength="6" style="width:165px;" />
+            <el-input v-model="formPSW.captcha" :placeholder="$t('sign.captcha')" :maxlength="6" style="width:165px;" />
             <s-identify :identifyCode="identifyCode" :contentWidth="contentWidth" :contentHeight="contentHeight" class="captcha" @click.native="refreshCode"></s-identify>
           </el-form-item>
           
           <el-form-item>
             <el-checkbox v-model="formPSW.checked">
-              <span class="fs-12">记住密码</span>
+              <span class="fs-12">{{ $t('sign.forgot') }}</span>
             </el-checkbox>
           </el-form-item>
         </el-form>
 
         <div class="sign-button">
-          <el-button type="primary" round :loading="loading" @click="handleSubmit('formPSW')">登录</el-button>
+          <el-button type="primary" round :loading="loading" @click="handleSubmit('formPSW')">{{ $t('sign.label') }}</el-button>
         </div>
         
         <div class="sign-meta">
-          <router-link to="/lost-password" class="fg">忘记密码</router-link>
-          <div>
-            没有账号？
-            <router-link to="/register" class="m-l-10">注册</router-link>
+          <router-link to="/lost-password" class="fg">{{ $t('sign.forgot') }}</router-link>
+          <div>{{ $t('sign.no_account') }}
+            <router-link to="/register" class="m-l-10">{{ $t('register.label') }}</router-link>
           </div>
         </div>
 

@@ -6,6 +6,7 @@ import i_en_US from './lang/en-US'
 
 import iview_zh_CN from 'element-ui/lib/locale/lang/zh-CN'
 import iview_en_US from 'element-ui/lib/locale/lang/en'
+// import locale from 'element-ui/lib/locale'
 
 Vue.use(VueI18n)
 Vue.locale = () => {}

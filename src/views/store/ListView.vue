@@ -5,21 +5,21 @@
       <span>{{ $t('goback') }}</span>
     </div>
     
-    <h3 class="section_title">店铺管理</h3>
+    <h3 class="section_title">{{ $t('store_management') }}</h3>
 
     <div class="add" @click="dialogVisible = true">
       <img alt="" src="../../assets/add.svg">
-      <span class="m-l-10">绑定店铺</span>
+      <span class="m-l-10">{{ $t('binding_stores') }}</span>
     </div>
 
-    <h3 class="section_title">已绑定店铺</h3>
+    <h3 class="section_title">{{ $t('bound_store') }}</h3>
     
     <el-row :gutter="46" class="row01" style="margin-right: 20px;">
       <el-col :md="8" :lg="6" v-for="(item, index) in items" :key="index">
         <div class="block_wrap">
           <div class="flex flex-column">
-            <span>店名 : {{ item.ShopName }}</span>
-            <span>站点 : {{ item.Location }}</span>
+            <span>{{ $t('shop_name') }} : {{ item.ShopName }}</span>
+            <span>{{ $t('site') }} : {{ show_country(item.Country) }}</span>
             <!-- <span>汇率 : 0.456</span> -->
           </div>
           <img alt="" src="../../assets/close.svg" class="close" @click="close(item.ShopId)">
@@ -29,27 +29,27 @@
 
     <!-- <pre>{{ items }}</pre> -->
     
-    <el-dialog title="绑定店铺" width="607px" :visible.sync="dialogVisible" class="store-form">
+    <el-dialog :title="$t('binding_stores')" width="607px" :visible.sync="dialogVisible" class="store-form">
       <el-form ref="formStore" :model="formStore">
-        <el-form-item label="请在下框输入店铺链接" style="margin-bottom:15px;">
+        <el-form-item :label="$t('please_enter_the_store_link_in_the_box_below')" style="margin-bottom:15px;">
           <el-input v-model="formStore.url" placeholder="http://" style="width:430px;" />
             
-          <el-button type="primary" v-if="send_code">{{ send_code }}秒后过期</el-button>
-          <el-button :type="send_text === '重新发送' ? 'info' : 'primary'" @click="sendCode" v-else>{{ send_text }}</el-button>
+          <el-button type="primary" v-if="send_code">{{ send_code }}{{ $t('after_second_expire') }}</el-button>
+          <el-button :type="send_text === $t('send_again') ? 'info' : 'primary'" @click="sendCode" v-else>{{ send_text }}</el-button>
         </el-form-item>
 
-        <el-form-item label="请在下框输入聊聊客服收到的验证码">
+        <el-form-item :label="$t('please_input_the_verification_code_received_by_customer_service_in_the_following_box')">
           <el-input v-model="formStore.captcha" placeholder="" style="width:430px;" />
-          <el-button type="primary" @click="submit">确 定</el-button>
+          <el-button type="primary" @click="submit">{{ $t('confirm') }}</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
     
     <el-dialog width="596px" :visible.sync="dialogVisible2" class="store-success-tip">
       <img src="../../assets/big_right_icon.svg" alt="">
-      <h3>恭喜您，绑定成功！</h3>
-      <p>稍后可在店铺管理页面查看</p>
-      <router-link to="/task/add" class="btn">立即发布任务</router-link>
+      <h3>{{ $t('congratulations_successful_binding') }}</h3>
+      <p>{{ $t('you_can_view_it_later_on_the_store_management_page') }}</p>
+      <router-link to="/task/add" class="btn">{{ $t('publish_tasks_now') }}</router-link>
     </el-dialog>
   </section>
 </template>
@@ -61,6 +61,7 @@ export default {
   components: {},
   data () {
     return {
+      countries: [],    // 国家
       items: [],
       formStore: {
         url: '',
@@ -68,7 +69,7 @@ export default {
       },
       dialogVisible: false,
       dialogVisible2: false,
-      send_text: '发送验证码',
+      send_text: '',
       countID: 0,
       send_code: 0
     }
@@ -85,10 +86,21 @@ export default {
         if (this.send_code === 0) clearInterval(this.countID)
       }, 1000);
     },
+    get_country() {
+      this.$http.get('/Config/GetCountry').then(res => {
+        this.countries = res.Data
+      }).catch(err => {
+        this.$message.error(err.data.Message)
+      });
+    },
+    show_country(id) {
+      let item = this.countries.find(item => item.Id === id)
+      return item.Name
+    },
 
     // 发送验证码
     sendCode() {
-      if (!this.formStore.url) return this.$message.error('请输入店铺链接')
+      if (!this.formStore.url) return this.$message.error(this.$t('please_enter_the_store_link'))
       this.$http.get('/UserShop/SendShopCode', {
         params: {
           ShopUrl: this.formStore.url
@@ -96,7 +108,7 @@ export default {
       }).then(res => {
         this.send_code = 30
         this.countdown()
-        this.send_text = '重新发送'
+        this.send_text = this.$t('send_again')
         console.log(res)
       }).catch(err => {
         this.$message.error(err.data.Message)
@@ -105,8 +117,8 @@ export default {
 
     // 绑定
     submit() {
-      if (!this.formStore.url) return this.$message.error('请输入店铺链接')
-      if (!this.formStore.captcha) return this.$message.error('请输入验证码')
+      if (!this.formStore.url) return this.$message.error(this.$t('please_enter_the_store_link'))
+      if (!this.formStore.captcha) return this.$message.error(this.$t('please_enter_the_verification_code'))
 
       this.$http.post('/UserShop/Bind', {
         ShopUrl: this.formStore.url,
@@ -148,6 +160,8 @@ export default {
   watch: {
   },
   mounted () {
+    this.send_text = this.$t('send_captcha')
+    this.get_country()
     this.query()
   },
   beforeCreate () {

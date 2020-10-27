@@ -5,7 +5,7 @@
       <span>{{ $t('goback') }}</span>
     </div>
 
-    <h3 class="section_title">公告详情</h3>
+    <h3 class="section_title">{{ $t('announcement_details') }}</h3>
     
     <div class="wrap2">
       <h1>{{ detail.Title }}</h1>

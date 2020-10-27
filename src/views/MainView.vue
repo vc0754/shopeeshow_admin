@@ -1,20 +1,20 @@
 <template>
   <section class="wrap_center">
-    <h3 class="section_title">首页</h3>
+    <h3 class="section_title">{{ $t('home') }}</h3>
 
     <div class="swipers">
       <img alt="" src="../assets/slider.png" >
     </div>
 
-    <h3 class="section_title">操作流程</h3>
+    <h3 class="section_title">{{ $t('operation_process') }}</h3>
 
     <el-row :gutter="46" class="row00">
       <el-col :span="6">
         <div class="block_wrap">
           <img alt="" src="../assets/icon01.png" class="icon">
           <div class="flex flex-column">
-            <span>商家绑定店铺</span>
-            <span>店铺审核通过</span>
+            <span>{{ $t('business_binding_store') }}</span>
+            <span>{{ $t('store_approved') }}</span>
           </div>
         </div>
       </el-col>
@@ -22,8 +22,8 @@
         <div class="block_wrap">
           <img alt="" src="../assets/icon02.png" class="icon">
           <div class="flex flex-column">
-            <span>商家发布任务</span>
-            <span>设置任务要求</span>
+            <span>{{ $t('business_release_task') }}</span>
+            <span>{{ $t('set_task_requirements') }}</span>
           </div>
         </div>
       </el-col>
@@ -31,8 +31,8 @@
         <div class="block_wrap">
           <img alt="" src="../assets/icon03.png" class="icon">
           <div class="flex flex-column">
-            <span>支付结算</span>
-            <span>核对订单并打款</span>
+            <span>{{ $t('payment_and_settlement') }}</span>
+            <span>{{ $t('check_the_order_and_make_payment') }}</span>
           </div>
         </div>
       </el-col>
@@ -40,14 +40,14 @@
         <div class="block_wrap">
           <img alt="" src="../assets/icon04.png" class="icon">
           <div class="flex flex-column">
-            <span>任务完成</span>
+            <span>{{ $t('mission_accomplished') }}</span>
           </div>
         </div>
       </el-col>
     </el-row>
     
     
-    <h3 class="section_title">商家公告</h3>
+    <h3 class="section_title">{{ $t('business_announcement') }}</h3>
 
     <div class="row">
       <div class="col_left">
@@ -66,7 +66,7 @@
             <img src="../assets/rocket.png" alt="" class="rocket">
             <div class="flex flex-grow flex-y-center">
               <div class="flex flex-grow flex-column flex-x-center flex-y-bottom">
-                <p class="fs-28 m-b-5">发布任务</p>
+                <p class="fs-28 m-b-5">{{ $t('create_tasks') }}</p>
                 <p>Create Tasks</p>
               </div>
               <img src="../assets/arrow_right.svg" alt="" style="width: 18px; height: 32px; margin-bottom: 18px; margin-left: 15px;">
@@ -75,31 +75,31 @@
         </div>
 
         <div class="card">
-          <p class="fs-18 m-b-10"><span class="num m-r-5">{{ counts.WaitPayCount }}</span>个任务</p>
-          <p class="flex" style="color:#aaa;">
-            <img src="../assets/alert.svg" alt="" class="m-r-10">24小时内未返款可能导致买手退款
+          <p class="fs-18 m-b-10"><span class="num m-r-5">{{ counts.WaitPayCount }}</span>{{ $t('tasks') }}</p>
+          <p class="flex flex-y-center" style="color:#aaa;">
+            <img src="../assets/alert.svg" alt="" class="m-r-10">{{ $t('tip1') }}
           </p>
         </div>
 
         <div class="card">
-          <p class="fs-18 m-b-10"><span class="num m-r-5">{{ counts.TaskRejectCount }}</span>个任务</p>
-          <p class="flex" style="color:#aaa;">
-            <img src="../assets/alert.svg" alt="" class="m-r-10">7天内被平台驳回的任务数
+          <p class="fs-18 m-b-10"><span class="num m-r-5">{{ counts.TaskRejectCount }}</span>{{ $t('tasks') }}</p>
+          <p class="flex flex-y-center" style="color:#aaa;">
+            <img src="../assets/alert.svg" alt="" class="m-r-10">{{ $t('tip2') }}
           </p>
         </div>
 
         <div class="card">
-          <p class="fs-18 m-b-10"><span class="num m-r-5">{{ counts.PayRejectCount }}</span>个订单</p>
-          <p class="flex" style="color:#aaa;">
-            <img src="../assets/alert.svg" alt="" class="m-r-10">当前所有支付被驳回的订单数
+          <p class="fs-18 m-b-10"><span class="num m-r-5">{{ counts.PayRejectCount }}</span>{{ $t('tasks') }}</p>
+          <p class="flex flex-y-center" style="color:#aaa;">
+            <img src="../assets/alert.svg" alt="" class="m-r-10">{{ $t('tip3') }}
           </p>
         </div>
       </div>
     </div>
 
     <footer>
-      <p>一站式商家营销平台  |  Shopee Show</p>
-      <p>联系邮箱： 888888@gmail.com</p>
+      <p>{{ $t('one_stop_shop_marketing_platform') }}  |  Shopee Show</p>
+      <p>{{ $t('contact_email') }}： 888888@gmail.com</p>
     </footer>
   </section>
 </template>
@@ -196,6 +196,7 @@ export default {
   }
   .card_add {
     color: #fff; background-color: rgba(70, 161, 255, 1); padding: 20px 25px 5px 0px;
+    .fs-28 { overflow: hidden; white-space: nowrap;}
     cursor: pointer;
     .rocket { opacity: 0.28;}
     &:hover {

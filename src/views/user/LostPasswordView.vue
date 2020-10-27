@@ -4,40 +4,36 @@
 
       <div class="sign-page">
         <div class="brand">
-          <img alt="" src="../../assets/logo.png">
-          <div>
-            <span>Shopee</span>
-            <span>show</span>
-          </div>
+          <img alt="" :src="sys.logo">
         </div>
         
         <el-form class="sign-content" ref="formPSW" :model="formPSW">
           <el-form-item>
-            <el-input v-model="formPSW.Email" placeholder="请输入你的注册邮箱" />
+            <el-input v-model="formPSW.Email" :placeholder="$t('input_your_reg_account')" />
           </el-form-item>
           
           <el-form-item>
-            <el-input v-model="formPSW.Code" placeholder="请输入验证码" :maxlength="6" style="width:172px;" />
+            <el-input v-model="formPSW.Code" :placeholder="$t('input_captcha')" :maxlength="6" style="width:172px;" />
             
-            <el-button class="sendSMS" type="primary" round v-if="send_code">{{ send_code }}秒后过期</el-button>
-            <el-button class="sendSMS" :type="send_text === '重新发送' ? 'info' : 'primary'" round :loading="loading" @click="sendCode" v-else>{{ send_text }}</el-button>
+            <el-button class="sendSMS" type="primary" round v-if="send_code">{{ send_code }}{{ $t('after_second_expire') }}</el-button>
+            <el-button class="sendSMS" :type="send_text === $t('send_again') ? 'info' : 'primary'" round :loading="loading" @click="sendCode" v-else>{{ send_text }}</el-button>
           </el-form-item>
 
           <el-form-item>
-            <el-input type="password" v-model="formPSW.Pwd" placeholder="请输入新密码" :maxlength="6" />
+            <el-input type="password" v-model="formPSW.Pwd" :placeholder="$t('input_new_pwd')" :maxlength="6" />
           </el-form-item>
 
           <el-form-item>
-            <el-input type="password" v-model="formPSW.Pwd2" placeholder="再次输入密码" :maxlength="6" />
+            <el-input type="password" v-model="formPSW.Pwd2" :placeholder="$t('input_new_pwd_again')" :maxlength="6" />
           </el-form-item>
         </el-form>
 
         <div class="sign-button">
-          <el-button type="primary" round :loading="loading" @click="handleSubmit">确定</el-button>
+          <el-button type="primary" round :loading="loading" @click="handleSubmit">{{ $t('confirm') }}</el-button>
         </div>
         
         <div class="sign-meta">
-          <router-link to="/sign" class="fg">返回登录</router-link>
+          <router-link to="/sign" class="fg">{{ $t('go_back_sign') }}</router-link>
         </div>
 
       </div>
@@ -47,6 +43,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'LostPasswordView',
   data () {
@@ -58,13 +55,12 @@ export default {
         Pwd2: '',
       },
       loading: false,
-      send_text: '发送验证码',
+      send_text: '',
       countID: 0,
       send_code: 0
     }
   },
-  computed: {
-  },
+  computed: mapState({ sys: state => state.sys }),
   methods: {
     countdown() {
       this.countID = setInterval(() => {
@@ -84,7 +80,7 @@ export default {
       }).then(res => {
         this.send_code = 30
         this.countdown()
-        this.send_text = '重新发送'
+        this.send_text = this.$t('send_again')
         console.log(res)
       }).catch(err => {
         this.$message.error(err.data.Message)
@@ -111,6 +107,7 @@ export default {
   watch: {
   },
   mounted () {
+    this.send_text = this.$t('send_captcha')
   }
 }
 </script>

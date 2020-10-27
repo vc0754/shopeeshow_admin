@@ -1,48 +1,43 @@
 <template>
   <div class="register-page">
     <div class="brand">
-      <img alt="" src="../assets/logo.png">
-      <div>
-        <span>Shopee</span>
-        <span>show</span>
-      </div>
+      <img alt="" :src="sys.logo">
     </div>
         
     <el-form class="sign-content" ref="formData" :model="formData">
       <el-form-item>
-        <el-input v-model="formData.Email" placeholder="请输入您的邮箱" />
+        <el-input v-model="formData.Email" :placeholder="$t('input_your_account')" />
       </el-form-item>
 
       <el-form-item>
-        <el-input v-model="formData.UserName" placeholder="请输入昵称" @blur="usernameExist" />
+        <el-input v-model="formData.UserName" :placeholder="$t('input_nickname')" @blur="usernameExist" />
         <img src="../assets/exist_0.svg" alt="" v-if="is_username_exist === false" class="tip">
         <img src="../assets/exist_1.svg" alt="" v-if="is_username_exist === true" class="tip">
       </el-form-item>
       
       <el-form-item>
-        <el-input v-model="formData.Code" placeholder="请输入验证码" :maxlength="6" style="width:172px;" />
+        <el-input v-model="formData.Code" :placeholder="$t('input_captcha')" :maxlength="6" style="width:172px;" />
             
-        <el-button class="sendSMS" type="primary" round v-if="send_code">{{ send_code }}秒后过期</el-button>
-        <el-button class="sendSMS" :type="send_text === '重新发送' ? 'info' : 'primary'" round :loading="loading" @click="sendCode" v-else>{{ send_text }}</el-button>
+        <el-button class="sendSMS" type="primary" round v-if="send_code">{{ send_code }}{{ $t('after_second_expire') }}</el-button>
+        <el-button class="sendSMS" :type="send_text === $t('send_again') ? 'info' : 'primary'" round :loading="loading" @click="sendCode" v-else>{{ send_text }}</el-button>
       </el-form-item>
 
       <el-form-item>
-        <el-input type="password" v-model="formData.Pwd" placeholder="请输入密码" :maxlength="6" />
+        <el-input type="password" v-model="formData.Pwd" :placeholder="$t('input_pwd')" :maxlength="6" />
       </el-form-item>
 
       <el-form-item>
-        <el-input type="password" v-model="formData.Pwd2" placeholder="再次输入密码" :maxlength="6" />
+        <el-input type="password" v-model="formData.Pwd2" :placeholder="$t('input_new_pwd_again')" :maxlength="6" />
       </el-form-item>
     </el-form>
 
     <div class="sign-button">
-      <el-button type="primary" round :loading="loading" @click="handle_submit">注册</el-button>
+      <el-button type="primary" round :loading="loading" @click="handle_submit">{{ $t('register.label') }}</el-button>
     </div>
     
     <div class="sign-meta">
-      <div>
-        已注册？
-        <router-link to="/sign">去登录</router-link>
+      <div>{{ $t('already_sign') }}
+        <router-link to="/sign">{{ $t('go_sign') }}</router-link>
       </div>
     </div>
 
@@ -50,7 +45,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { USER_SIGNIN } from '@/store/modules/user'
 export default {
   name: 'RegisterComponent',
@@ -77,13 +72,12 @@ export default {
       },
       loading: false,
       is_username_exist: null,
-      send_text: '发送验证码',
+      send_text: '',
       countID: 0,
       send_code: 0
     }
   },
-  computed: {
-  },
+  computed: mapState({ sys: state => state.sys }),
   methods: {
     ...mapActions([USER_SIGNIN]),
     
@@ -169,6 +163,7 @@ export default {
   created() {
   },
   mounted() {
+    this.send_text = this.$t('send_captcha')
   }
 }
 </script>

@@ -5,37 +5,37 @@
       <span>{{ $t('goback') }}</span>
     </div>
 
-    <h3 class="section_title">结算中心</h3>
+    <h3 class="section_title">{{ $t('settlement_center') }}</h3>
 
     <el-form ref="form" :model="form" class="formDaterange bg-white flex flex-x-between flex-y-center">
       <div class="flex">
-        <el-form-item label="任务编号：" style="margin: 0;">
+        <el-form-item :label="`${$t('task_number')}:`" style="margin: 0;">
           <el-input v-model="form.OrderNo" placeholder="" style="width:125px;"></el-input>
         </el-form-item>
 
-        <el-form-item label="站点：" style="margin: 0;">
+        <el-form-item :label="`${$t('site')}:`" style="margin: 0;">
           <el-select v-model="form.country" style="width:150px;">
             <el-option :label="item.Name" :value="item.Id" v-for="(item, index) in countries" :key="index"></el-option>
           </el-select>
         </el-form-item>
 
-        <el-form-item label="商品名称：" style="margin: 0;" class="m-l-15">
-          <el-input v-model="form.name" placeholder="模糊匹配" style="width:155px;"></el-input>
+        <el-form-item :label="`${$t('trade_name')}:`" style="margin: 0;" class="m-l-15">
+          <el-input v-model="form.name" :placeholder="$t('fuzzy_matching')" style="width:155px;"></el-input>
         </el-form-item>
 
-        <el-form-item label="时间：" style="margin: 0;">
+        <el-form-item :label="`${$t('time')}:`" style="margin: 0;">
           <el-select v-model="form.times" style="width:155px;">
             <el-option :label="item.label" :value="item.value" v-for="(item, index) in select_times" :key="index"></el-option>
           </el-select>
         </el-form-item>
       </div>
-      <el-button type="primary" @click="onSearch">查询</el-button>
-      <el-button type="primary" @click="onReset">重置</el-button>
+      <el-button type="primary" @click="onSearch">{{ $t('query') }}</el-button>
+      <!-- <el-button type="primary" @click="onReset">重置</el-button> -->
     </el-form>
 
     <div class="add" @click="payit">
       <img alt="" src="../assets/money.svg">
-      <span class="m-l-10">立即打款</span>
+      <span class="m-l-10">{{ $t('pay_immediately') }}</span>
     </div>
 
     <div class="formTable">
@@ -48,29 +48,29 @@
           <template slot-scope="props">
             
             <el-table stripe border :data="props.row.Detail" style="width: 100%" :ref="`multipleTable2_${props.row.Id}`" @selection-change="handleSelectionChange2">
-              <el-table-column type="selection" label="序号" :selectable="checkbox_select" width="55"></el-table-column>
+              <el-table-column type="selection" :selectable="checkbox_select" width="55"></el-table-column>
 
-              <el-table-column type="index" label="序号" width="80"></el-table-column>
+              <el-table-column type="index" :label="$t('serial_number')" width="80"></el-table-column>
 
-              <el-table-column label="订单号" min-width="190">
+              <el-table-column :label="$t('order_number')" min-width="190">
                 <template slot-scope="scope">
                   <span>{{ scope.row.SubOrderNo }}</span>
                 </template>
               </el-table-column>
 
-              <el-table-column label="订单状态" width="170">
+              <el-table-column :label="$t('order_status')" width="170">
                 <template slot-scope="scope">
                   <span>{{ scope.row.StateStr }}</span>
                 </template>
               </el-table-column>
 
-              <el-table-column label="买家昵称" min-width="170">
+              <el-table-column :label="$t('buyer_nickname')" min-width="170">
                 <template slot-scope="scope">
                   <span>{{ scope.row.Sp_NickName }}</span>
                 </template>
               </el-table-column>
 
-              <el-table-column label="付款金额" min-width="150">
+              <el-table-column :label="$t('payment_amount')" min-width="150">
                 <template slot-scope="scope">
                   <div class="flex flex-column text-right lh-100">
                     <span class="red">{{ scope.row.Pub_OrderCost | fixed2 }}</span>
@@ -79,7 +79,7 @@
                 </template>
               </el-table-column>
 
-              <el-table-column label="佣金" min-width="150">
+              <el-table-column :label="$t('commission')" min-width="150">
                 <template slot-scope="scope">
                   <div class="flex flex-column text-right lh-100">
                     <span class="red">{{ scope.row.Pub_CommissionCost | fixed2 }}</span>
@@ -88,7 +88,7 @@
                 </template>
               </el-table-column>
 
-              <el-table-column label="合计" min-width="150">
+              <el-table-column :label="$t('total')" min-width="150">
                 <template slot-scope="scope">
                   <div class="flex flex-column text-right lh-100">
                     <span class="red">{{ scope.row.Pub_TotalCost | fixed2 }}</span>
@@ -101,23 +101,23 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="" min-width="210">
+        <el-table-column label="" min-width="230">
           <template slot-scope="scope">
             <div class="text-left">
-              <div>任务编号：<span class="gray">{{ scope.row.OrderNo }}</span></div>
-              <div>提交时间：<span class="gray">{{ scope.row.CreateTime | date }}</span></div>
+              <div>{{ $t('task_number') }}：<span class="gray">{{ scope.row.OrderNo }}</span></div>
+              <div>{{ $t('submission_time') }}：<span class="gray">{{ scope.row.CreateTime | date }}</span></div>
             </div>
           </template>
         </el-table-column>
 
-        <el-table-column label="" min-width="190">
+        <el-table-column label="" min-width="170">
           <template slot-scope="scope">
-            <div>店铺名：<span class="gray">{{ scope.row.ShopName }}</span></div>
-            <div>站点：<span class="gray">{{ countryShowName(scope.row.CountryId) }}</span></div>
+            <div>{{ $t('store_name') }}：<span class="gray">{{ scope.row.ShopName }}</span></div>
+            <div>{{ $t('site') }}：<span class="gray">{{ countryShowName(scope.row.CountryId) }}</span></div>
           </template>
         </el-table-column>
 
-        <el-table-column label="" min-width="300">
+        <el-table-column label="" min-width="350">
           <template slot-scope="scope">
             <div class="flex flex-y-center text-left p-l-15 p-r-15">
               <img :src="`http://${scope.row.MainPic}`" alt="" class="thumb" />
@@ -129,19 +129,19 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="" min-width="120">
+        <el-table-column label="" min-width="100">
           <template slot-scope="scope">
-            <div class="lh-120" style="padding:0 15px;" v-if="scope.row.SuccCount && scope.row.TaskCount">
-              <p class="m-b-10">已完成：{{ scope.row.SuccCount }}/{{ scope.row.TaskCount }}</p>
+            <div class="lh-120" style="padding:0 15px;">
+              <p class="m-b-10">{{ $t('completed') }}：{{ scope.row.SuccCount }}/{{ scope.row.TaskCount }}</p>
               <el-progress :percentage="scope.row.SuccCount/scope.row.TaskCount*100" :show-text="false"></el-progress>
             </div>
           </template>
         </el-table-column>
 
-        <el-table-column label="" min-width="180">
+        <el-table-column label="" min-width="120">
           <template slot-scope="scope">
-            <p>待支付：{{ scope.row.WaitPayCost | fixed2 }}</p>
-            <p>已支付：{{ scope.row.PaySuccCost | fixed2 }}</p>
+            <p>{{ $t('to_be_paid') }}：{{ scope.row.WaitPayCost | fixed2 }}</p>
+            <p>{{ $t('paid') }}：{{ scope.row.PaySuccCost | fixed2 }}</p>
           </template>
         </el-table-column>
       </el-table>
@@ -166,17 +166,15 @@
       <!-- <pre>{{ selected_orders_currency }}</pre> -->
       <!-- <pre>{{ selected_orders_total }}</pre> -->
     
-      <el-dialog title="支付中..." width="944px" :visible.sync="dialogVisible" class="payment-form">
+      <el-dialog :title="`${$t('paying')}...`" width="944px" :visible.sync="dialogVisible" class="payment-form">
         <div class="col-left">
-          <h3>请选择一种支付方式：</h3>
+          <h3>{{ $t('please_choose_a_payment_method') }}：</h3>
           <ul class="payment_channels">
             <li v-for="(item, index) in payment_channels" :key="index" @click="payment_channel_selected(item.Id)" :class="item.selected ? 'current' : ''">
               <img :src="item.Logo" :alt="item.Name">
             </li>
           </ul>
-          <div class="payment_wrap">
-            <p>{{ payment_content }}</p>
-          </div>
+          <div class="payment_wrap" v-html="payment_content"></div>
         </div>
         <div class="col-right">
           <el-form ref="formPayment" :model="formPayment" label-width="130px">
@@ -188,25 +186,25 @@
               <span>ABC</span>
             </el-form-item> -->
 
-            <el-form-item label="支付金额：" style="margin-bottom: 0px;">
+            <el-form-item :label="`${$t('payment_amount')}：`" style="margin-bottom: 0px;">
               <strong>{{ selected_orders_total | fixed2 }}</strong>
             </el-form-item>
 
-            <el-form-item label="汇率：" style="margin-bottom: 35px;">
+            <el-form-item :label="`${$t('exchange_rate')}：`" style="margin-bottom: 35px;">
               <span>{{ selected_orders_to_payment_ratio }}</span>
             </el-form-item>
 
-            <el-form-item label="兑换后支付金额：" style="margin-bottom: 40px;">
+            <el-form-item :label="`${$t('payment_after_exchange')}：`" style="margin-bottom: 40px;">
               <strong class="blue">{{ payment_total | fixed2 }}</strong>
             </el-form-item>
 
-            <el-form-item label="*支付订单号：">
-              <el-input v-model="formPayment.sn" placeholder="（必填）" />
+            <el-form-item :label="`*${$t('payment_order_number')}：`">
+              <el-input v-model="formPayment.sn" :placeholder="`（${$t('required')}）`" />
             </el-form-item>
 
             <div class="flex flex-column flex-y-center">
-              <el-button type="primary" @click="payment_submit" class="payment_submit">支付完成</el-button>
-              <div class="tip">转账时，请在支付备注信息填写上店铺名称</div>
+              <el-button type="primary" @click="payment_submit" class="payment_submit">{{ $t('payment_completed') }}</el-button>
+              <div class="tip">{{ $t('tip5') }}</div>
             </div>
           </el-form>
 
@@ -262,12 +260,7 @@ export default {
       pageSize: 10,
       total: 0,
       items: [],
-      loading: false,
-      select_times: [
-        { label: '近30日', value: 30 },
-        { label: '近90日', value: 90 }
-      ],
-      
+      loading: false
     }
   },
   filters: {
@@ -280,6 +273,12 @@ export default {
     }
   },
   computed: {
+    select_times() {
+      return [
+        { label: this.$t('nearly_30_days'), value: 30 },
+        { label: this.$t('nearly_90_days'), value: 90 }
+      ]
+    },
     start_time() {
       if (this.form.times === 30) {
         return moment().subtract(30, 'days').format('YYYY-MM-DD HH:mm:ss');
@@ -355,7 +354,7 @@ export default {
     // 获取国家
     get_countries() {
       this.$http.get('/Config/GetCountry').then(res => {
-        res.Data.unshift({ Id: '', Name: '全部' })
+        res.Data.unshift({ Id: '', Name: this.$t('all') })
         this.countries = res.Data
       }).catch(err => {
         this.$message.error(err.data.Message)
@@ -485,7 +484,7 @@ export default {
       this.$router.go(-1)
     },
     payit() {
-      if (!this.selected_orders_sn.length) return this.$message.error('请先选择要付款的订单')
+      if (!this.selected_orders_sn.length) return this.$message.error(this.$t('please_select_the_order_to_pay_first'))
       this.dialogVisible = true
     },
     countryShowName(id) {
@@ -557,8 +556,9 @@ export default {
     }
   }
   .payment_wrap {
-    background-color: #eee;
+    background-color: #fcfcfc;
     width: 100%; height: 280px;
+    overflow: hidden;
   }
   .el-form-item__content { line-height: 32px;}
   .el-button--primary { width: 126px; height: 32px;}

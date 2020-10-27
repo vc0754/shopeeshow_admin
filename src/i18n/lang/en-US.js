@@ -1,5 +1,76 @@
 export default {
+  sign: {
+    captcha: '请输入验证码',
+    no_account: '没有账号？',
+    account: '请输入邮箱或昵称',
+    pwd: '请输入密码',
+    forgot: '记住密码',
+    label: '登录'
+  },
+  register: {
+    label: '注册'
+  },
+  already_sign: '已注册？',
+  input_nickname: '请输入昵称',
+  input_your_account: '请输入您的邮箱',
+  input_your_reg_account: '请输入你的注册邮箱',
+  input_captcha: '请输入验证码',
+  after_second_expire: '秒后过期',
+  input_pwd: '请输入密码',
+  input_new_pwd: '请输入新密码',
+  input_new_pwd_again: '再次输入密码',
+  send_again: '重新发送',
+  go_back_sign: '返回登录',
+  send_captcha: 'Send SMS',
+  go_sign: '去登录',
+  // 以上为登录注册页面的
   nav: {
-    zhifuliushui: 'ZFLS',
-  }
+    shouye: 'HOME',
+    dianpuguanli: 'STORE',
+    renwuguanli: 'TASK',
+    jiesuanzhongxin: 'SETTLEMENT',
+    zhifuliushui: 'TRANSITION',
+  },
+  brand: '',
+  lan: {
+    chinese: 'chinese',
+    english: 'english'
+  },
+  setting: 'setting',
+  quit: 'Quit',
+  confirm: 'OK',
+  goback: 'Back',
+  //首页
+  home: 'HOME',
+  operation_process: 'Operation Process',
+  business_binding_store: 'Business Binding Store',
+  store_approved: 'Store Approved',
+  business_release_task: 'Business Release Task',
+  set_task_requirements: 'Set Task Requirements',
+  payment_and_settlement: 'Payment And Settlement',
+  check_the_order_and_make_payment: 'Check The Order And Make Payment',
+  mission_accomplished: 'Mission Accomplished',
+  business_announcement: 'Business Announcement',
+  create_tasks: 'Create Tasks',
+  tasks: 'Tasks',
+  tip1: 'Failure to return money within 24 hours may result in a buyer\'s refund',
+  tip2: 'Number of tasks rejected by the platform within 7 days',
+  tip3: 'Number of orders rejected for all payments currently',
+  one_stop_shop_marketing_platform: 'One Stop Shop Marketing Platform',
+  contact_email: 'Contact Email',
+  // 公告详情
+  announcement_details: 'Announcement Details',
+  // 店铺管理
+  store_management: '店铺管理',
+  binding_stores: '绑定店铺',
+  bound_store: '已绑定店铺',
+  shop_name: '店名',
+  site: '站点',
+  please_enter_the_store_link_in_the_box_below: '请在下框输入店铺链接',
+  please_input_the_verification_code_received_by_customer_service_in_the_following_box: '请在下框输入聊聊客服收到的验证码',
+  congratulations_successful_binding: '恭喜您，绑定成功！',
+  you_can_view_it_later_on_the_store_management_page: '稍后可在店铺管理页面查看',
+  publish_tasks_now: '立即发布任务',
+  please_enter_the_store_link: '请输入店铺链接',
+  please_enter_the_verification_code: '请输入验证码'
 }

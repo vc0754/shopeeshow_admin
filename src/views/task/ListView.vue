@@ -5,38 +5,38 @@
       <span>{{ $t('goback') }}</span>
     </div>
 
-    <h3 class="section_title">发布任务</h3>
+    <h3 class="section_title">{{ $t('publish_task') }}</h3>
     
     <el-form ref="form" :model="form" class="formDaterange bg-white flex flex-x-between flex-y-center">
       <div class="flex flex-wrap">
-        <el-form-item label="任务编号：" style="margin: 0;">
+        <el-form-item :label="`${$t('task_number')}:`" style="margin: 0;">
           <el-input v-model="form.OrderNo" placeholder="" style="width:125px;"></el-input>
         </el-form-item>
 
-        <el-form-item label="站点：" style="margin: 0;">
+        <el-form-item :label="`${$t('site')}:`" style="margin: 0;">
           <el-select v-model="form.country" style="width:150px;">
             <el-option :label="item.Name" :value="item.Id" v-for="(item, index) in countries" :key="index"></el-option>
           </el-select>
         </el-form-item>
 
-        <el-form-item label="商品名称：" style="margin: 0;" class="m-l-15">
-          <el-input v-model="form.name" placeholder="模糊匹配" style="width:155px;"></el-input>
+        <el-form-item :label="`${$t('trade_name')}:`" style="margin: 0;" class="m-l-15">
+          <el-input v-model="form.name" :placeholder="$t('fuzzy_matching')" style="width:155px;"></el-input>
         </el-form-item>
 
-        <el-form-item label="任务状态：" style="margin: 0;" class="m-l-15">
+        <el-form-item :label="`${$t('task_status')}`" style="margin: 0;" class="m-l-15">
           <el-select v-model="form.status" style="width:155px;">
             <el-option :label="item.label" :value="item.value" v-for="(item, index) in statuses" :key="index"></el-option>
           </el-select>
         </el-form-item>
 
-        <el-form-item label="时间：" style="margin: 0;">
+        <el-form-item :label="`${$t('time')}:`" style="margin: 0;">
           <el-select v-model="form.times" style="width:155px;">
             <el-option :label="item.label" :value="item.value" v-for="(item, index) in select_times" :key="index"></el-option>
           </el-select>
         </el-form-item>
       </div>
       <div class="flex p-l-20">
-        <el-button type="primary" @click="onSearch">查询</el-button>
+        <el-button type="primary" @click="onSearch">{{ $t('query') }}</el-button>
         <el-button type="primary" class="m-l-20">导出 Excel</el-button>
       </div>
     </el-form>
@@ -45,7 +45,7 @@
 
     <div class="add" @click="goto('/task/add')">
       <img alt="" src="../../assets/add.svg">
-      <span class="m-l-10">发布任务</span>
+      <span class="m-l-10">{{ $t('publish_task') }}</span>
     </div>
 
     <div class="formTable">
@@ -54,25 +54,25 @@
       </el-tabs>
       
       <el-table stripe :data="items" v-loading="loading" style="width: 100%;">
-        <el-table-column label="任务编号" width="170">
+        <el-table-column :label="$t('task_number')" width="170">
           <template slot-scope="scope">
             <span>{{ scope.row.OrderNo }}</span>
             <span>{{ scope.row.PayModeStr }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="ShopName" label="店铺名" width="180"></el-table-column>
+        <el-table-column prop="ShopName" :label="$t('store_name')" width="180"></el-table-column>
 
-        <el-table-column prop="CountryId" label="站点" width="120">
+        <el-table-column prop="CountryId" :label="$t('site')" width="120">
           <template slot-scope="scope">
             <span>{{ countryShowName(scope.row.CountryId) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="报名商品" min-width="380">
+        <el-table-column :label="$t('registered_products')" min-width="380">
           <template slot-scope="scope">
             <div class="flex flex-y-center text-left p-l-15 p-r-15">
-              <img :src="`http://${scope.row.MainPic}`" alt="" class="thumb" />
+              <img :src="`http://${scope.row.MainPic}`" alt="" class="thumb" v-if="scope.row.MainPic !== 'null'" />
               <div class="flex flex-column lh-150">
                 <span>Id: {{ scope.row.ItemId }}</span>
                 <span>{{ scope.row.Title }}</span>
@@ -81,31 +81,31 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="提交时间" min-width="120">
+        <el-table-column :label="$t('submission_time')" min-width="120">
           <template slot-scope="scope">
             <div class="lh-120" style="width:70px;margin:0 auto;">{{ scope.row.CreateTime | date }}</div>
           </template>
         </el-table-column>
 
-        <el-table-column label="状态" min-width="120">
+        <el-table-column :label="$t('status')" min-width="120">
           <template slot-scope="scope">
             <div class="lh-120" style="color:#D43030;padding:0 15px;">{{ scope.row.StateStr }}</div>
           </template>
         </el-table-column>
 
-        <el-table-column label="任务完成进度" min-width="120">
+        <el-table-column :label="$t('task_completion_progress')" min-width="120">
           <template slot-scope="scope">
             <div class="lh-120" style="padding:0 15px;">
-              <p class="m-b-10">已完成：{{ scope.row.SuccCount }}/{{ scope.row.TaskCount }}</p>
+              <p class="m-b-10">{{ $t('completed') }}：{{ scope.row.SuccCount }}/{{ scope.row.TaskCount }}</p>
               <el-progress :percentage="scope.row.SuccCount/scope.row.TaskCount*100" :show-text="false"></el-progress>
             </div>
           </template>
         </el-table-column>
 
-        <el-table-column label="操作" width="190">
+        <el-table-column :label="$t('operation')" width="190">
           <template slot-scope="scope">
-            <router-link :to="`/task/detail?id=${scope.row.OrderNo}`">任务详情</router-link>
-            <router-link :to="`/task/add?id=${scope.row.OrderNo}`" class="m-l-20">再次发布</router-link>
+            <router-link :to="`/task/detail?id=${scope.row.OrderNo}`">{{ $t('mission_details') }}</router-link>
+            <router-link :to="`/task/add?id=${scope.row.OrderNo}`" class="m-l-20">{{ $t('re_release') }}</router-link>
           </template>
         </el-table-column>
       </el-table>
@@ -148,18 +148,7 @@ export default {
       total: 0,
       items: [],
       loading: false,
-      select_times: [
-        { label: '近30日', value: 30 },
-        { label: '近90日', value: 90 }
-      ],
-      countries: [],
-      statuses: [
-        { label: '全部', value: 9999, number: 0},
-        { label: '待审核', value: 1, number: 0},
-        { label: '进行中', value: 3, number: 0},
-        { label: '被驳回', value: 2, number: 0},
-        { label: '任务结束', value: 4, number: 0}
-      ]
+      countries: []
     }
   },
   filters: {
@@ -168,6 +157,21 @@ export default {
     }
   },
   computed: {
+    select_times() {
+      return [
+        { label: this.$t('nearly_30_days'), value: 30 },
+        { label: this.$t('nearly_90_days'), value: 90 }
+      ]
+    },
+    statuses() {
+      return [
+        { label: this.$t('all'), value: 9999, number: 0},
+        { label: this.$t('to_be_reviewed'), value: 1, number: 0},
+        { label: this.$t('have_in_hand'), value: 3, number: 0},
+        { label: this.$t('rejected'), value: 2, number: 0},
+        { label: this.$t('end_of_mission'), value: 4, number: 0}
+      ]
+    },
     start_time() {
       if (this.form.times === 30) {
         return moment().subtract(30, 'days').format('YYYY-MM-DD HH:mm:ss');
@@ -214,7 +218,7 @@ export default {
     },
     get_country() {
       this.$http.get('/Config/GetCountry').then(res => {
-        res.Data.unshift({ Id: '', Name: '全部' })
+        res.Data.unshift({ Id: '', Name: this.$t('all') })
         this.countries = res.Data
       }).catch(err => {
         this.$message.error(err.data.Message)

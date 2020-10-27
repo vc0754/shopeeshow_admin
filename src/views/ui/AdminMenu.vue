@@ -31,8 +31,16 @@ export default {
   name: 'AdminMenu',
   data () {
     return {
-      isCollapse: false,
-      menus: [
+      isCollapse: false
+    }
+  },
+  computed: mapState({
+    sys: state => state.sys,
+    default_active() {
+      return `${window.location.pathname}${window.location.search}` || '/'
+    },
+    menus() {
+      return [
         {
           url: '/',
           icon: require('../../assets/home.svg'),
@@ -59,12 +67,6 @@ export default {
           label: this.$t('nav.zhifuliushui')
         }
       ]
-    }
-  },
-  computed: mapState({
-    sys: state => state.sys,
-    default_active() {
-      return `${window.location.pathname}${window.location.search}` || '/'
     }
   }),
   methods: {
