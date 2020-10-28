@@ -17,8 +17,8 @@
     <el-row :gutter="46" class="row01" style="margin-right: 20px;">
       <el-col :md="8" :lg="6" v-for="(item, index) in items" :key="index">
         <div class="block_wrap">
-          <div class="flex flex-column">
-            <span>{{ $t('shop_name') }} : {{ item.ShopName }}</span>
+          <div class="flex flex-column flex-x-center" style="height:74px;">
+            <span class="store_name">{{ $t('shop_name') }} : {{ item.ShopName }}</span>
             <span>{{ $t('site') }} : {{ show_country(item.Country) }}</span>
             <!-- <span>汇率 : 0.456</span> -->
           </div>
@@ -179,6 +179,16 @@ export default {
   border: solid 1px rgb(215, 215, 215);
   display: flex; justify-content: center; align-items: center;
   cursor: pointer;
+}
+
+.store_name {
+  text-overflow: -o-ellipsis-lastline;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 // 绑定店铺

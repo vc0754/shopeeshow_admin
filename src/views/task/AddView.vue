@@ -90,7 +90,7 @@
           <el-input v-model="form2.keyword" :placeholder="$t('keyword')" style="width:162px;" class="m-l-10"></el-input>
           <el-input v-model="form2.price" :placeholder="$t('product_order_price')" style="width:108px;" class="m-l-10"></el-input>
           <el-input v-model="form2.amount" :placeholder="$t('number')" style="width:78px;" class="m-l-10"></el-input>
-          <el-input v-model="form2.pingyu" :placeholder="$t('comment')" style="width:313px;" class="m-l-10"></el-input>
+          <!-- <el-input v-model="form2.pingyu" :placeholder="$t('comment')" style="width:313px;" class="m-l-10"></el-input> -->
 
           <div class="flex flex-y-center m-l-10">
             <el-checkbox-group v-model="form2.type1">
@@ -145,7 +145,7 @@
             <template slot-scope="scope">
               <div>
                 <el-upload name="files" list-type="picture-card"
-                  :action="upload_url"
+                  :action="upload_url" :limit="4"
                   :on-success="function(res, file) { return handleBannerSuccess(res, file, scope.$index)}"
                   :on-remove="function(res, file){ return handleBannerRemove(res, scope.$index)}"
                   >
@@ -544,6 +544,16 @@ export default {
       this.form.currency_id = currency.Id
       this.form.flag = currency.Flag
       this.step = 1
+      this.form2 = {
+        selected: 'all',
+        keyword: '',
+        price: '',
+        amount: '',
+        pingyu: '',
+        type1: false,
+        type2: false,
+        type3: false
+      },
       this.tableData = []
     },
     on_input_blured() {
@@ -584,21 +594,20 @@ export default {
       this.calculate()
     },
     on_cancel() {
+      // this.goods = {}
       this.form.number = ''
-      // this.form = {
-      //   store: '',      // 选择店铺
-      //   store_id: null,    // 店铺ID
-      //   country: '',    // 国家
-      //   country_id: 0,  // 国家ID
-      //   currency_id: 0, // 货币ID
-      //   flag: '',       // 旗帜
-      //   currency: '',   // 币种
-      //   url: '',        // 宝贝链接
-      //   payment: '',    // 支付方式
-      //   number: ''      // 任务数
-      // }
-      this.goods = {}
       this.step = 1
+      this.form2 = {
+        selected: 'all',
+        keyword: '',
+        price: '',
+        amount: '',
+        pingyu: '',
+        type1: false,
+        type2: false,
+        type3: false
+      },
+      this.tableData = []
     },
     on_setting() {
       if (this.form2.selected !== 'all') return
@@ -611,7 +620,7 @@ export default {
         if (this.form2.keyword) item.keyword = this.form2.keyword
         if (this.form2.price) item.price = parseFloat(this.form2.price)
         if (this.form2.amount) item.amount = parseInt(this.form2.amount)
-        if (this.form2.pingyu) item.pingyu = this.form2.pingyu
+        // if (this.form2.pingyu) item.pingyu = this.form2.pingyu
         if (this.form2.type1) {
           item.price_1 = this.fav_shop_price
           item.price_1_bool = true

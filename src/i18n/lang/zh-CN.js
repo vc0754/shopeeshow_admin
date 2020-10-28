@@ -23,7 +23,9 @@ export default {
   go_back_sign: '返回登录',
   send_captcha: '发送验证码',
   go_sign: '去登录',
+
   // 以上为登录注册页面的
+
   nav: {
     shouye: '首页',
     dianpuguanli: '店铺管理',
@@ -40,6 +42,7 @@ export default {
   quit: '退出',
   confirm: '确定',
   goback: '返回',
+
   // 首页
   home: '首页',
   operation_process: '操作流程',
@@ -58,8 +61,10 @@ export default {
   tip3: '当前所有支付被驳回的订单数',
   one_stop_shop_marketing_platform: '一站式商家营销平台',
   contact_email: '联系邮箱',
+
   // 公告详情
   announcement_details: '公告详情',
+
   // 店铺管理
   store_management: '店铺管理',
   binding_stores: '绑定店铺',
@@ -177,7 +182,7 @@ export default {
   payment_method: '支付方式',
   reasons_for_rejection: '驳回原因',
 
-  // 
+  // 通用
   next: '下一步',
   cancel: '取消',
   nearly_30_days: '近30日',
