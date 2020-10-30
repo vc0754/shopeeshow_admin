@@ -8,7 +8,7 @@
           <router-view />
         </div>
       </main>
-      <div class="quickmenus">
+      <!-- <div class="quickmenus">
         <ul>
           <li>
             <img alt="" src="../assets/top.svg">
@@ -23,7 +23,7 @@
             <img alt="" src="../assets/education.svg">
           </li>
         </ul>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

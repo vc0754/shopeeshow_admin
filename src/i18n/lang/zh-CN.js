@@ -53,6 +53,7 @@ export default {
   payment_and_settlement: '支付结算',
   check_the_order_and_make_payment: '核对订单并打款',
   mission_accomplished: '任务完成',
+  customer_service: '专属客服',
   business_announcement: '商家公告',
   create_tasks: '发布任务',
   tasks: '个任务',
@@ -93,10 +94,12 @@ export default {
   re_release: '再次发布',
   have_in_hand: '进行中',
   end_of_mission: '任务结束',
-  p_title: '任务说明',
-  p_p_1: '任务流程：用户搜索打标关键词 - 指定竞品多天打标操作 - 搜索下单',
-  p_p_2: '如何打标：搜索长尾词 - 指定竞品收藏、加购，多天反复操作，确保标签深度',
-  p_p_3: '核心功能：多天操作，路径随机性更强，标签用户购买，权重提升更快，快速打开搜索入口',
+  mission_title: '任务说明',
+  mission_desc: `1：没有提供评语和图片默认好评，需要评语跟图片记得编辑好<br/>
+  2：加购其他产品下单点击批量加购<br/>
+  3：商家操作前可根据自身需求添加优惠券，不支持关注领券，优惠金额不得高于售价的20%。（台湾站不支持特定优惠券，测评手下单均按照正常售价下单。）如需优惠券码请填写在特殊备注中！！<br/>
+  4：一笔订单的购买数量不超过3，如超过3件，任务将会被驳回，有疑问请联系客服。<br/>
+  5：特殊要求一定要提前告知客服，模板填写有疑问请提前告知客服。`,
   step_1: '第一步：选择店铺',
   step_2: '第二步：输入链接、自动显示',
   step_3: '第三步：支付方式',
@@ -154,6 +157,7 @@ export default {
   add_pic: '晒图',
   product_order_price: '产品下单价格',
   price: '价格',
+  title: '标题',
 
   // 结算中心
   settlement_center: '结算中心',

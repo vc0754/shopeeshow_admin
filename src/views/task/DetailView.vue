@@ -119,6 +119,10 @@
           </div>
         </el-table-column>
 
+        <el-table-column :label="$t('title')" min-width="260px">
+          <span>{{ AddplusForm.title }}</span>
+        </el-table-column>
+
         <el-table-column :label="$t('number')" width="80px">
           <span>{{ AddplusForm.amount }}</span>
         </el-table-column>

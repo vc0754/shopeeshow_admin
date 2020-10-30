@@ -29,7 +29,7 @@
 
     <!-- <pre>{{ items }}</pre> -->
     
-    <el-dialog :title="$t('binding_stores')" width="607px" :visible.sync="dialogVisible" class="store-form">
+    <el-dialog :title="$t('binding_stores')" width="607px" :visible.sync="dialogVisible" class="store-form" @closed="closed">
       <el-form ref="formStore" :model="formStore">
         <el-form-item :label="$t('please_enter_the_store_link_in_the_box_below')" style="margin-bottom:15px;">
           <el-input v-model="formStore.url" placeholder="http://" style="width:430px;" />
@@ -95,7 +95,7 @@ export default {
     },
     show_country(id) {
       let item = this.countries.find(item => item.Id === id)
-      return item.Name
+      return item ? item.Name : ''
     },
 
     // 发送验证码
@@ -145,6 +145,14 @@ export default {
         this.$message.error(err.data.Message)
       })
     },
+    
+    closed() {
+      this.formStore = {
+        url: '',
+        captcha: ''
+      }
+    },
+
     // 接触绑定
     close(id) {
       this.$http.post('/UserShop/UnBind', {

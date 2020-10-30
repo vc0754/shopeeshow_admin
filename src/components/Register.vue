@@ -40,7 +40,6 @@
         <router-link to="/sign">{{ $t('go_sign') }}</router-link>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -77,7 +76,12 @@ export default {
       send_code: 0
     }
   },
-  computed: mapState({ sys: state => state.sys }),
+  computed: mapState({
+    sys: state => state.sys,
+    InvitationCode () {
+      return this.$route.query.InvitationCode
+    }
+  }),
   methods: {
     ...mapActions([USER_SIGNIN]),
     
@@ -132,7 +136,7 @@ export default {
     // 注册成功回调
     handle_registered() {
       if (this.registerSuccess) return this.registerSuccess();
-      // this.$router.replace({ path: '/' });
+      this.$router.replace({ path: '/' });
     },
 
     // 提交表单
@@ -147,11 +151,18 @@ export default {
       if (this.formData.Pwd !== this.formData.Pwd2) return this.$message.error('两次密码不一致')
 
       if (this.formData.Email && this.formData.UserName && this.formData.Code && this.formData.Pwd && this.formData.Pwd2) {
-        this.$http.post('/User/EmailRegister', this.formData).then(res => {
+        this.$http.post('/User/EmailRegister', {
+          Email: this.formData.Email,
+          UserName: this.formData.UserName,
+          Code: this.formData.Code,
+          InvitationCode: this.InvitationCode,
+          Pwd: this.formData.Pwd,
+          Pwd2: this.formData.Pwd2
+        }).then(res => {
           console.log(res)
           // this.$store.dispatch(USER_SIGNIN, res)
-          // this.$Message.success('注册成功!')
-          // this.handle_registered()
+          this.$Message.success('注册成功!')
+          this.handle_registered()
         }).catch(err => {
           this.$message.error(err.data.Message)
         });

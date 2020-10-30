@@ -8,10 +8,8 @@
     <h3 class="section_title">{{ $t('create_tasks') }}</h3>
 
     <div class="desc">
-      <h3>{{ $t('p_title') }}</h3>
-      <p>{{ $t('p_p_1') }}</p>
-      <p>{{ $t('p_p_2') }}</p>
-      <p>{{ $t('p_p_3') }}</p>
+      <h3>{{ $t('mission_title') }}</h3>
+      <p v-html="$t('mission_desc')"></p> 
     </div>
 
     <el-form ref="form" :model="form" class="formAddTask" label-width="130px">
@@ -94,15 +92,15 @@
 
           <div class="flex flex-y-center m-l-10">
             <el-checkbox-group v-model="form2.type1">
-              <el-checkbox :label="`${$t('focus_on_stores')}（+${fav_shop_price}${$t('currency_unit')}）`" name="type"></el-checkbox>
+              <el-checkbox :label="`${$t('focus_on_stores')}（+${fav_shop_price}${$t(`${form.currency}`)}）`" name="type"></el-checkbox>
             </el-checkbox-group>
 
             <el-checkbox-group v-model="form2.type2">
-              <el-checkbox :label="`${$t('collection_of_goods')}（+${fav_goods_price}${$t('currency_unit')}）`" name="type"></el-checkbox>
+              <el-checkbox :label="`${$t('collection_of_goods')}（+${fav_goods_price}${$t(`${form.currency}`)}）`" name="type"></el-checkbox>
             </el-checkbox-group>
 
             <el-checkbox-group v-model="form2.type3">
-              <el-checkbox :label="`${$t('add_cart')}（+${add_cart_price}${$t('currency_unit')}）`" name="type"></el-checkbox>
+              <el-checkbox :label="`${$t('add_cart')}（+${add_cart_price}${$t(`${form.currency}`)}）`" name="type"></el-checkbox>
             </el-checkbox-group>
           </div>
           
@@ -143,17 +141,45 @@
 
           <el-table-column :label="$t('add_pic')" width="140">
             <template slot-scope="scope">
-              <div>
+              <div class="uploader-thumbs">
                 <el-upload name="files" list-type="picture-card"
-                  :action="upload_url" :limit="4"
+                  :action="upload_url" :limit="1" :show-file-list="false"
                   :on-success="function(res, file) { return handleBannerSuccess(res, file, scope.$index)}"
                   :on-remove="function(res, file){ return handleBannerRemove(res, scope.$index)}"
                   >
+                  <div class="thumb" :style="{backgroundImage: `url(http://${scope.row.CommentPic[0]})`}" v-if="scope.row.CommentPic[0]"></div>
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                   <!-- scope.$index -->
                   <!-- :file-list="scope.row.CommentPic" -->
                   <!-- <div v-if="scope.row.CommentPic.length"></div> -->
-                  <i class="el-icon-plus"></i>
                   <!-- :on-preview="handlePictureCardPreview" -->
+                </el-upload>
+
+                <el-upload name="files" list-type="picture-card"
+                  :action="upload_url" :limit="1" :show-file-list="false"
+                  :on-success="function(res, file) { return handleBannerSuccess(res, file, scope.$index)}"
+                  :on-remove="function(res, file){ return handleBannerRemove(res, scope.$index)}"
+                  >
+                  <div class="thumb" :style="{backgroundImage: `url(http://${scope.row.CommentPic[1]})`}" v-if="scope.row.CommentPic[1]"></div>
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+
+                <el-upload name="files" list-type="picture-card"
+                  :action="upload_url" :limit="1" :show-file-list="false"
+                  :on-success="function(res, file) { return handleBannerSuccess(res, file, scope.$index)}"
+                  :on-remove="function(res, file){ return handleBannerRemove(res, scope.$index)}"
+                  >
+                  <div class="thumb" :style="{backgroundImage: `url(http://${scope.row.CommentPic[2]})`}" v-if="scope.row.CommentPic[2]"></div>
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+
+                <el-upload name="files" list-type="picture-card"
+                  :action="upload_url" :limit="1" :show-file-list="false"
+                  :on-success="function(res, file) { return handleBannerSuccess(res, file, scope.$index)}"
+                  :on-remove="function(res, file){ return handleBannerRemove(res, scope.$index)}"
+                  >
+                  <div class="thumb" :style="{backgroundImage: `url(http://${scope.row.CommentPic[3]})`}" v-if="scope.row.CommentPic[3]"></div>
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
               </div>
             </template>
@@ -168,7 +194,7 @@
           <el-table-column min-width="100">
             <template #header>
               <p class="lh-150">{{ $t('focus_on_stores') }}</p>
-              <p style="color:#46A1FF;" class="lh-100">(+{{ fav_shop_price }}{{ $t('currency_unit') }})</p>
+              <p style="color:#46A1FF;" class="lh-100">(+{{ fav_shop_price }}{{ $t(`${form.currency}`) }})</p>
             </template>
 
             <template slot-scope="scope">
@@ -179,7 +205,7 @@
           <el-table-column min-width="100">
             <template #header>
               <p class="lh-150">{{ $t('collection_of_goods') }}</p>
-              <p style="color:#46A1FF;" class="lh-100">(+{{ fav_goods_price }}{{ $t('currency_unit') }})</p>
+              <p style="color:#46A1FF;" class="lh-100">(+{{ fav_goods_price }}{{ $t(`${form.currency}`) }})</p>
             </template>
 
             <template slot-scope="scope">
@@ -190,7 +216,7 @@
           <el-table-column min-width="100">
             <template #header>
               <p class="lh-150">{{ $t('add_cart') }}</p>
-              <p style="color:#46A1FF;" class="lh-100">(+{{ add_cart_price }}{{ $t('currency_unit') }})</p>
+              <p style="color:#46A1FF;" class="lh-100">(+{{ add_cart_price }}{{ $t(`${form.currency}`) }})</p>
             </template>
 
             <template slot-scope="scope">
@@ -226,6 +252,10 @@
               <img :src="`http://${AddplusForm.img}`" alt="" style="width:47px;height:47px;">
               <div class="p-l-15 text-left">{{ AddplusForm.url }}</div>
             </div>
+          </el-table-column>
+
+          <el-table-column :label="$t('title')" min-width="260px">
+            <span>{{ AddplusForm.title }}</span>
           </el-table-column>
 
           <el-table-column :label="$t('number')" width="80px">
@@ -770,9 +800,22 @@ export default {
 </script>
 
 <style lang="less">
+.uploader-thumbs {
+  display: flex; justify-content: center; flex-wrap: wrap;
+  > div {
+    margin: 2px; overflow: hidden;
+    .thumb {
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+      width: 42px; height: 42px;
+    }
+  }
+}
+
 .desc {
   background-color: #fff; border: solid 1px rgb(215, 215, 215);
-  font-size: 14px; line-height: 1.65;
+  font-size: 12px; line-height: 1.65;
   padding: 15px 25px; margin-bottom: 20px;
   h3 { font-size: 18px; font-weight: bold; margin-bottom: 8px;}
 }
