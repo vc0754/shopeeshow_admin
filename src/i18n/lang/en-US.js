@@ -33,7 +33,7 @@ export default {
     jiesuanzhongxin: 'SETTLEMENT',
     zhifuliushui: 'TRANSITION',
   },
-  brand: '',
+  brand: 'Management Information System For Seller',
   lan: {
     chinese: 'chinese',
     english: 'english'
@@ -51,7 +51,7 @@ export default {
   business_release_task: 'Business Release Task',
   set_task_requirements: 'Set Task Requirements',
   payment_and_settlement: 'Payment And Settlement',
-  check_the_order_and_make_payment: 'Check The Order And Make Payment',
+  check_the_order_and_make_payment: 'Check The Order',
   mission_accomplished: 'Mission Accomplished',
   customer_service: '专属客服',
   business_announcement: 'Business Announcement',

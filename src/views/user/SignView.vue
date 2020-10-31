@@ -61,8 +61,10 @@ export default {
       identifyCodes: '23456890',
       identifyCode: '',
       formPSW: {
-        UserName: '980436963@qq.com',
-        Pwd: '123',
+        UserName: '',
+        Pwd: '',
+        // UserName: '980436963@qq.com',
+        // Pwd: '123',
         captcha: '',
         checked: false
       },
@@ -103,7 +105,7 @@ export default {
           })
           this.$router.replace({ path: '/' })
         }).catch(err => {
-          this.$message.error(err.data.message)
+          this.$message.error(err.data.Message)
         })
       })
     },

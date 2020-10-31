@@ -8,7 +8,7 @@
 
     <h3 class="section_title">{{ $t('operation_process') }}</h3>
 
-    <el-row :gutter="46" class="row00">
+    <el-row :gutter="24" class="row00">
       <el-col :span="6">
         <div class="block_wrap">
           <img alt="" src="../assets/icon01.png" class="icon">
@@ -61,23 +61,42 @@
           <div class="service_content" v-if="services.Contact">
             <ul>
               <li v-for="(item, index) in services.Contact" :key="index">
-                <div :class="`bg bg_${item.Type}`"></div>
-                <span class="icon" v-if="item.Type === 1">微信</span>
-                <span class="icon" v-if="item.Type === 2">Line</span>
-                <span class="icon" v-if="item.Type === 3">Whatsapp</span>
-                <span class="icon icon4" v-if="item.Type === 4">Facebook</span>
-                <div class="tip" v-if="item.Link">
-                  <p>点我和我联系</p>
-                </div>
-                <div class="tip" v-else>
-                  <p>点我扫一扫</p>
-                  <p>Scan the QR code</p>
-                </div>
+                <a :href="item.Link" target="_blank" v-if="item.Link">
+                  <div :class="`bg bg_${item.Type}`"></div>
+                  <span class="icon" v-if="item.Type === 1">微信</span>
+                  <span class="icon" v-if="item.Type === 2">Line</span>
+                  <span class="icon" v-if="item.Type === 3">Whatsapp</span>
+                  <span class="icon icon4" v-if="item.Type === 4">Facebook</span>
+                  <div class="tip" v-if="item.Link">
+                    <p>点我和我联系</p>
+                  </div>
+                  <div class="tip" v-else>
+                    <p>点我扫一扫</p>
+                    <p>Scan the QR code</p>
+                  </div>
 
-                <div class="hover_show">
-                  <a :href="item.Link" v-if="item.Link"><img :src="item.QRCode" alt=""></a>
-                  <img :src="item.QRCode" alt="" v-else>
-                </div>
+                  <div class="hover_show">
+                    <img :src="item.QRCode" alt="">
+                  </div>
+                </a>
+                <template v-else>
+                  <div :class="`bg bg_${item.Type}`"></div>
+                  <span class="icon" v-if="item.Type === 1">微信</span>
+                  <span class="icon" v-if="item.Type === 2">Line</span>
+                  <span class="icon" v-if="item.Type === 3">Whatsapp</span>
+                  <span class="icon icon4" v-if="item.Type === 4">Facebook</span>
+                  <div class="tip" v-if="item.Link">
+                    <p>点我和我联系</p>
+                  </div>
+                  <div class="tip" v-else>
+                    <p>点我扫一扫</p>
+                    <p>Scan the QR code</p>
+                  </div>
+
+                  <div class="hover_show">
+                    <img :src="item.QRCode" alt="">
+                  </div>
+                </template>
               </li>
             </ul>
           </div>

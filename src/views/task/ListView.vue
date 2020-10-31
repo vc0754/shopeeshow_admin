@@ -225,7 +225,15 @@ export default {
       });
     },
     get_counts() {
-      this.$http.get('/Task/Search_StateCount').then(res => {
+      this.$http.get('/Task/Search_StateCount', {
+        params: {
+          StartTime: this.start_time,
+          EndTime: this.end_time,
+          CountryId: this.form.country,
+          OrderNo:  this.form.OrderNo,
+          Title: this.form.name,
+        }
+      }).then(res => {
         this.statuses[0].number = res.Data.SumCount
         this.statuses[1].number = res.Data.WaitVerifyCount
         this.statuses[2].number = res.Data.TaskIngCount
