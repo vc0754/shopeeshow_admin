@@ -166,7 +166,7 @@
       <!-- <pre>{{ selected_orders_currency }}</pre> -->
       <!-- <pre>{{ selected_orders_total }}</pre> -->
     
-      <el-dialog :title="`${$t('paying')}...`" width="944px" :visible.sync="dialogVisible" class="payment-form">
+      <el-dialog :title="`${$t('paying')}...`" width="944px" :visible.sync="dialogVisible" @closed="dialogClosed" class="payment-form">
         <div class="col-left">
           <h3>{{ $t('please_choose_a_payment_method') }}：</h3>
           <ul class="payment_channels">
@@ -198,7 +198,7 @@
               <strong class="blue">{{ payment_total | fixed2 }}</strong>
             </el-form-item>
 
-            <el-form-item :label="`*${$t('payment_order_number')}：`">
+            <el-form-item :label="`* ${$t('payment_order_number')}：`">
               <el-input v-model="formPayment.sn" :placeholder="`（${$t('required')}）`" />
             </el-form-item>
 
@@ -395,15 +395,24 @@ export default {
     },
     // 支付提交
     payment_submit() {
+      if (!this.formPayment.sn) return this.$message.error('支付订单号必须')
+
       this.$http.post('/SettlementCenter/Pay', {
         PaymentModeId: this.payment_channel_id,
         PayCost: (this.payment_total * 1).toFixed(2) * 1,
         PayOrderNo: this.formPayment.sn,
         TaskSubOrderNo: this.selected_orders_sn
-      }).then(() => {
+      }).then(res => {
+        console.log('xxxxxx')
+        console.log(res)
+
         this.dialogVisible = false
         this.onSearch()
         this.formPayment.sn = ''
+
+        this.$message.success(res.data.Message)
+      }).catch(err => {
+        this.$message.error(err.data.Message)
       })
     },
     // 检查行状态，返回用于 table checkbox 是否禁用
@@ -490,6 +499,11 @@ export default {
     countryShowName(id) {
       let item = this.countries.find(item => item.Id === id)
       return item ? item.Name : id
+    },
+
+    // 关闭
+    dialogClosed() {
+      this.formPayment.sn = ''
     },
 
     onSearch () {

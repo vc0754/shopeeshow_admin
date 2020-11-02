@@ -15,7 +15,7 @@
     <el-form ref="form" :model="form" class="formAddTask" label-width="130px">
       <h4>{{ $t('step_1') }}</h4>
 
-      <pre>https://xiapi.xiapibuy.com/product/282684893/4743308116/</pre>
+      <!-- <pre>https://xiapi.xiapibuy.com/product/282684893/4743308116/</pre> -->
       <!-- <pre>{{ form }}</pre> -->
 
       <el-form-item :label="`${$t('choose_a_store')}:`">
@@ -24,11 +24,11 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item :label="`${$t('site')}:`">
+      <el-form-item :label="`${$t('site')}:`" class="disabled">
         <el-input v-model="form.country" placeholder="" style="width:76px;" readonly></el-input>
       </el-form-item>
 
-      <el-form-item :label="`${$t('local_currency')}:`">
+      <el-form-item :label="`${$t('local_currency')}:`" class="disabled">
         <el-input v-model="form.currency" placeholder="" style="width:76px;" readonly></el-input>
       </el-form-item>
 
@@ -70,6 +70,8 @@
         <div class="formNextOpt">
           <el-button type="primary" @click="on_next_step" :disabled="!next_abled">{{ $t('next') }}</el-button>
           <span @click="on_cancel" style="cursor:pointer;">{{ $t('cancel') }}</span>
+
+          <span class="p-l-25 orange">（产品下单价格、数量、加购产品不同时，请单独重新发布任务）</span>
         </div>
       </el-form-item>
     </el-form>
@@ -184,6 +186,21 @@
               </div>
             </template>
           </el-table-column>
+          
+          <!-- 颜色 -->
+          <el-table-column :label="$t('color')" min-width="100">
+            <template slot-scope="scope">
+              <span>{{ scope.row.color }}</span>
+            </template>
+          </el-table-column>
+          
+          <!-- 尺码 -->
+          <el-table-column :label="$t('size')" min-width="100">
+            <template slot-scope="scope">
+              <span>{{ scope.row.size }}</span>
+            </template>
+          </el-table-column>
+
 
           <el-table-column :label="$t('special_requirements')" width="200">
             <template slot-scope="scope">
@@ -559,6 +576,28 @@ export default {
         this.goods.MainPic = this.detail.MainPic
         this.goods.SaleCount = this.detail.SaleCount
         this.goods.Title = this.detail.Title
+
+        for(let i = 0; i < this.detail.Detail.length; ++i) {
+          this.tableData.push({
+            keyword: this.detail.Detail[i].SearchKey,
+            price: this.detail.Detail[i].OrderPrice,
+            amount: this.detail.Detail[i].BuyCount,
+            CommentPic: [],
+            pingyu: this.detail.Detail[i].Comment,
+            remark: this.detail.Detail[i].Remark,
+            price_1: this.detail.Detail[i].FollowShop_Cost,
+            price_1_bool: this.detail.Detail[i].FollowShop,
+            price_2: this.detail.Detail[i].CollectGoods_Cost,
+            price_2_bool: this.detail.Detail[i].CollectGoods,
+            price_3: this.detail.Detail[i].AddShoppingCart_Cost,
+            price_3_bool: this.detail.Detail[i].AddShoppingCart,
+            price_yugu: this.detail.Detail[i].Pub_OrderCost,
+            yongjin_yugu: this.detail.Detail[i].Pub_CommissionCost,
+            total: this.detail.Detail[i].Pub_TotalCost,
+          })
+        }
+        
+        this.step = 2
       }).catch(err => {
         this.$message.error(err.data.Message)
       });
@@ -829,9 +868,9 @@ export default {
   .el-form-item__label { line-height: 32px;}
   .el-form-item__content { line-height: 32px;}
   .el-input__inner {
-    background-color: #f2f2f2;
     height: 32px; line-height: 32px; border-radius: 0; padding: 0 8px;
   }
+  .disabled .el-input__inner { background-color: #f2f2f2;}
   .el-input__icon { line-height: 32px;}
   .el-radio-group { margin-bottom: 30px;}
   .el-radio { display: block; margin-bottom: 5px; padding: 10px 0;}
@@ -851,7 +890,7 @@ export default {
   }
 
   .formNextOpt {
-    width: 300px; display: flex; margin-left: 50px;
+    display: flex; margin-left: 50px;
     .el-button--primary { width: 63px; height: 32px; line-height: 32px; border-radius: 0; padding: 0; margin-right: 25px;}
   }
 

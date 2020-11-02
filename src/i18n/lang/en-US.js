@@ -105,7 +105,7 @@ export default {
   step_3: 'step 3: payment method',
   choose_a_store: 'select store',
   local_currency: 'local currency',
-  baby_link: 'baby link',
+  baby_link: 'Item url',
   tip8: 'you need to arrange a refund within 24 hours after the form is checked, otherwise, you can go to refund by brushing your hands. Please contact customer service for special circumstances!',
   tip9: 'You need to arrange the refund within 24 hours after receiving the goods, otherwise you can refund by brushing your hands. Please contact customer service for special circumstances!',
   batch_setting: 'batch setting (select the content in the lower column to fill in batch)',

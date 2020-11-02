@@ -1,6 +1,6 @@
 <template>
   <header class="header">
-    <div class="flex">
+    <div class="flex flex-grow">
       <img src="../../assets/toggle.svg" alt="" class="" />
       <span class="fs-12 m-l-10" style="color:#333;">{{ $t('brand') }}</span>
     </div>

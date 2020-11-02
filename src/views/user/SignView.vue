@@ -7,16 +7,16 @@
           <img alt="" :src="sys.logo">
         </div>
 
-        <el-form class="sign-content" ref="formPSW" :model="formPSW">
-          <el-form-item>
+        <el-form class="sign-content" ref="formPSW" :model="formPSW" :rules="rules">
+          <el-form-item prop="UserName">
             <el-input v-model="formPSW.UserName" :placeholder="$t('sign.account')" />
           </el-form-item>
 
-          <el-form-item>
-            <el-input type="password" v-model="formPSW.Pwd" :placeholder="$t('sign.pwd')" :maxlength="6" />
+          <el-form-item prop="Pwd">
+            <el-input type="password" v-model="formPSW.Pwd" :placeholder="$t('sign.pwd')" :maxlength="20" />
           </el-form-item>
           
-          <el-form-item style="margin-bottom: 5px;">
+          <el-form-item style="margin-bottom: 5px;" prop="captcha">
             <el-input v-model="formPSW.captcha" :placeholder="$t('sign.captcha')" :maxlength="6" style="width:165px;" />
             <s-identify :identifyCode="identifyCode" :contentWidth="contentWidth" :contentHeight="contentHeight" class="captcha" @click.native="refreshCode"></s-identify>
           </el-form-item>
@@ -61,12 +61,25 @@ export default {
       identifyCodes: '23456890',
       identifyCode: '',
       formPSW: {
-        UserName: '',
-        Pwd: '',
-        // UserName: '980436963@qq.com',
-        // Pwd: '123',
+        // UserName: '',
+        // Pwd: '',
+        UserName: '980436963@qq.com',
+        Pwd: '123',
         captcha: '',
         checked: false
+      },
+      rules: {
+        UserName: [
+          { required: true, message: '邮箱必须', trigger: 'blur' },
+          { type: 'email', message: '邮箱格式错误', trigger: 'change' }
+        ],
+        Pwd: [
+          { required: true, message: '密码必须', trigger: 'blur' },
+          // { pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,20}$/, message: '长度8-20位，必须包含大小写英文字母，数字', trigger: 'blur' }
+        ],
+        captcha: [
+          { required: true, message: '验证码必须', trigger: 'blur' },
+        ]
       },
       loading: false
     }
@@ -135,7 +148,7 @@ export default {
   background-color: #fff;
   width: 392px; height: 478px;
   padding: 38px 60px;
-  display: flex; flex-direction: column; align-items: center;
+  // display: flex; flex-direction: column; align-items: center;
   
   .brand {
     width: 100%; margin-bottom: 24px;
