@@ -10,10 +10,10 @@
           <img :src="icon1[isOver1]" style="cursor: pointer;" @mouseover="isOver1 = 1" @mouseleave="isOver1 = 0" />
           <span>{{ lan }}</span>
         </li>
-        <li class="m-l-25">
+        <!-- <li class="m-l-25">
           <img :src="icon2[isOver2]" style="cursor: pointer;" @mouseover="isOver2 = 1" @mouseleave="isOver2 = 0" />
           <span>{{ $t('setting') }}</span>
-        </li>
+        </li> -->
         <li class="m-l-25" @click="logout">
           <img :src="icon3[isOver3]" style="cursor: pointer;" @mouseover="isOver3 = 1" @mouseleave="isOver3 = 0" />
           <span>{{ $t('quit') }}</span>

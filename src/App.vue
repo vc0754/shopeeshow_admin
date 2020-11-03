@@ -21,7 +21,7 @@ export default {
         link.href = `http://${res.Data.SmallLogo}`;
         document.getElementsByTagName("head")[0].appendChild(link);
 
-        console.log(link)
+        // console.log(link)
       })
     }
   },

@@ -37,7 +37,7 @@
       </div>
       <div class="flex p-l-20">
         <el-button type="primary" @click="onSearch">{{ $t('query') }}</el-button>
-        <el-button type="primary" class="m-l-20">导出 Excel</el-button>
+        <!-- <el-button type="primary" class="m-l-20">导出 Excel</el-button> -->
       </div>
     </el-form>
 
@@ -148,7 +148,14 @@ export default {
       total: 0,
       items: [],
       loading: false,
-      countries: []
+      countries: [],
+      sta: [
+        { number: 0},
+        { number: 0},
+        { number: 0},
+        { number: 0},
+        { number: 0}
+      ]
     }
   },
   filters: {
@@ -165,11 +172,11 @@ export default {
     },
     statuses() {
       return [
-        { label: this.$t('all'), value: 9999, number: 0},
-        { label: this.$t('to_be_reviewed'), value: 1, number: 0},
-        { label: this.$t('have_in_hand'), value: 3, number: 0},
-        { label: this.$t('rejected'), value: 2, number: 0},
-        { label: this.$t('end_of_mission'), value: 4, number: 0}
+        { label: this.$t('all'), value: 9999, number: this.sta[0].number},
+        { label: this.$t('to_be_reviewed'), value: 1, number: this.sta[1].number},
+        { label: this.$t('have_in_hand'), value: 3, number: this.sta[2].number},
+        { label: this.$t('rejected'), value: 2, number: this.sta[3].number},
+        { label: this.$t('end_of_mission'), value: 4, number: this.sta[4].number}
       ]
     },
     start_time() {
@@ -234,11 +241,11 @@ export default {
           Title: this.form.name,
         }
       }).then(res => {
-        this.statuses[0].number = res.Data.SumCount
-        this.statuses[1].number = res.Data.WaitVerifyCount
-        this.statuses[2].number = res.Data.TaskIngCount
-        this.statuses[3].number = res.Data.VerifyFailCount
-        this.statuses[4].number = res.Data.TaskEndCount
+        this.sta[0].number = res.Data.SumCount
+        this.sta[1].number = res.Data.WaitVerifyCount
+        this.sta[2].number = res.Data.TaskIngCount
+        this.sta[3].number = res.Data.VerifyFailCount
+        this.sta[4].number = res.Data.TaskEndCount
       }).catch(err => {
         this.$message.error(err.data.Message)
       });
@@ -263,9 +270,9 @@ export default {
   watch: {
   },
   mounted() {
+    this.get_counts()
     this.get_country()
     this.onSearch()
-    this.get_counts()
   }
 }
 </script>

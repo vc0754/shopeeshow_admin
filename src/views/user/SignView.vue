@@ -61,10 +61,10 @@ export default {
       identifyCodes: '23456890',
       identifyCode: '',
       formPSW: {
-        // UserName: '',
-        // Pwd: '',
-        UserName: '980436963@qq.com',
-        Pwd: '123',
+        UserName: '',
+        Pwd: '',
+        // UserName: '980436963@qq.com',
+        // Pwd: '123',
         captcha: '',
         checked: false
       },

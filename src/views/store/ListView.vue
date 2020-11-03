@@ -18,11 +18,11 @@
       <el-col :md="8" :lg="6" v-for="(item, index) in items" :key="index">
         <div class="block_wrap">
           <div class="flex flex-column flex-x-center" style="height:74px;">
-            <span class="store_name">{{ $t('shop_name') }} : {{ item.ShopName }}</span>
+            <span class="store_name">{{ $t('shop_name') }} : {{ item.ShopUserName }}</span>
             <span>{{ $t('site') }} : {{ show_country(item.Country) }}</span>
             <!-- <span>汇率 : 0.456</span> -->
           </div>
-          <img alt="" src="../../assets/close.svg" class="close" @click="close(item.ShopId)">
+          <img alt="" src="../../assets/close.svg" class="close" @click="close(item.Id)">
         </div>
       </el-col>
     </el-row>
@@ -156,7 +156,7 @@ export default {
     // 接触绑定
     close(id) {
       this.$http.post('/UserShop/UnBind', {
-        UserShopId: id
+        Id: id
       }).then(res => {
         console.log(res)
         // this.query()
