@@ -78,6 +78,7 @@
         </el-table-column>
 
         <el-table-column prop="Remark" :label="$t('special_requirements')" min-width="100"></el-table-column>
+        <el-table-column prop="Spec" :label="$t('special_model')" min-width="160"></el-table-column>
         <el-table-column prop="Sp_NickName" :label="$t('buyer_nickname')" width="80"></el-table-column>
         <el-table-column prop="Sp_OrderNo" :label="$t('order_number')" min-width="180"></el-table-column>
         <el-table-column prop="StateStr" :label="$t('order_status')" min-width="80"></el-table-column>

@@ -14,7 +14,14 @@ export default {
         this.$store.dispatch(SYS_REG, {
           logo: `http://${res.Data.Logo}`,
           site: res.Data.Name
-        })
+        });
+        let link = document.querySelector('link[rel*="icon"]') || document.createElement("link")
+        link.type = "image/x-icon";
+        link.rel = "shortcut icon";
+        link.href = `http://${res.Data.SmallLogo}`;
+        document.getElementsByTagName("head")[0].appendChild(link);
+
+        console.log(link)
       })
     }
   },

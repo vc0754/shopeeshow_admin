@@ -31,7 +31,8 @@
       <el-form-item :label="`${$t('local_currency')}:`" class="disabled">
         <el-input v-model="form.currency" placeholder="" style="width:76px;" readonly></el-input>
       </el-form-item>
-
+      
+      <!-- 第二步 -->
       <h4 class="m-t-35">{{ $t('step_2') }}</h4>
 
       <el-form-item :label="`${$t('baby_link')}:`">
@@ -50,7 +51,8 @@
           </div>
         </div>
       </el-form-item>
-
+      
+      <!-- 第三步 -->
       <h4 class="m-t-35">{{ $t('step_3') }}</h4>
 
       <el-form-item :label="`${$t('pay_it_method')}:`">
@@ -58,11 +60,47 @@
           <el-radio label="1">{{ $t('order_payment') }}
             <span class="orange">（{{ $t('tip8') }}）</span>
           </el-radio>
-          <el-radio label="2">{{ $t('cash_on_delivery') }}
+          <!-- <el-radio label="2">{{ $t('cash_on_delivery') }}
             <span class="orange">（{{ $t('tip9') }}）</span>
-          </el-radio>
+          </el-radio> -->
         </el-radio-group>
       </el-form-item>
+      
+      <!-- 第四步 -->
+      <h4 class="m-t-35a">{{ $t('step_4') }}</h4>
+
+      <el-form-item label="" style="margin-left:-70px;">
+        <el-radio-group v-model="form.is_add_goods">
+          <el-radio label="1">不需要加购商品</el-radio>
+          <el-radio label="2">需要加购商品</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      
+      <!-- 加购商品 -->
+      <div class="m-b-35" v-if="form.is_add_goods === '2'">
+        <el-form-item :label="`${$t('product_links')}:`">
+          <el-input v-model="AddplusForm.url" placeholder="" style="width:360px;" @blur="on_addplus_input_blured"></el-input>
+        </el-form-item>
+
+        <el-form-item :label="`${$t('product_title')}:`">
+          <el-input v-model="AddplusForm.title" placeholder="" style="width:360px;" readonly="" class="disabled"></el-input>
+        </el-form-item>
+
+        <el-form-item :label="`${$t('main_pic')}:`">
+          <img :src="`http://${AddplusForm.img}`" alt="" v-if="AddplusForm.img" width="80">
+        </el-form-item>
+
+        <el-form-item :label="`${$t('order_numbers')}:`">
+          <el-input v-model="AddplusForm.amount" placeholder="" style="width:76px;"></el-input>
+        </el-form-item>
+
+        <el-form-item :label="`${$t('order_amount')}:`">
+          <el-input v-model="AddplusForm.price" placeholder="" style="width:76px;"></el-input>
+        </el-form-item>
+      </div>
+      
+      <!-- 加购商品 完成 -->
+
 
       <el-form-item :label="`${$t('odd_number_of_published_tasks')}:`" class="formNextOptWrap">
         <el-input v-model="form.number" placeholder="" style="width:58px;"></el-input>
@@ -107,8 +145,8 @@
           </div>
           
           <el-button type="primary" @click="on_setting">{{ $t('set_now') }}</el-button>
-          <el-button type="primary" @click="addplus_cancel" v-if="AddplusForm.add">{{ $t('cancel_app_plush') }}</el-button>
-          <el-button type="primary" @click="addplus" v-else>{{ $t('app_plush') }}</el-button>
+          <!-- <el-button type="primary" @click="addplus_cancel" v-if="AddplusForm.add">{{ $t('cancel_app_plush') }}</el-button>
+          <el-button type="primary" @click="addplus" v-else>{{ $t('app_plush') }}</el-button> -->
         </div>
       </div>
 
@@ -187,24 +225,17 @@
             </template>
           </el-table-column>
           
-          <!-- 颜色 -->
-          <el-table-column :label="$t('color')" min-width="100">
-            <template slot-scope="scope">
-              <span>{{ scope.row.color }}</span>
-            </template>
-          </el-table-column>
-          
-          <!-- 尺码 -->
-          <el-table-column :label="$t('size')" min-width="100">
-            <template slot-scope="scope">
-              <span>{{ scope.row.size }}</span>
-            </template>
-          </el-table-column>
-
-
+          <!-- 特殊要求 -->
           <el-table-column :label="$t('special_requirements')" width="200">
             <template slot-scope="scope">
               <el-input :placeholder="$t('remark')" style="width:180px;" v-model="scope.row.remark"></el-input>
+            </template>
+          </el-table-column>
+          
+          <!-- 规格型号 -->
+          <el-table-column :label="$t('special_model')" min-width="160">
+            <template slot-scope="scope">
+              <el-input :placeholder="$t('color_size')" style="width:140px;" v-model="scope.row.Spec"></el-input>
             </template>
           </el-table-column>
 
@@ -411,8 +442,9 @@ export default {
         flag: '',       // 旗帜
         currency: '',   // 币种
         url: '',        // 宝贝链接
-        payment: '',    // 支付方式
-        number: ''      // 任务数
+        payment: '1',    // 支付方式
+        number: '',     // 任务数
+        is_add_goods: '1' // 是否加购商品
       },
       goods: {},        // 自动获取的宝贝
 
@@ -572,6 +604,20 @@ export default {
         this.form.url = this.detail.Url
         this.form.payment = this.detail.PayMode.toFixed(0)
         this.form.number = this.detail.Detail.length
+        
+        if (this.detail.AddedGoods.Title) {
+          this.AddplusForm.url = this.detail.AddedGoods.Url
+          this.AddplusForm.title = this.detail.AddedGoods.Title
+          this.AddplusForm.img = this.detail.AddedGoods.MainPic
+          this.AddplusForm.amount = this.detail.AddedGoods.BuyCount
+          this.AddplusForm.price = this.detail.AddedGoods.OrderPrice
+
+          this.form.is_add_goods = '2'
+        } else {
+          this.form.is_add_goods = '1'
+        }
+
+
         this.goods.ItemId = this.detail.ItemId
         this.goods.MainPic = this.detail.MainPic
         this.goods.SaleCount = this.detail.SaleCount
@@ -583,6 +629,7 @@ export default {
             price: this.detail.Detail[i].OrderPrice,
             amount: this.detail.Detail[i].BuyCount,
             CommentPic: [],
+            Spec: this.detail.Detail[i].Spec,
             pingyu: this.detail.Detail[i].Comment,
             remark: this.detail.Detail[i].Remark,
             price_1: this.detail.Detail[i].FollowShop_Cost,
@@ -648,6 +695,7 @@ export default {
           CommentPic: [],
           pingyu: '',
           remark: '',
+          Spec: '',
           price_1: 0,
           price_1_bool: false,
           price_2: 0,
@@ -711,7 +759,7 @@ export default {
           item.price_3 = 0
           item.price_3_bool = false
         }
-        item.price_yugu = parseFloat(item.price * item.amount + (this.AddplusForm.add ? this.AddplusForm.amount * this.AddplusForm.price: 0))
+        item.price_yugu = parseFloat(item.price * item.amount + (this.form.is_add_goods === '2' ? this.AddplusForm.amount * this.AddplusForm.price: 0))
         item.yongjin_yugu = this.yongjin_price
         item.total = parseFloat(item.price_yugu + item.yongjin_yugu + item.price_1 + item.price_2 + item.price_3)
         return item
@@ -787,6 +835,7 @@ export default {
           Comment: item.pingyu,
           CommentPic: item.CommentPic,
           Remark: item.remark,
+          Spec: item.Spec,
           FollowShop: item.price_1_bool,
           CollectGoods: item.price_2_bool,
           AddShoppingCart: item.price_3_bool
@@ -872,7 +921,7 @@ export default {
   }
   .disabled .el-input__inner { background-color: #f2f2f2;}
   .el-input__icon { line-height: 32px;}
-  .el-radio-group { margin-bottom: 30px;}
+  // .el-radio-group { margin-bottom: 30px;}
   .el-radio { display: block; margin-bottom: 5px; padding: 10px 0;}
 
   // 预览

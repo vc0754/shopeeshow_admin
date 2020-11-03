@@ -103,6 +103,7 @@ export default {
   step_1: 'Step 1: choose a store',
   step_2: 'Step 2: input the link and display it automatically',
   step_3: 'step 3: payment method',
+  step_4: '第四步：选择加购商品',
   choose_a_store: 'select store',
   local_currency: 'local currency',
   baby_link: 'Item url',
