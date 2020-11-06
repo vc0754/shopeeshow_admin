@@ -293,7 +293,7 @@
       </div>
 
       <!-- 加购 -->
-      <div class="formTable" v-if="AddplusForm.add">
+      <div class="formTable" v-if="form.is_add_goods === '2'">
         <el-table stripe :data="[{}]" style="width: 100%">
           <el-table-column :label="$t('tip4')" width="440">
             <div class="flex flex-y-center">
