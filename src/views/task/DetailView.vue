@@ -22,7 +22,7 @@
       </div>
 
       <el-form-item :label="`${$t('shop')}:`" style="margin: 0;">
-        <span>{{ detail.ShopName }}</span>
+        <span>{{ detail.ShopUserName }}</span>
       </el-form-item>
 
       <el-form-item :label="`${$t('site')}:`" style="margin: 0;">

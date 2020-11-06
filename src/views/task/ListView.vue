@@ -61,7 +61,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="ShopName" :label="$t('store_name')" width="180"></el-table-column>
+        <el-table-column prop="ShopUserName" :label="$t('store_name')" width="180"></el-table-column>
 
         <el-table-column prop="CountryId" :label="$t('site')" width="120">
           <template slot-scope="scope">

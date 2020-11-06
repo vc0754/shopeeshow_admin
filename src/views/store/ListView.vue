@@ -156,10 +156,10 @@ export default {
     // 接触绑定
     close(id) {
       this.$http.post('/UserShop/UnBind', {
-        Id: id
+        UserShopId: id
       }).then(res => {
-        console.log(res)
-        // this.query()
+        this.$message.success(res.Message)
+        this.query()
       }).catch(err => {
         this.$message.error(err.data.Message)
       })

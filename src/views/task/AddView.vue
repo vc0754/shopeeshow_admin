@@ -20,7 +20,7 @@
 
       <el-form-item :label="`${$t('choose_a_store')}:`">
         <el-select v-model="form.store_id" style="width:320px;" @change="on_selected_store">
-          <el-option :label="item.ShopName" :value="item.Id" v-for="(item, index) in stores" :key="index"></el-option>
+          <el-option :label="item.ShopUserName" :value="item.Id" v-for="(item, index) in stores" :key="index"></el-option>
         </el-select>
       </el-form-item>
 
@@ -187,7 +187,7 @@
                   :on-success="function(res, file) { return handleBannerSuccess(res, file, scope.$index)}"
                   :on-remove="function(res, file){ return handleBannerRemove(res, scope.$index)}"
                   >
-                  <div class="thumb" :style="{backgroundImage: `url(http://${scope.row.CommentPic[0]})`}" v-if="scope.row.CommentPic[0]"></div>
+                  <div class="thumb" :style="{backgroundImage: `url(${scope.row.CommentPic[0]})`}" v-if="scope.row.CommentPic[0]"></div>
                   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                   <!-- scope.$index -->
                   <!-- :file-list="scope.row.CommentPic" -->
@@ -200,7 +200,7 @@
                   :on-success="function(res, file) { return handleBannerSuccess(res, file, scope.$index)}"
                   :on-remove="function(res, file){ return handleBannerRemove(res, scope.$index)}"
                   >
-                  <div class="thumb" :style="{backgroundImage: `url(http://${scope.row.CommentPic[1]})`}" v-if="scope.row.CommentPic[1]"></div>
+                  <div class="thumb" :style="{backgroundImage: `url(${scope.row.CommentPic[1]})`}" v-if="scope.row.CommentPic[1]"></div>
                   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
 
@@ -209,7 +209,7 @@
                   :on-success="function(res, file) { return handleBannerSuccess(res, file, scope.$index)}"
                   :on-remove="function(res, file){ return handleBannerRemove(res, scope.$index)}"
                   >
-                  <div class="thumb" :style="{backgroundImage: `url(http://${scope.row.CommentPic[2]})`}" v-if="scope.row.CommentPic[2]"></div>
+                  <div class="thumb" :style="{backgroundImage: `url(${scope.row.CommentPic[2]})`}" v-if="scope.row.CommentPic[2]"></div>
                   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
 
@@ -218,7 +218,7 @@
                   :on-success="function(res, file) { return handleBannerSuccess(res, file, scope.$index)}"
                   :on-remove="function(res, file){ return handleBannerRemove(res, scope.$index)}"
                   >
-                  <div class="thumb" :style="{backgroundImage: `url(http://${scope.row.CommentPic[3]})`}" v-if="scope.row.CommentPic[3]"></div>
+                  <div class="thumb" :style="{backgroundImage: `url(${scope.row.CommentPic[3]})`}" v-if="scope.row.CommentPic[3]"></div>
                   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
               </div>

@@ -112,7 +112,7 @@
 
         <el-table-column label="" min-width="170">
           <template slot-scope="scope">
-            <div>{{ $t('store_name') }}：<span class="gray">{{ scope.row.ShopName }}</span></div>
+            <div>{{ $t('store_name') }}：<span class="gray">{{ scope.row.ShopUserName }}</span></div>
             <div>{{ $t('site') }}：<span class="gray">{{ countryShowName(scope.row.CountryId) }}</span></div>
           </template>
         </el-table-column>
