@@ -120,7 +120,7 @@
         <el-table-column label="" min-width="350">
           <template slot-scope="scope">
             <div class="flex flex-y-center text-left p-l-15 p-r-15">
-              <img :src="`http://${scope.row.MainPic}`" alt="" class="thumb" />
+              <img :src="scope.row.MainPic" alt="" class="thumb" />
               <div class="flex flex-column lh-150">
                 <span class="gray">Id: {{ scope.row.ItemId }}</span>
                 <span>{{ scope.row.Title }}</span>
@@ -269,7 +269,7 @@ export default {
     },
     fixed2(str) {
       if (!str) return '-'
-      return (str * 1).toFixed(2)
+      return (str * 1).toFixed(4)
     }
   },
   computed: {
@@ -399,7 +399,7 @@ export default {
 
       this.$http.post('/SettlementCenter/Pay', {
         PaymentModeId: this.payment_channel_id,
-        PayCost: (this.payment_total * 1).toFixed(2) * 1,
+        PayCost: (this.payment_total * 1).toFixed(4) * 1,
         PayOrderNo: this.formPayment.sn,
         TaskSubOrderNo: this.selected_orders_sn
       }).then(res => {

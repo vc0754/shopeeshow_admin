@@ -72,7 +72,7 @@
         <el-table-column :label="$t('registered_products')" min-width="380">
           <template slot-scope="scope">
             <div class="flex flex-y-center text-left p-l-15 p-r-15">
-              <img :src="`http://${scope.row.MainPic}`" alt="" class="thumb" v-if="scope.row.MainPic !== 'null'" />
+              <el-image class="thumb" :src="scope.row.MainPic" :preview-src-list="[scope.row.MainPic]" v-if="scope.row.MainPic !== 'null'"></el-image>
               <div class="flex flex-column lh-150">
                 <span>Id: {{ scope.row.ItemId }}</span>
                 <span>{{ scope.row.Title }}</span>

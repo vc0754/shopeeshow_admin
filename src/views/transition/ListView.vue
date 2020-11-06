@@ -50,7 +50,7 @@
         <el-table-column :label="$t('payment_amount2')" min-width="200">
           <template slot-scope="scope">
             <div class="flex flex-x-center">
-              <span>{{ scope.row.PayCost }}</span>
+              <span>{{ scope.row.PayCost | fixed2 }}</span>
               <span>（{{ scope.row.PayCurrencyName }}）</span>
             </div>
           </template>
@@ -60,7 +60,7 @@
         <el-table-column prop="PaymentModeName" :label="$t('payment_method')" min-width="120"></el-table-column>
         <el-table-column prop="State" :label="$t('payment_status')" min-width="116">
           <template slot-scope="scope">
-            <span class="gray">{{ stateShowName(scope.row.State) }}</span>
+            <span class="gray">{{ scope.row.StateStr }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="RejectReason" :label="$t('reasons_for_rejection')"></el-table-column>
@@ -106,6 +106,10 @@ export default {
   filters: {
     date(str) {
       return moment(str).format('YYYY-MM-DD HH:mm:ss')
+    },
+    fixed2(str) {
+      if (!str) return '-'
+      return str.toFixed(4)
     }
   },
   computed: {

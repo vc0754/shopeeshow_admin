@@ -40,7 +40,7 @@
 
         <div class="preview flex" v-if="goods.Title">
           <div class="thumb">
-            <img :src="`http://${goods.MainPic}`" alt="" v-if="goods.MainPic">
+            <img :src="goods.MainPic" alt="" v-if="goods.MainPic">
           </div>
           <div class="info">
             <h6>{{ goods.Title }}</h6>
@@ -87,7 +87,7 @@
         </el-form-item>
 
         <el-form-item :label="`${$t('main_pic')}:`">
-          <img :src="`http://${AddplusForm.img}`" alt="" v-if="AddplusForm.img" width="80">
+          <img :src="AddplusForm.img" alt="" v-if="AddplusForm.img" width="80">
         </el-form-item>
 
         <el-form-item :label="`${$t('order_numbers')}:`">
@@ -297,7 +297,7 @@
         <el-table stripe :data="[{}]" style="width: 100%">
           <el-table-column :label="$t('tip4')" width="440">
             <div class="flex flex-y-center">
-              <img :src="`http://${AddplusForm.img}`" alt="" style="width:47px;height:47px;">
+              <img :src="AddplusForm.img" alt="" style="width:47px;height:47px;">
               <div class="p-l-15 text-left">{{ AddplusForm.url }}</div>
             </div>
           </el-table-column>
@@ -387,7 +387,7 @@
         </el-table-column>
 
         <el-table-column :label="$t('main_pic')" width="70">
-          <img :src="`http://${AddplusForm.img}`" alt="" v-if="AddplusForm.img">
+          <img :src="AddplusForm.img" alt="" v-if="AddplusForm.img">
         </el-table-column>
 
         <el-table-column :label="$t('order_numbers')" width="80">
@@ -470,7 +470,7 @@ export default {
   filters: {
     fixed2(str) {
       if (!str) return '-'
-      return (str * 1).toFixed(2)
+      return (str * 1).toFixed(4)
     }
   },
   computed: {
@@ -865,7 +865,7 @@ export default {
         Detail: detail,
         AddedGoods,
         PayMode: parseInt(this.form.payment),
-        TotalCost: parseFloat((this.sub_total_all).toFixed(2))
+        TotalCost: parseFloat((this.sub_total_all).toFixed(4))
       }
       this.$http.post('/Task/Add', params).then(() => {
         this.fullscreenLoading = false

@@ -10,7 +10,7 @@
     <el-form ref="detail" :model="detail"  label-width="160px" class="border bg-white p-t-30 p-r-35 p-b-25 p-l-10 m-b-50" v-if="detail.Title">
       <div class="preview flex" style="padding-left:68px;">
         <div class="thumb">
-          <img :src="`http://${detail.MainPic}`" alt="" v-if="detail.MainPic">
+          <el-image :src="detail.MainPic" :preview-src-list="[detail.MainPic]" v-if="detail.MainPic"></el-image>
         </div>
         <div class="info">
           <h6 class="m-t-10 m-b-10">{{ detail.Title }}</h6>
@@ -57,7 +57,7 @@
       <el-table stripe :data="detail.Detail" v-loading="loading" style="width: 100%;">
         <el-table-column type="index" :label="$t('serial_number')" width="55"></el-table-column>
 
-        <el-table-column prop="SearchKey" :label="$t('keyword')" min-width="80"></el-table-column>
+        <el-table-column prop="SearchKey" :label="$t('keyword')" min-width="180"></el-table-column>
 
         <el-table-column :label="$t('order_price')" width="80">
           <template slot-scope="scope">
@@ -72,7 +72,7 @@
         <el-table-column :label="$t('picture')" width="92">
           <template slot-scope="scope">
             <div class="thumbs" v-for="(item, index) in scope.row.CommentPic" :key="index">
-              <img :src="`http://${item}`" alt="">
+              <el-image :src="item" :preview-src-list="scope.row.CommentPic"></el-image>
             </div>
           </template>
         </el-table-column>
@@ -81,7 +81,7 @@
         <el-table-column prop="Spec" :label="$t('special_model')" min-width="160"></el-table-column>
         <el-table-column prop="Sp_NickName" :label="$t('buyer_nickname')" width="80"></el-table-column>
         <el-table-column prop="Sp_OrderNo" :label="$t('order_number')" min-width="180"></el-table-column>
-        <el-table-column prop="StateStr" :label="$t('order_status')" min-width="80"></el-table-column>
+        <el-table-column prop="StateStr" :label="$t('order_status')" min-width="95"></el-table-column>
         <el-table-column prop="SurplusPayTime" :label="$t('remaining_payment_time')" min-width="120"></el-table-column>
 
         <el-table-column :label="$t('pay_attention_to_and_collect_additional_purchase_amount')" min-width="150">
@@ -94,12 +94,12 @@
           <template slot-scope="scope">
             <div class="flex flex-column">
               <span class="red">{{ scope.row.Pub_OrderCost | fixed2 }}</span>
-              <span>{{ scope.row.TotalCost | fixed2 }}</span>
+              <span>{{ scope.row.OrderCost | fixed2 }}</span>
             </div>
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('commission')" min-width="65">
+        <el-table-column :label="$t('commission')" min-width="95">
           <template slot-scope="scope">
             <div class="flex flex-column">
               <span class="red">{{ scope.row.Pub_CommissionCost | fixed2 }}</span>
@@ -115,7 +115,7 @@
       <el-table stripe :data="[{}]" style="width: 100%">
         <el-table-column label="加购商品信息（以下为每条订单的加购商品信息）" width="440">
           <div class="flex flex-y-center">
-            <img :src="`http://${AddplusForm.img}`" alt="" style="width:47px;height:47px;" v-if="AddplusForm.img">
+            <img :src="AddplusForm.img" alt="" style="width:47px;height:47px;" v-if="AddplusForm.img">
             <div class="p-l-15 text-left">{{ AddplusForm.url }}</div>
           </div>
         </el-table-column>
@@ -242,7 +242,7 @@ export default {
     },
     fixed2(str) {
       if (!str) return '-'
-      return str.toFixed(2)
+      return str.toFixed(4)
     }
   },
   computed: {
