@@ -95,7 +95,7 @@ export default {
   computed: mapState({
     sys: state => state.sys,
     InvitationCode () {
-      return this.$route.query.InvitationCode
+      return this.$route.query.Invitation
     }
   }),
   methods: {
@@ -159,7 +159,7 @@ export default {
     // 注册成功回调
     handle_registered() {
       if (this.registerSuccess) return this.registerSuccess();
-      this.$router.replace({ path: '/' });
+      this.$router.replace({ path: '/register' });
     },
 
     // 提交表单
@@ -188,7 +188,8 @@ export default {
             console.log(res)
             // this.$store.dispatch(USER_SIGNIN, res)
             this.$Message.success('注册成功!')
-            this.handle_registered()
+            this.$router.replace({ path: '/sign' });
+            // this.handle_registered()
           }).catch(err => {
             this.$message.error(err.data.Message)
           });
