@@ -87,6 +87,12 @@
           </template>
         </el-table-column>
 
+        <el-table-column :label="$t('is_add_goods')" min-width="80">
+          <template slot-scope="scope">
+            <div class="lh-120" style="width:70px;margin:0 auto;">{{ scope.row.AddedGoods ? $t('has') : $t('nohas') }}</div>
+          </template>
+        </el-table-column>
+
         <el-table-column :label="$t('status')" min-width="120">
           <template slot-scope="scope">
             <div class="lh-120" style="color:#D43030;padding:0 15px;">{{ scope.row.StateStr }}</div>

@@ -28,7 +28,9 @@
     </el-row>
 
     <!-- <pre>{{ items }}</pre> -->
+    <!-- https://xiapi.xiapibuy.com/melo_toys?categoryId=75&itemId=4743308116 -->
     
+    <!-- 对话框 -->
     <el-dialog :title="$t('binding_stores')" width="607px" :visible.sync="dialogVisible" class="store-form" @closed="closed">
       <el-form ref="formStore" :model="formStore">
         <el-form-item :label="$t('please_enter_the_store_link_in_the_box_below')" style="margin-bottom:15px;">
@@ -38,13 +40,14 @@
           <el-button :type="send_text === $t('send_again') ? 'info' : 'primary'" @click="sendCode" v-else>{{ send_text }}</el-button>
         </el-form-item>
 
-        <el-form-item :label="$t('please_input_the_verification_code_received_by_customer_service_in_the_following_box')">
+        <el-form-item :label="$t('please_input_the_verification_code_received_by_customer_service_in_the_following_box')" v-if="add_store_step_2">
           <el-input v-model="formStore.captcha" placeholder="" style="width:430px;" />
           <el-button type="primary" @click="submit">{{ $t('confirm') }}</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
     
+    <!-- 对话框 -->
     <el-dialog width="596px" :visible.sync="dialogVisible2" class="store-success-tip">
       <img src="../../assets/big_right_icon.svg" alt="">
       <h3>{{ $t('congratulations_successful_binding') }}</h3>
@@ -56,6 +59,7 @@
 
 
 <script>
+import { Loading } from 'element-ui';
 export default {
   name: 'MainView',
   components: {},
@@ -71,7 +75,8 @@ export default {
       dialogVisible2: false,
       send_text: '',
       countID: 0,
-      send_code: 0
+      send_code: 0,
+      add_store_step_2: false
     }
   },
   computed: {
@@ -101,16 +106,26 @@ export default {
     // 发送验证码
     sendCode() {
       if (!this.formStore.url) return this.$message.error(this.$t('please_enter_the_store_link'))
+
+      let loadingInstance = Loading.service();
+
       this.$http.get('/UserShop/SendShopCode', {
         params: {
           ShopUrl: this.formStore.url
         }
       }).then(res => {
-        this.send_code = 30
-        this.countdown()
-        this.send_text = this.$t('send_again')
-        console.log(res)
+        loadingInstance.close();
+        if (res.Data.NeedCode) {
+          this.add_store_step_2 = true
+          this.send_code = 30
+          this.countdown()
+          this.send_text = this.$t('send_again')
+        } else {
+          this.formStore.captcha = '123_test'
+          this.submit()
+        }
       }).catch(err => {
+        loadingInstance.close();
         this.$message.error(err.data.Message)
       })
     },
@@ -124,6 +139,7 @@ export default {
         ShopUrl: this.formStore.url,
         Code: this.formStore.captcha
       }).then(() => {
+        this.add_store_step_2 = false
         this.dialogVisible2 = true
 
         this.dialogVisible = false
@@ -168,7 +184,7 @@ export default {
   watch: {
   },
   mounted () {
-    this.send_text = this.$t('send_captcha')
+    this.send_text = this.$t('next')
     this.get_country()
     this.query()
   },

@@ -5,6 +5,7 @@ export default {
     account: 'Please enter email or nickname',
     pwd: 'Please input a password',
     forgot: 'Remember the password',
+    lostpassword: 'lost password',
     label: 'Sign in'
   },
   register: {
@@ -204,5 +205,10 @@ export default {
   required: 'required',
   exchange_rate: 'exchange rate',
   rmb: 'RMB',
-  usd: 'USD'
+  usd: 'USD',
+
+  // 
+  is_add_goods: 'is add goods',
+  has: 'yes',
+  nohas: 'no'
 }

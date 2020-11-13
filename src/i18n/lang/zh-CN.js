@@ -5,6 +5,7 @@ export default {
     account: '请输入邮箱或昵称',
     pwd: '请输入密码',
     forgot: '记住密码',
+    lostpassword: '忘记密码',
     label: '登录'
   },
   register: {
@@ -31,7 +32,7 @@ export default {
     dianpuguanli: '店铺管理',
     renwuguanli: '任务管理',
     jiesuanzhongxin: '结算中心',
-    zhifuliushui: '支付流水',
+    zhifuliushui: '财务流水',
   },
   brand: '店铺商家端管理后台',
   lan: {
@@ -149,7 +150,7 @@ export default {
   tip7: '需要在收货后24小时内安排返款，否则刷手前往退款，特殊情况请联系客服处理！',
   buyer_nickname: '买家昵称',
   order_number: '订单号',
-  special_requirements: '特殊要求（颜色，尺寸等）',
+  special_requirements: '特殊要求请备注',
   special_model: '规格型号',
   color_size: '颜色、尺码',
   remaining_payment_time: '剩余支付时间',
@@ -206,5 +207,10 @@ export default {
   required: '必填',
   exchange_rate: '汇率',
   rmb: '人民币',
-  usd: '美元'
+  usd: '美元',
+
+  // 
+  is_add_goods: '是否加购',
+  has: '是',
+  nohas: '否'
 }

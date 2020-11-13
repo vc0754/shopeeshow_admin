@@ -13,7 +13,7 @@
           </el-form-item>
 
           <el-form-item prop="Pwd">
-            <el-input type="password" v-model="formPSW.Pwd" :placeholder="$t('sign.pwd')" :maxlength="20" />
+            <el-input type="password" v-model="formPSW.Pwd" :placeholder="$t('sign.pwd')" :minlength="8" :maxlength="20" :show-password="true" />
           </el-form-item>
           
           <el-form-item style="margin-bottom: 5px;" prop="captcha">
@@ -33,7 +33,7 @@
         </div>
         
         <div class="sign-meta">
-          <router-link to="/lost-password" class="fg">{{ $t('sign.forgot') }}</router-link>
+          <router-link to="/lost-password" class="fg" style="color:#46A1FF;">{{ $t('sign.lostpassword') }}</router-link>
           <div>{{ $t('sign.no_account') }}
             <router-link to="/register" class="m-l-10">{{ $t('register.label') }}</router-link>
           </div>
@@ -75,7 +75,8 @@ export default {
         ],
         Pwd: [
           { required: true, message: '密码必须', trigger: 'blur' },
-          // { pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,20}$/, message: '长度8-20位，必须包含大小写英文字母，数字', trigger: 'blur' }
+          { type: 'string', min: 8, message: '密码长度需要8-20位', trigger: 'blur' },
+          { type: 'string', max: 20, message: '密码长度需要8-20位', trigger: 'blur' }
         ],
         captcha: [
           { required: true, message: '验证码必须', trigger: 'blur' },

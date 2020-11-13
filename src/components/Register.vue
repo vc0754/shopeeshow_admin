@@ -11,8 +11,15 @@
 
       <el-form-item prop="UserName">
         <el-input v-model="formData.UserName" :placeholder="$t('input_nickname')" @blur="usernameExist" />
-        <img src="../assets/exist_0.svg" alt="" v-if="is_username_exist === false" class="tip">
-        <img src="../assets/exist_1.svg" alt="" v-if="is_username_exist === true" class="tip">
+        
+        <el-tooltip class="item" effect="dark" content="可用" placement="top" v-if="is_username_exist === false">
+          <img src="../assets/exist_0.svg" alt="" class="tip">
+        </el-tooltip>
+
+        <el-tooltip class="item" effect="dark" content="不可用" placement="top" v-if="is_username_exist === true">
+          <img src="../assets/exist_1.svg" alt="" class="tip">
+        </el-tooltip>
+        
       </el-form-item>
       
       <el-form-item prop="Code">
@@ -23,11 +30,11 @@
       </el-form-item>
 
       <el-form-item prop="Pwd">
-        <el-input type="password" v-model="formData.Pwd" :placeholder="$t('input_pwd')" :maxlength="8" />
+        <el-input type="password" v-model="formData.Pwd" :placeholder="$t('input_pwd')" :minlength="8" :maxlength="20" :show-password="true" />
       </el-form-item>
 
-      <el-form-item>
-        <el-input type="password" v-model="formData.Pwd2" :placeholder="$t('input_new_pwd_again')" :maxlength="8" />
+      <el-form-item prop="PwdCheck">
+        <el-input type="password" v-model="formData.Pwd2" :placeholder="$t('input_new_pwd_again')" :minlength="8" :maxlength="20" :show-password="true" />
       </el-form-item>
     </el-form>
 
@@ -60,6 +67,16 @@ export default {
     },
   },
   data() {
+    const validatePassCheck = (rule, value, callback) => {
+      if (!this.formData.Pwd2) {
+        callback(new Error('请再次输入密码'));
+      } else if (this.formData.Pwd2 !== this.formData.Pwd) {
+        callback(new Error('两次密码不一致'));
+      } else {
+        callback();
+      }
+    };
+
     return {
       formData: {
         Email: '',
@@ -76,7 +93,11 @@ export default {
         ],
         Pwd: [
           { required: true, message: '密码必须', trigger: 'blur' },
-          { pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,20}$/, message: '长度8-20位，必须包含大小写英文字母，数字', trigger: 'blur' }
+          { type: 'string', min: 8, message: '密码长度需要8-20位', trigger: 'blur' },
+          { type: 'string', max: 20, message: '密码长度需要8-20位', trigger: 'blur' }
+        ],
+        PwdCheck: [
+          { validator: validatePassCheck, trigger: 'blur' }
         ],
         UserName: [
           { required: true, message: '昵称必须', trigger: 'blur' },
@@ -159,7 +180,7 @@ export default {
     // 注册成功回调
     handle_registered() {
       if (this.registerSuccess) return this.registerSuccess();
-      this.$router.replace({ path: '/register' });
+      this.$router.replace({ path: '/sign' });
     },
 
     // 提交表单
@@ -187,7 +208,7 @@ export default {
           }).then(res => {
             console.log(res)
             // this.$store.dispatch(USER_SIGNIN, res)
-            this.$Message.success('注册成功!')
+            this.$message.success('注册成功!')
             this.$router.replace({ path: '/sign' });
             // this.handle_registered()
           }).catch(err => {

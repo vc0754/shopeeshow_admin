@@ -25,11 +25,11 @@
       </el-form-item>
 
       <el-form-item :label="`${$t('site')}:`" class="disabled">
-        <el-input v-model="form.country" placeholder="" style="width:76px;" readonly></el-input>
+        <el-input v-model="form.country" placeholder="" style="width:185px;" readonly></el-input>
       </el-form-item>
 
       <el-form-item :label="`${$t('local_currency')}:`" class="disabled">
-        <el-input v-model="form.currency" placeholder="" style="width:76px;" readonly></el-input>
+        <el-input v-model="form.currency" placeholder="" style="width:185px;" readonly></el-input>
       </el-form-item>
       
       <!-- 第二步 -->
@@ -96,6 +96,10 @@
 
         <el-form-item :label="`${$t('order_amount')}:`">
           <el-input v-model="AddplusForm.price" placeholder="" style="width:76px;"></el-input>
+        </el-form-item>
+
+        <el-form-item label="规格型号">
+          <el-input v-model="AddplusForm.size" placeholder="" style="width:76px;"></el-input>
         </el-form-item>
       </div>
       
@@ -173,9 +177,9 @@
             </template>
           </el-table-column>
 
-          <el-table-column :label="$t('comment')" width="200">
+          <el-table-column :label="$t('comment')" width="250">
             <template slot-scope="scope">
-              <el-input :placeholder="$t('comment')" style="width:180px;" v-model="scope.row.pingyu"></el-input>
+              <el-input type="textarea" :placeholder="$t('comment')" style="width:240px; height:96px;" rows="4" v-model="scope.row.pingyu"></el-input>
             </template>
           </el-table-column>
 
@@ -422,7 +426,8 @@ export default {
         title: '',
         img: '',
         amount: 0,
-        price: 0
+        price: 0,
+        size: ''
       },
 
       currencies: [],   // 币种
@@ -611,6 +616,7 @@ export default {
           this.AddplusForm.img = this.detail.AddedGoods.MainPic
           this.AddplusForm.amount = this.detail.AddedGoods.BuyCount
           this.AddplusForm.price = this.detail.AddedGoods.OrderPrice
+          this.AddplusForm.size = this.detail.AddedGoods.Size
 
           this.form.is_add_goods = '2'
         } else {
@@ -849,6 +855,7 @@ export default {
           MainPic: this.AddplusForm.img,
           BuyCount: parseFloat(this.AddplusForm.amount),
           OrderPrice: parseFloat(this.AddplusForm.price),
+          Size: this.AddplusForm.size,
           Comment: '',
           CommentPic: [],
           Remark: ''

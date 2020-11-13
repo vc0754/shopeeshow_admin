@@ -20,11 +20,11 @@
           </el-form-item>
 
           <el-form-item>
-            <el-input type="password" v-model="formPSW.Pwd" :placeholder="$t('input_new_pwd')" :maxlength="6" />
+            <el-input type="password" v-model="formPSW.Pwd" :placeholder="$t('input_new_pwd')" :minlength="8" :maxlength="20" :show-password="true" />
           </el-form-item>
 
           <el-form-item>
-            <el-input type="password" v-model="formPSW.Pwd2" :placeholder="$t('input_new_pwd_again')" :maxlength="6" />
+            <el-input type="password" v-model="formPSW.Pwd2" :placeholder="$t('input_new_pwd_again')" :minlength="8" :maxlength="20" :show-password="true" />
           </el-form-item>
         </el-form>
 
@@ -96,9 +96,9 @@ export default {
       if (!this.formPSW.Pwd2) return this.$message.error('请再次输入密码')
       if (this.formPSW.Pwd !== this.formPSW.Pwd2) return this.$message.error('两次密码不一致')
       
-      this.$http.post('/User/EmailForgetPwd', this.formPSW).then(res => {
-        console.log(res)
-        // this.$router.replace({ path: '/' })
+      this.$http.post('/User/EmailForgetPwd', this.formPSW).then(() => {
+        // console.log(res)
+        this.$router.replace({ path: '/sign' })
       }).catch(err => {
         this.$message.error(err.data.Message)
       })
