@@ -198,8 +198,8 @@
               <strong class="blue">{{ payment_total | fixed2 }}</strong>
             </el-form-item>
 
-            <el-form-item :label="`* ${$t('payment_order_number')}：`">
-              <el-input v-model="formPayment.sn" :placeholder="`（${$t('required')}）`" />
+            <el-form-item :label="`${$t('payment_order_number')}：`">
+              <el-input v-model="formPayment.sn" />
             </el-form-item>
 
             <div class="flex flex-column flex-y-center">
@@ -395,7 +395,7 @@ export default {
     },
     // 支付提交
     payment_submit() {
-      if (!this.formPayment.sn) return this.$message.error('支付订单号必须')
+      // if (!this.formPayment.sn) return this.$message.error('支付订单号必须')
 
       this.$http.post('/SettlementCenter/Pay', {
         PaymentModeId: this.payment_channel_id,

@@ -10,6 +10,19 @@ const store = new Vuex.Store({
   modules: {
     sys, user
   },
+  state: {
+    recharge: false
+  },
+  mutations: {
+    recharge (state, val) {
+      state.recharge = val
+    }
+  },
+  actions: {
+    recharge ({ commit }, val) {
+      commit('recharge', val)
+    }
+  }
 })
 
 export default store

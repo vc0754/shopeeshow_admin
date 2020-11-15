@@ -47,7 +47,7 @@
     </el-row>
     
     <div class="row p-t-15 m-b-25">
-      <div class="col_left_1">
+      <div class="col_left_1" v-if="services.HeadPic">
         <h3 class="section_title">{{ $t('customer_service') }}</h3>
         <div class="service_panel">
           <div class="service_header">
@@ -55,7 +55,7 @@
               <img :src="services.HeadPic ? services.HeadPic : require('../assets/avatar.png')" alt="">
             </div>
             <div class="info">
-              <p>{{ services.NickName }}</p>
+              <p v-if="services.NickName">{{ services.NickName }}</p>
             </div>
           </div>
           <div class="service_content" v-if="services.Contact">
@@ -105,7 +105,7 @@
 
       <div class="col_left">
         <h3 class="section_title">{{ $t('business_announcement') }}</h3>
-        <ul>
+        <ul v-if="items.length">
           <li v-for="(item, index) in items" :key="index">
             <div class="link" @click="to_detail(item.Id)">
               <p>{{ item.Title }}</p>
@@ -114,6 +114,7 @@
           </li>
         </ul>
       </div>
+      
       <div class="col_right p-t-60">
         <div class="card card_add" @click="goto('/task/add')">
           <div class="flex">
@@ -184,7 +185,7 @@ export default {
       this.$http.get('/Home/GetVipContact').then(res => {
         this.services = res.Data
       }).catch(err => {
-        this.$message.error(err.data.message)
+        if (err.data && err.data.message) this.$message.error(err.data.message)
       })
     },
     NoticeList() {

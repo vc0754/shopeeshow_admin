@@ -39,6 +39,12 @@
       <el-table stripe :data="items" v-loading="loading" style="width: 100%">
         <el-table-column type="index" :label="$t('serial_number')" width="78"></el-table-column>
 
+        <el-table-column :label="$t('payment_type')" min-width="180">
+          <template slot-scope="scope">
+            <span>{{ scope.row.SourceTypeStr }}</span>
+          </template>
+        </el-table-column>
+
         <el-table-column :label="$t('payment_time')" min-width="180">
           <template slot-scope="scope">
             <span>{{ scope.row.CreateTime | date }}</span>

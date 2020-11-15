@@ -27,6 +27,15 @@ export default {
 
   // 以上为登录注册页面的
 
+  recharge: '充值',
+  recharge_tip: '请扫码充值，并及时告知客服人员后台录入充值金额，谢谢！',
+  recharge_amount: '支付金额',
+  recharge_sn: '支付订单号',
+  recharge_submit_pending: '提交审核',
+  recharge_cancel: '放弃充值',
+
+  payment_type: '支付类型',
+
   nav: {
     shouye: '首页',
     dianpuguanli: '店铺管理',
