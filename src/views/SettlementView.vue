@@ -281,15 +281,15 @@ export default {
     },
     start_time() {
       if (this.form.times === 30) {
-        return moment().subtract(30, 'days').format('YYYY-MM-DD HH:mm:ss');
+        return moment().subtract(30, 'days').format('YYYY-MM-DD 00:00:00');
       } else if (this.form.times === 90) {
-        return moment().subtract(90, 'days').format('YYYY-MM-DD HH:mm:ss');
+        return moment().subtract(90, 'days').format('YYYY-MM-DD 00:00:00');
       } else {
-        return moment().subtract(30, 'days').format('YYYY-MM-DD HH:mm:ss');
+        return moment().subtract(30, 'days').format('YYYY-MM-DD 00:00:00');
       }
     },
     end_time() {
-      return moment().format('YYYY-MM-DD HH:mm:ss');
+      return moment().format('YYYY-MM-DD 23:59:59');
     },
     
     payment_channel_id() {

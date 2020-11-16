@@ -12,9 +12,7 @@
       <div class="metas">
         商家公告 | {{ detail.CreateTime | date }}
       </div>
-      <div class="wrap2_content">
-        {{ detail.Content }}
-      </div>
+      <div class="wrap2_content" v-html="detail.Content"></div>
     </div>
     
   </section>

@@ -98,6 +98,7 @@ export default {
   }),
   filters: {
     price(str) {
+      if (!str) return '0.00'
       return str.toFixed(2)
     }
   },
