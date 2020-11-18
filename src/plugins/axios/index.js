@@ -7,8 +7,8 @@ axios.defaults.timeout = 10000
 axios.defaults.headers.post['Content-Type'] = 'application/json; charset=utf-8'
 // axios.defaults.baseURL = (process.env.NODE_ENV === 'development' ? 'http://localhost:7001/' : 'http://net.taoke8.cn:8080/')
 
-axios.defaults.baseURL = 'http://service.shopeeshow.com'
-// axios.defaults.baseURL = 'http://servicetest.shopeeshow.com'
+// axios.defaults.baseURL = 'http://service.shopeeshow.com'
+axios.defaults.baseURL = 'http://servicetest.shopeeshow.com'
 
 axios.interceptors.request.use(config => {
   const token = sessionStorage.getItem('token')

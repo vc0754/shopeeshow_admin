@@ -30,3 +30,21 @@ export default {
   }
 }
 </script>
+
+<style lang="less">
+// 上传文件
+.upload-form {
+  .el-dialog__header {
+    background-color: rgba(243, 246, 249, 1);
+    border-bottom: solid 1px rgba(215, 215, 215, 1);
+    font-size: 16px; height: 59px; line-height: 59px;
+    text-align: center; padding: 0;
+  }
+  .el-dialog__body { padding: 26px;}
+  .el-button--primary {
+    font-size: 18px;
+    width: 120px; height: 42px;
+    padding: 0; border-radius: 0;
+  }
+}
+</style>

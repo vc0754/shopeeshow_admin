@@ -128,7 +128,8 @@ export default {
       this.$http.get('User/GetInfo').then(res => {
         this.$store.dispatch(USER_SIGNIN, {
           balance: res.Data.Balance,
-          frozen_balance: res.Data.FrozenBalance
+          frozen_balance: res.Data.FrozenBalance,
+          allowInputOrder: res.Data.AllowInputOrder
         })
       }).catch(err => {
         console.log(err)

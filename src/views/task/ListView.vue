@@ -36,8 +36,8 @@
         </el-form-item>
       </div>
       <div class="flex p-l-20">
-        <el-button type="primary" @click="onSearch">{{ $t('query') }}</el-button>
-        <!-- <el-button type="primary" class="m-l-20">导出 Excel</el-button> -->
+        <el-button type="primary" @click="export_">转单</el-button>
+        <el-button type="primary" class="m-l-20" @click="onSearch">{{ $t('query') }}</el-button>
       </div>
     </el-form>
 
@@ -130,6 +130,18 @@
       
       <!-- <pre>{{ items }}</pre> -->
     </div>
+    
+    
+    <!-- 上传对话框 -->
+    <el-dialog title="上传文件" width="607px" :visible.sync="dialogVisible" class="upload-form" @closed="closed">
+      <el-upload name="files" v-if="user.allowInputOrder"
+        :action="upload_url" multiple :file-list="fileList"
+        :on-success="function(res, file) { return handleBannerSuccess(res, file)}"
+        :on-remove="function(res, file){ return handleBannerRemove(res)}"
+        >
+        <el-button size="small" type="primary">上传文件</el-button>
+      </el-upload>
+    </el-dialog>
 
   </section>
 </template>
@@ -141,6 +153,9 @@ export default {
   components: {},
   data () {
     return {
+      fileList: [],
+      dialogVisible: false,
+      upload_url: `${this.$http.defaults.baseURL}/File/UploadFile`,
       form: {
         OrderNo: '',
         name: '',
@@ -170,6 +185,9 @@ export default {
     }
   },
   computed: {
+    user() {
+      return this.$store.state.user
+    },
     select_times() {
       return [
         { label: this.$t('nearly_30_days'), value: 30 },
@@ -271,7 +289,40 @@ export default {
     handleCurrentChange(val) {
       this.currentPage = val
       this.onSearch()
-    }
+    },
+    
+    
+    handleBannerSuccess(response, file) {
+      this.$http.post('/Task/InputParentOrder', {
+        ExcelUrl: response.Data[0]
+      }).then(res => {
+        console.log(res)
+
+        this.$notify({
+          title: '提示',
+          message: `文件 ${file.name} – 导入成功`,
+          type: 'success',
+          duration: 0
+        });
+      }).catch(() => {
+        this.$notify({
+          title: '提示',
+          message: `文件 ${file.name} – 导入失败`,
+          type: 'error',
+          duration: 0
+        });
+      })
+    },
+    handleBannerRemove(response) {
+      console.log(response)
+      // this.tableData[index].CommentPic = this.tableData[index].CommentPic.filter(item => response.response.Data[0] !== item)
+    },
+    export_() {
+      this.dialogVisible = true
+    },
+    closed() {
+      this.fileList = []
+    },
   },
   watch: {
   },
