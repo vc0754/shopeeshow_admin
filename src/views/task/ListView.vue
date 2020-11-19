@@ -36,7 +36,7 @@
         </el-form-item>
       </div>
       <div class="flex p-l-20">
-        <el-button type="primary" @click="export_">转单</el-button>
+        <el-button type="primary" @click="export_" v-if="user.allowInputOrder">转单</el-button>
         <el-button type="primary" class="m-l-20" @click="onSearch">{{ $t('query') }}</el-button>
       </div>
     </el-form>
@@ -134,7 +134,7 @@
     
     <!-- 上传对话框 -->
     <el-dialog title="上传文件" width="607px" :visible.sync="dialogVisible" class="upload-form" @closed="closed">
-      <el-upload name="files" v-if="user.allowInputOrder"
+      <el-upload name="files"
         :action="upload_url" multiple :file-list="fileList"
         :on-success="function(res, file) { return handleBannerSuccess(res, file)}"
         :on-remove="function(res, file){ return handleBannerRemove(res)}"

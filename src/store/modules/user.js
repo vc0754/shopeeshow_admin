@@ -5,7 +5,10 @@ export const USER_SIGNOUT = 'USER_SIGNOUT'
 
 export default {
   state: JSON.parse(sessionStorage.getItem('user')) || {
-    username: ''
+    username: '',
+    balance: 0,
+    frozen_balance: 0,
+    allowInputOrder: false,
   },
   getters: {
     is_sign(state) {
@@ -20,7 +23,12 @@ export default {
     [USER_SIGNOUT] (state) {
       sessionStorage.removeItem('user')
       Object.keys(state).forEach(k => Vue.delete(state, k))
-      this.state.user = { username: '' }
+      this.state.user = {
+        username: '',
+        balance: 0,
+        frozen_balance: 0,
+        allowInputOrder: false
+    }
     }
   },
   actions: {
