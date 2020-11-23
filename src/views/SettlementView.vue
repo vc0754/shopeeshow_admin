@@ -46,7 +46,6 @@
         
         <el-table-column type="expand" width="35">
           <template slot-scope="props">
-            
             <el-table stripe border :data="props.row.Detail" style="width: 100%" :ref="`multipleTable2_${props.row.Id}`" @selection-change="handleSelectionChange2">
               <el-table-column type="selection" :selectable="checkbox_select" width="55"></el-table-column>
 
@@ -161,10 +160,11 @@
       <!-- <pre>{{ multipleSelection }}</pre> -->
       <!-- <pre>{{ multipleSelection2 }}</pre> -->
       <!-- <pre>{{ payment_country }}</pre> -->
-      <!-- <pre>{{ selected_orders_sn }}</pre> -->
-      <!-- <pre>{{ selected_orders_country }}</pre> -->
-      <!-- <pre>{{ selected_orders_currency }}</pre> -->
-      <!-- <pre>{{ selected_orders_total }}</pre> -->
+      <pre>{{ selected_sub_order }}</pre>
+      <pre>单号:{{ selected_orders_sn }}</pre>
+      <!-- <pre>国家：{{ selected_orders_country }}</pre> -->
+      <pre>货币：{{ selected_orders_currency }}</pre>
+      <pre>金额：{{ selected_orders_total }}</pre>
     
       <el-dialog :title="`${$t('paying')}...`" width="944px" :visible.sync="dialogVisible" @closed="dialogClosed" class="payment-form">
         <div class="col-left">
@@ -207,7 +207,6 @@
               <div class="tip">{{ $t('tip5') }}</div>
             </div>
           </el-form>
-
           <div class="col-ex">
             <div class="row">
               <span><img :src="selected_orders_currency.Flag" alt="" class="flag"></span>
@@ -244,6 +243,9 @@ export default {
       multipleSelection2: [],
       // sub_orders_parent_order: [],      // 选中的子订单对应的父订单
       sub_orders_parent_order_CountryId: 0,    // 选中的子订单对应的父订单的国家的ID
+
+      selected_parents: [],
+      selected_sub_order: {},
 
       payment_channels: [],
       form: {
@@ -318,14 +320,21 @@ export default {
 
     // 选中的子订单号
     selected_orders_sn() {
-      return this.multipleSelection2.map(item => item.SubOrderNo)
+      let orders = []
+      for (let i in this.selected_sub_order) {
+        this.selected_sub_order[i].map(item => {
+          orders.push(item)
+        })
+      }
+      return orders;
     },
     // 选中的子订单总计金额
     selected_orders_total() {
       let total = 0
-      this.multipleSelection2.map(item => {
-        // total += item.Pub_TotalCost
-        total += item.TotalCost
+      this.multipleSelection.map(item => {
+        item.Detail.map(_item => {
+          total += _item.TotalCost
+        })
       })
       return total
     },
@@ -420,12 +429,30 @@ export default {
       return row.State === 3 || row.State === 5 || row.State === 6 ? 1 : 0
     },
 
-    expand_change(row, expandedRows, expanded) {
-      console.log(row, expandedRows, expanded)
+    // 表格 -------------------------------------
+    // 行展开
+    expand_change() {
+      // row, expandedRows, expanded
+      // console.log(row, expandedRows, expanded)
     },
-
+    // 父级行选中
     handleSelectionChange(val) {
+      console.log('父级行选中')
+      console.log(val)
+      
+      this.selected_parents = val
+
+      /*
       this.multipleSelection = val
+
+      this.selected_par_indexs = []
+      this.selected_sub_order = []
+      this.multipleSelection.map((item, index) => {
+        this.selected_par_indexs.push(index)
+        item.Detail.map(_item => {
+          this.selected_sub_order.push(_item.SubOrderNo)
+        })
+      })
       
       if (val.length) {
         val.map(item => {
@@ -452,9 +479,54 @@ export default {
           }
         })
       }
+      */
     },
-    
+    // 子级行选中
     handleSelectionChange2(val) {
+      console.log('子级行选中')
+      
+      if (val.length) {
+        const { items, selected_sub_order } = this
+        const ids = val.map(item => {
+          return item.Id
+        })
+
+        let parent_id
+        items.map((item, index) => {
+          item.Detail.map(_item => {
+            if (ids.includes(_item.Id)) parent_id = index
+          })
+        })
+
+        selected_sub_order[parent_id] = []
+        val.map(item => {
+          selected_sub_order[parent_id].push(item.SubOrderNo)
+        })
+        this.$set(this.selected_sub_order, parent_id, selected_sub_order[parent_id])
+      } else {
+        const { selected_sub_order } = this
+        for (let i in this.selected_sub_order) {
+          selected_sub_order[i] = []
+        }
+        this.$set(this, selected_sub_order, selected_sub_order)
+      }
+
+      // this.selected_sub_order = []
+      // val.map(item => {
+      //   this.selected_sub_order.push(item.SubOrderNo)
+      // })
+
+      // console.log(this.selected_par_indexs)
+
+      // this.selected_sub_order = []
+      // this.multipleSelection.map((item, index) => {
+      //   if (this.selected_par_indexs.includes(index)) {
+      //     item.Detail.map(_item => {
+      //       this.selected_sub_order.push(_item.SubOrderNo)
+      //     })
+      //   }
+      // })
+
       this.multipleSelection2 = val
       
       // console.log(val)
@@ -492,10 +564,13 @@ export default {
     goback() {
       this.$router.go(-1)
     },
+
+    // 立即打款
     payit() {
       if (!this.selected_orders_sn.length) return this.$message.error(this.$t('please_select_the_order_to_pay_first'))
       this.dialogVisible = true
     },
+
     countryShowName(id) {
       let item = this.countries.find(item => item.Id === id)
       return item ? item.Name : id
