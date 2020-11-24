@@ -46,14 +46,14 @@
         
         <el-table-column type="expand" width="35">
           <template slot-scope="props">
-            <el-table stripe border :data="props.row.Detail" style="width: 100%" :ref="`multipleTable2_${props.row.Id}`" @selection-change="handleSelectionChange2">
+            <el-table stripe border :data="props.row.Detail" style="width: 100%" :ref="`multipleTable2_${props.row.Id}`" @selection-change="function(val){ return handleSelectionChange2(val, props.row.Id) }">
               <el-table-column type="selection" :selectable="checkbox_select" width="55"></el-table-column>
 
               <el-table-column type="index" :label="$t('serial_number')" width="80"></el-table-column>
 
               <el-table-column :label="$t('order_number')" min-width="190">
                 <template slot-scope="scope">
-                  <span>{{ scope.row.SubOrderNo }}</span>
+                  <span>{{ scope.row.Sp_OrderNo }}</span>
                 </template>
               </el-table-column>
 
@@ -157,14 +157,12 @@
         </el-pagination>
       </div>
 
-      <!-- <pre>{{ multipleSelection }}</pre> -->
-      <!-- <pre>{{ multipleSelection2 }}</pre> -->
+      <!-- <pre>{{ selected_parents }}</pre> -->
       <!-- <pre>{{ payment_country }}</pre> -->
-      <pre>{{ selected_sub_order }}</pre>
-      <pre>单号:{{ selected_orders_sn }}</pre>
+      <!-- <pre>单号:{{ selected_orders_sn }}</pre> -->
       <!-- <pre>国家：{{ selected_orders_country }}</pre> -->
-      <pre>货币：{{ selected_orders_currency }}</pre>
-      <pre>金额：{{ selected_orders_total }}</pre>
+      <!-- <pre>货币：{{ selected_orders_currency }}</pre> -->
+      <!-- <pre>金额：{{ selected_orders_total }}</pre> -->
     
       <el-dialog :title="`${$t('paying')}...`" width="944px" :visible.sync="dialogVisible" @closed="dialogClosed" class="payment-form">
         <div class="col-left">
@@ -239,8 +237,6 @@ export default {
       currencies: [],       // 货币
       ratios: [],           // 汇率
 
-      multipleSelection: [],
-      multipleSelection2: [],
       // sub_orders_parent_order: [],      // 选中的子订单对应的父订单
       sub_orders_parent_order_CountryId: 0,    // 选中的子订单对应的父订单的国家的ID
 
@@ -331,9 +327,15 @@ export default {
     // 选中的子订单总计金额
     selected_orders_total() {
       let total = 0
-      this.multipleSelection.map(item => {
+      let orders = []
+      for (let i in this.selected_sub_order) {
+        this.selected_sub_order[i].map(item => {
+          orders.push(item)
+        })
+      }
+      this.items.map(item => {
         item.Detail.map(_item => {
-          total += _item.TotalCost
+          if (orders.includes(_item.SubOrderNo)) total += _item.TotalCost
         })
       })
       return total
@@ -432,73 +434,73 @@ export default {
     // 表格 -------------------------------------
     // 行展开
     expand_change() {
-      // row, expandedRows, expanded
-      // console.log(row, expandedRows, expanded)
+      this.$nextTick(() => {
+        this.selected_parents.map(item => {
+          let childrens = item.Detail.filter(item2 => item2.State === 3 || item2.State === 5 || item2.State === 6)
+          if (!childrens.length) return
+          childrens.forEach(row => {
+            if (this.$refs[`multipleTable2_${item.Id}`]) this.$refs[`multipleTable2_${item.Id}`].toggleRowSelection(row, true)
+          })
+        })
+      })
     },
     // 父级行选中
     handleSelectionChange(val) {
-      console.log('父级行选中')
-      console.log(val)
-      
       this.selected_parents = val
-
-      /*
-      this.multipleSelection = val
-
-      this.selected_par_indexs = []
-      this.selected_sub_order = []
-      this.multipleSelection.map((item, index) => {
-        this.selected_par_indexs.push(index)
-        item.Detail.map(_item => {
-          this.selected_sub_order.push(_item.SubOrderNo)
-        })
-      })
-      
       if (val.length) {
-        val.map(item => {
+        const { items, selected_sub_order } = this
+        const ids = val.map(item => item.Id)
+        
+        items.map(item => {
           let childrens = item.Detail.filter(item2 => item2.State === 3 || item2.State === 5 || item2.State === 6)
-          if (childrens.length) {
-            if (this.$refs[`multipleTable2_${item.Id}`]) {
-              childrens.forEach(row => {
-                if (!this.multipleSelection2.includes(row)) {
+          if (!childrens.length) return
+          if (ids.includes(item.Id)) {
+            childrens.forEach(row => {
+              if (!this.selected_orders_sn.includes(row.SubOrderNo)) {
+                if (this.$refs[`multipleTable2_${item.Id}`]) {
                   this.$refs[`multipleTable2_${item.Id}`].toggleRowSelection(row)
+                } else {
+                  let parent_id = `Id_${item.Id}`
+                  if (!Array.isArray(this.selected_sub_order[parent_id])) this.$set(this.selected_sub_order, parent_id, [])
+                  selected_sub_order[parent_id].push(row.SubOrderNo)
                 }
-              })
-            } else {
-              this.multipleSelection2 = childrens
-            }
-            // console.log(`multipleTable2_${item.Id}`)
+              }
+            })
+          } else {
+            childrens.map(row => {
+              if (this.selected_orders_sn.includes(row.SubOrderNo)) {
+                if (this.$refs[`multipleTable2_${item.Id}`]) {
+                  this.$refs[`multipleTable2_${item.Id}`].clearSelection()
+                } else {
+                  let parent_id = `Id_${item.Id}`
+                  selected_sub_order[parent_id] = []
+                }
+              }
+            })
           }
         })
       } else {
         this.items.map(item => {
           if (this.$refs[`multipleTable2_${item.Id}`]) {
             this.$refs[`multipleTable2_${item.Id}`].clearSelection()
-          } else {
-            this.multipleSelection2 = []
           }
         })
+        this.selected_sub_order = {}
       }
-      */
     },
     // 子级行选中
-    handleSelectionChange2(val) {
-      console.log('子级行选中')
-      
+    handleSelectionChange2(val, index) {
       if (val.length) {
         const { items, selected_sub_order } = this
-        const ids = val.map(item => {
-          return item.Id
-        })
-
+        const ids = val.map(item => item.Id)
+        
         let parent_id
-        items.map((item, index) => {
+        items.map(item => {
           item.Detail.map(_item => {
-            if (ids.includes(_item.Id)) parent_id = index
+            if (ids.includes(_item.Id)) parent_id = `Id_${item.Id}`
           })
         })
-
-        selected_sub_order[parent_id] = []
+        this.$set(this.selected_sub_order, parent_id, [])
         val.map(item => {
           selected_sub_order[parent_id].push(item.SubOrderNo)
         })
@@ -506,54 +508,9 @@ export default {
       } else {
         const { selected_sub_order } = this
         for (let i in this.selected_sub_order) {
-          selected_sub_order[i] = []
+          if (i === `Id_${index}`) selected_sub_order[i] = []
         }
-        this.$set(this, selected_sub_order, selected_sub_order)
       }
-
-      // this.selected_sub_order = []
-      // val.map(item => {
-      //   this.selected_sub_order.push(item.SubOrderNo)
-      // })
-
-      // console.log(this.selected_par_indexs)
-
-      // this.selected_sub_order = []
-      // this.multipleSelection.map((item, index) => {
-      //   if (this.selected_par_indexs.includes(index)) {
-      //     item.Detail.map(_item => {
-      //       this.selected_sub_order.push(_item.SubOrderNo)
-      //     })
-      //   }
-      // })
-
-      this.multipleSelection2 = val
-      
-      // console.log(val)
-      // let parents = this.items.filter(item => {
-      //   return item.Detail.find(item2 => {
-      //     return this.selected_orders_sn.includes(item2.SubOrderNo)
-      //   })
-      // })
-      // if (parents.length) {
-      //   parents.forEach(row => {
-      //     if (!this.multipleSelection.includes(row)) {
-      //       this.$refs.multipleTable.toggleRowSelection(row)
-      //     }
-      //   })
-      // } else {
-      //   this.$refs.multipleTable.clearSelection()
-      // }
-      
-      // // 父级
-      // let selected_orders_sn = val.map(item => item.SubOrderNo)
-      // let item = this.items.find(item => {
-      //   return item.Detail.find(item2 => {
-      //     return selected_orders_sn.includes(item2.SubOrderNo)
-      //   })
-      // })
-      // // this.sub_orders_parent_order = item || []
-      // this.sub_orders_parent_order_CountryId = item && item.CountryId || 0
     },
     
     onReset() {
