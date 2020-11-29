@@ -290,7 +290,8 @@ export default {
     sub_total_3() {
       let total = 0
       this.detail.Detail && this.detail.Detail.map(item => {
-        total += item.TotalCost * 1
+        // total += item.TotalCost * 1
+        total += item.OrderCost * 1
       })
       return total
     },

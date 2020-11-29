@@ -64,7 +64,7 @@ export default {
         UserName: '',
         Pwd: '',
         // UserName: '980436963@qq.com',
-        // Pwd: '123',
+        // Pwd: '123456789',
         captcha: '',
         checked: false
       },
